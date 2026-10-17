@@ -28,7 +28,7 @@
         </span>
     </span>
 
-    <div class="hidden" {{ stimulus_target('billing-id', 'form') }}>
+    <div class="hidden" data-error-blank="{{ 'billing.error.blank'|trans }}" {{ stimulus_target('billing-id', 'form') }}>
         {{ form_label(id_field) }}
         <div class="si-group">
             {{ form_widget(id_field) }}

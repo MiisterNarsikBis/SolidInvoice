@@ -57,7 +57,7 @@
 
     const logLabels = {
         show: {{ 'installation.process_page.view_logs'|trans|json_encode|raw }},
-        hide: 'Hide logs',
+        hide: {{ 'installation.process_page.hide_logs'|trans|json_encode|raw }},
     };
 
     function runStep(index) {
@@ -65,7 +65,7 @@
             // All steps completed
             nextBtn.innerHTML = originalBtnText;
             nextBtn.disabled = false;
-            document.querySelector('#install-title')?.replaceChildren('Installation Complete');
+            document.querySelector('#install-title')?.replaceChildren({{ 'installation.finish_page.title'|trans|json_encode|raw }});
             setProgress(100);
             progressBar.classList.remove('animate-pulse', 'bg-primary');
             progressBar.classList.add('bg-success');
@@ -138,7 +138,7 @@
                 // Connection error, not a step error
                 errorData = {
                     status: 'error',
-                    message: 'Connection lost or step failed to complete',
+                    message: {{ 'installation.process_page.connection_lost'|trans|json_encode|raw }},
                     trace: '',
                 };
             }
@@ -153,7 +153,7 @@
             }
 
             eventSource.close();
-            failStep(stepId, 'Connection lost or step failed to complete');
+            failStep(stepId, {{ 'installation.process_page.connection_lost'|trans|json_encode|raw }});
         };
     }
 
@@ -170,7 +170,7 @@
         }
 
         toggleBtn.classList.remove('hidden');
-        outputContent.textContent += '❌ Error: ' + message;
+        outputContent.textContent += '❌ {{ 'installation.process_page.error_prefix'|trans|e('js') }}: ' + message;
 
         // Show the error, and a way to try again
         setLogs(stepId, true);
@@ -244,7 +244,7 @@
         nextBtn = document.querySelector('#installation_navigator_next');
 
         originalBtnText = nextBtn.innerHTML;
-        nextBtn.innerHTML = '<span class="inline-block size-4 animate-spin rounded-full border-2 border-white border-t-transparent" role="status"></span> Installing...';
+        nextBtn.innerHTML = '<span class="inline-block size-4 animate-spin rounded-full border-2 border-white border-t-transparent" role="status"></span> ' + {{ 'installation.process.title.busy'|trans|json_encode|raw }};
         nextBtn.disabled = true;
 
         // Auto-start installation when page loads

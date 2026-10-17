@@ -47,6 +47,8 @@ all_clients: 'Tous les clients'
 billing:
     discount: Remise
     due_date: 'Date d’échéance'
+    error:
+        blank: 'Cette valeur ne doit pas être vide.'
     notes_help: 'Les notes ne seront pas visibles par le client'
     subtotal: Sous-total
     tax: Taxe
@@ -683,6 +685,8 @@ installation:
             email_settings: 'Paramètres e-mail'
             requirements_check: 'Vérification des prérequis système'
     database:
+        choose_text: 'Si vous ne savez pas quelle base de données utiliser, nous recommandons <strong>SQLite</strong> pour la plupart des utilisateurs. Elle ne demande aucune configuration supplémentaire et convient parfaitement aux petites et moyennes entreprises.'
+        choose_title: 'Choisissez votre connexion à la base de données'
         name: 'Nom de la base de données'
         recommended: Recommandé
         select_driver: 'Sélectionner le pilote de base de données'
@@ -721,6 +725,9 @@ installation:
             busy: 'Installation en cours...'
             done: Terminé
     process_page:
+        connection_lost: 'Connexion perdue ou étape non terminée'
+        error_prefix: Erreur
+        hide_logs: 'Masquer les journaux'
         retry: Réessayer
         view_logs: 'Voir les journaux'
     progress:
@@ -758,6 +765,25 @@ installation:
         system_information: 'Informations système'
         upload_max_size: 'Taille maximale d’envoi'
         web_server: 'Serveur web'
+    review:
+        admin_title: 'Compte administrateur'
+        database_title: 'Configuration de la base de données'
+        heading: 'Vérifiez votre configuration d’installation'
+        intro: 'Veuillez vérifier les informations ci-dessous. Une fois que vous continuez, l’installation démarrera avec ces paramètres.'
+        label:
+            database_name: 'Nom de la base de données'
+            driver: Pilote
+            email: 'Adresse e-mail'
+            host: Hôte
+            language: Langue
+            name: Nom
+            password: 'Mot de passe'
+            usage_statistics: 'Statistiques d’utilisation'
+            username: 'Nom d’utilisateur'
+        show_password: 'Afficher le mot de passe'
+        state:
+            disabled: Désactivées
+            enabled: Activées
     setup:
         notice: Remarque
         title:
@@ -805,6 +831,16 @@ installation:
         locale_placeholder: 'Veuillez sélectionner une langue'
         telemetry: 'Envoyer des statistiques d’utilisation anonymes'
         telemetry_help: 'Aidez-nous à améliorer SolidInvoice en partageant des données d’utilisation anonymes. Aucune information personnelle ou professionnelle n’est jamais collectée.'
+        telemetry_collect_link: 'Que collectons-nous ?'
+        telemetry_never_1: 'Factures, devis, clients, montants de paiement ou toute donnée commerciale'
+        telemetry_never_2: 'Noms, adresses e-mail, adresses IP ou toute information permettant d’identifier une personne'
+        telemetry_never_title: 'Ce que nous n’envoyons jamais :'
+        telemetry_send_1: 'Un identifiant d’installation aléatoire (non lié à vous ni à vos données)'
+        telemetry_send_2: 'La version de SolidInvoice et le type d’installation (manuelle, Docker, etc.)'
+        telemetry_send_3: 'La version de PHP, le système d’exploitation et sa version'
+        telemetry_send_4: 'Le type et la version de la base de données, et la langue configurée'
+        telemetry_send_5: 'Des événements de fonctionnalités anonymes (ex. : « une facture a été créée »), jamais leur contenu'
+        telemetry_send_title: 'Ce que nous envoyons (anonyme, agrégé) :'
 invalid_file: 'Fichier invalide'
 invoice:
     action:
@@ -2534,3 +2570,132 @@ users:
     title: Utilisateurs
 view: Voir
 website: 'Site web'
+
+# Textes utilisés tels quels comme clés (Platform et gabarits sans clé de traduction)
+"%count% codes remaining": "%count% codes restants"
+"{1} %count% day|]1,Inf[ %count% days": "{1} %count% jour|]1,Inf[ %count% jours"
+"{1} %count% month|]1,Inf[ %count% months": "{1} %count% mois|]1,Inf[ %count% mois"
+"{1} %count% year|]1,Inf[ %count% years": "{1} %count% an|]1,Inf[ %count% ans"
+"2-step verification": "Vérification en deux étapes"
+"A workspace keeps your data separate from everyone else's. You can invite people to it later.": "Un espace de travail garde vos données séparées de celles des autres. Vous pourrez y inviter des personnes plus tard."
+"Account": "Compte"
+"Add a second step to your sign-in": "Ajoutez une seconde étape à votre connexion"
+"Add a second step to your sign-in, so a password on its own is not enough": "Ajoutez une seconde étape à votre connexion, pour qu’un mot de passe seul ne suffise pas"
+"Ask an administrator to add you to one.": "Demandez à un administrateur de vous en ajouter un."
+"Authenticator app": "Application d’authentification"
+"Back": "Retour"
+"Backup codes": "Codes de secours"
+"Cancel": "Annuler"
+"Cannot scan it? Enter the key by hand": "Impossible de scanner ? Saisissez la clé à la main"
+"Change password": "Changer de mot de passe"
+"Change the password you sign in with": "Modifiez le mot de passe avec lequel vous vous connectez"
+"Close": "Fermer"
+"Codes are sent to %email%": "Les codes sont envoyés à %email%"
+"Codes come from the app you paired with this account": "Les codes viennent de l’application associée à ce compte"
+"Configure": "Configurer"
+"Confirm it works": "Vérifier que ça fonctionne"
+"Confirm my email address": "Confirmer mon adresse e-mail"
+"Copy": "Copier"
+"Create": "Créer"
+"Create a workspace": "Créer un espace de travail"
+"Create API Token": "Créer un jeton d’API"
+"Create Invoice": "Créer une facture"
+"Create new workspace": "Créer un nouvel espace de travail"
+"Create Quote": "Créer un devis"
+"Create workspace": "Créer l’espace de travail"
+"Date": "Date"
+"Devices that skip the second step until the trust expires": "Appareils qui passent la seconde étape jusqu’à l’expiration de la confiance"
+"Didn't receive it?": "Vous ne l’avez pas reçu ?"
+"Disable": "Désactiver"
+"Disabled": "Désactivé"
+"Download": "Télécharger"
+"Download as a text file": "Télécharger en fichier texte"
+"Each code works once. Store them somewhere you can reach without this account — they are not shown again after you regenerate them.": "Chaque code ne fonctionne qu’une fois. Conservez-les ailleurs que dans ce compte, car ils ne sont plus affichés après une régénération."
+"Email": "E-mail"
+"Email address": "Adresse e-mail"
+"Email verification": "Vérification de l’e-mail"
+"Enable": "Activer"
+"Enabled": "Activé"
+"Endpoint": "Point d’accès"
+"Enter the 6-digit code from your app": "Saisissez le code à 6 chiffres de votre application"
+"Enter your current password and choose a new one": "Saisissez votre mot de passe actuel et choisissez-en un nouveau"
+"First name": "Prénom"
+"Get full access for %duration%, completely free. No credit card required.": "Profitez d’un accès complet pendant %duration%, entièrement gratuit. Aucune carte bancaire requise."
+"Get full access for %duration%. We'll ask for your payment details to begin — cancel any time before the trial ends and you won't be charged.": "Profitez d’un accès complet pendant %duration%. Nous vous demanderons vos informations de paiement pour commencer ; résiliez à tout moment avant la fin de l’essai et vous ne serez pas débité."
+"How you get back in when you lose access to your second factor": "Comment récupérer l’accès si vous perdez votre second facteur"
+"If you didn't create an account, you can ignore this email.": "Si vous n’avez pas créé de compte, vous pouvez ignorer cet e-mail."
+"Invalid CSRF token": "Jeton CSRF invalide"
+"IP Address": "Adresse IP"
+"Keep them somewhere safe — each one works once, and they are shown in full only here": "Gardez-les en lieu sûr : chacun ne fonctionne qu’une fois et ils ne sont affichés en entier qu’ici"
+"Last name": "Nom"
+"Login to your account": "Connectez-vous à votre compte"
+"Logout": "Déconnexion"
+"Lost access to your authenticator app? You can use one of your backup codes.": "Vous n’avez plus accès à votre application d’authentification ? Vous pouvez utiliser l’un de vos codes de secours."
+"Manage how you sign in to your account": "Gérez la façon dont vous vous connectez à votre compte"
+"Method": "Méthode"
+"Mobile number": "Numéro de mobile"
+"Next": "Suivant"
+"No workspace assigned": "Aucun espace de travail attribué"
+"Open user menu": "Ouvrir le menu utilisateur"
+"Open workspace menu": "Ouvrir le menu de l’espace de travail"
+"Open your authenticator app and scan this code.": "Ouvrez votre application d’authentification et scannez ce code."
+"or": "ou"
+"Or use another method:": "Ou utilisez une autre méthode :"
+"Page header": "En-tête de page"
+"paid": "payée"
+"Pair an app to generate codes without waiting for an email": "Associez une application pour générer des codes sans attendre un e-mail"
+"Password": "Mot de passe"
+"Password requirements": "Exigences du mot de passe"
+"pending": "en attente"
+"Personal details": "Informations personnelles"
+"Personal information": "Informations personnelles"
+"Please confirm your email address by clicking the link below.": "Veuillez confirmer votre adresse e-mail en cliquant sur le lien ci-dessous."
+"Please enter the code from your authenticator app.": "Veuillez saisir le code de votre application d’authentification."
+"Please enter the code in the field below.": "Veuillez saisir le code dans le champ ci-dessous."
+"Please verify your email address before %action%.": "Veuillez vérifier votre adresse e-mail avant de %action%."
+"Please verify your email address. Check your inbox for the verification link.": "Veuillez vérifier votre adresse e-mail. Consultez votre boîte de réception pour le lien de vérification."
+"Profile": "Profil"
+"QR code for pairing an authenticator app": "QR code pour associer une application d’authentification"
+"Receive a verification code by email when you sign in": "Recevez un code de vérification par e-mail à la connexion"
+"Recovery codes": "Codes de récupération"
+"Regenerate codes": "Régénérer les codes"
+"Remember me on this device": "Se souvenir de moi sur cet appareil"
+"Resend code": "Renvoyer le code"
+"Resend verification email": "Renvoyer l’e-mail de vérification"
+"Revoke this if the device is shared or you no longer have it": "Révoquez-le si l’appareil est partagé ou si vous ne l’avez plus"
+"Revoke trust": "Retirer la confiance"
+"Save changes": "Enregistrer les modifications"
+"Save these now": "Enregistrez-les maintenant"
+"Scan the code": "Scannez le code"
+"Security": "Sécurité"
+"Select a workspace": "Sélectionner un espace de travail"
+"Set up": "Configurer"
+"Set up your authenticator app": "Configurez votre application d’authentification"
+"Show password": "Afficher le mot de passe"
+"Sign in": "Se connecter"
+"Signing in from here will not ask for a code": "Se connecter depuis cet appareil ne demandera pas de code"
+"Single-use codes that stand in for your second factor": "Codes à usage unique qui remplacent votre second facteur"
+"Status": "Statut"
+"System Default (%currency%)": "Valeur par défaut du système (%currency%)"
+"This browser": "Ce navigateur"
+"This link will expire in %count%.": "Ce lien expirera dans %count%."
+"Toggle navigation": "Afficher ou masquer la navigation"
+"Trust this device": "Faire confiance à cet appareil"
+"Trusted": "De confiance"
+"Trusted devices": "Appareils de confiance"
+"Two-factor authentication": "Authentification à deux facteurs"
+"Update profile": "Mettre à jour le profil"
+"Update your password": "Mettre à jour votre mot de passe"
+"Use an app such as Google Authenticator or 1Password to generate codes": "Utilisez une application comme Google Authenticator ou 1Password pour générer des codes"
+"User Agent": "Agent utilisateur"
+"Verify and enable": "Vérifier et activer"
+"Verify your email": "Vérifiez votre e-mail"
+"View codes": "Voir les codes"
+"We sent a verification code to your email.": "Nous avons envoyé un code de vérification à votre adresse e-mail."
+"Workspaces": "Espaces de travail"
+"You do not have access to any workspace yet.": "Vous n’avez encore accès à aucun espace de travail."
+"You do not have access to any workspace.": "Vous n’avez accès à aucun espace de travail."
+"Your contact details and account information": "Vos coordonnées et informations de compte"
+"Your email address is not verified yet. Did not get the email? Send another one.": "Votre adresse e-mail n’est pas encore vérifiée. Vous n’avez pas reçu l’e-mail ? Demandez-en un autre."
+"Your name and contact information": "Votre nom et vos coordonnées"
+"Your password": "Votre mot de passe"

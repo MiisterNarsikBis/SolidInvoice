@@ -47,6 +47,8 @@ all_clients: 'All Clients'
 billing:
     discount: Discount
     due_date: 'Due Date'
+    error:
+        blank: 'This value should not be blank.'
     notes_help: 'Notes will not be visible to the client'
     subtotal: SubTotal
     tax: Tax
@@ -683,6 +685,8 @@ installation:
             email_settings: 'Email Settings'
             requirements_check: 'System Requirements Check'
     database:
+        choose_text: 'If you are unsure which database to use, we recommend <strong>SQLite</strong> for most users. It requires no additional setup or configuration and works perfectly for small to medium-sized businesses.'
+        choose_title: 'Choose your database connection'
         name: 'Database Name'
         recommended: Recommended
         select_driver: 'Select Database Driver'
@@ -721,6 +725,9 @@ installation:
             busy: Installing...
             done: Done
     process_page:
+        connection_lost: 'Connection lost or step failed to complete'
+        error_prefix: Error
+        hide_logs: 'Hide logs'
         retry: Retry
         view_logs: 'View logs'
     progress:
@@ -758,6 +765,25 @@ installation:
         system_information: 'System Information'
         upload_max_size: 'Upload Max Size'
         web_server: 'Web Server'
+    review:
+        admin_title: 'Administrator Account'
+        database_title: 'Database Configuration'
+        heading: 'Review Your Installation Configuration'
+        intro: 'Please review the information below. Once you proceed, the installation will begin using these settings.'
+        label:
+            database_name: 'Database Name'
+            driver: Driver
+            email: 'Email Address'
+            host: Host
+            language: Language
+            name: Name
+            password: Password
+            usage_statistics: 'Usage statistics'
+            username: Username
+        show_password: 'Show password'
+        state:
+            disabled: Disabled
+            enabled: Enabled
     setup:
         notice: Notice
         title:
@@ -805,6 +831,16 @@ installation:
         locale_placeholder: 'Please select a locale'
         telemetry: 'Send anonymous usage statistics'
         telemetry_help: 'Help us improve SolidInvoice by sharing anonymous usage data. No personal or business information is ever collected.'
+        telemetry_collect_link: 'What do we collect?'
+        telemetry_never_1: 'Invoices, quotes, clients, payment amounts or any business data'
+        telemetry_never_2: 'Names, email addresses, IP addresses or any personally identifiable information'
+        telemetry_never_title: 'What we never send:'
+        telemetry_send_1: 'A random installation ID (not linked to you or your data)'
+        telemetry_send_2: 'SolidInvoice version and install type (manual, Docker, etc.)'
+        telemetry_send_3: 'PHP version, operating system and OS version'
+        telemetry_send_4: 'Database type and version, and the configured locale'
+        telemetry_send_5: 'Anonymous feature events (e.g. "an invoice was created") — never their contents'
+        telemetry_send_title: 'What we send (anonymous, aggregate):'
 invalid_file: 'Invalid File'
 invoice:
     action:

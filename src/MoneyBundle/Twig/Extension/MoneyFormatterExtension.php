@@ -87,9 +87,9 @@ class MoneyFormatterExtension extends AbstractExtension
                     $value = $value->toScale(0, RoundingMode::HalfEven);
                 }
 
-                return $this
+                return $this->plainSpaces($this
                     ->formatter
-                    ->format(new Money((string) $value, $currency ?? $this->systemConfig->getCurrency()));
+                    ->format(new Money((string) $value, $currency ?? $this->systemConfig->getCurrency())));
             }),
 
             /*
@@ -132,7 +132,7 @@ class MoneyFormatterExtension extends AbstractExtension
                     throw new RuntimeException(sprintf('Unable to format amount "%s" for currency "%s".', $value, $currency->getCode()));
                 }
 
-                return $formatted;
+                return $this->plainSpaces($formatted);
             }),
         ];
     }
@@ -149,5 +149,15 @@ class MoneyFormatterExtension extends AbstractExtension
         }
 
         return $currency;
+    }
+
+    /**
+     * French and several other locales group digits with a narrow no-break space (U+202F), which many
+     * fonts do not draw: the digits then run together. A plain no-break space reads the same and
+     * renders everywhere.
+     */
+    private function plainSpaces(string $formatted): string
+    {
+        return str_replace("\u{202F}", "\u{00A0}", $formatted);
     }
 }
