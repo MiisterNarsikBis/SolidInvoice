@@ -22,6 +22,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\SqlFormatter\SqlFormatter;
 use Generator;
+use Psr\Cache\CacheItemPoolInterface;
 
 final readonly class Migration
 {
@@ -30,11 +31,41 @@ final readonly class Migration
     public function __construct(
         private DependencyFactory $migrationDependencyFactory,
         private ManagerRegistry $registry,
+        private CacheItemPoolInterface $cache,
     ) {
         $this->sqlFormatter = new SqlFormatter();
     }
 
+    /**
+     * Asked on every request, and answering it costs a couple of dozen queries (the migration
+     * table, then the schema introspection behind it). "Up to date" is therefore remembered for a
+     * few minutes, keyed by the list of migrations the code ships: a new migration file changes
+     * the key, so an upgrade is noticed at once. Only a positive answer is kept, so a database
+     * that is behind is checked again on the next request.
+     */
     public function isUpToDate(): bool
+    {
+        $available = array_map(
+            static fn ($migration): string => (string) $migration->getVersion(),
+            $this->migrationDependencyFactory->getMigrationRepository()->getMigrations()->getItems(),
+        );
+
+        $item = $this->cache->getItem('migrations_up_to_date_' . md5(implode(',', $available)));
+
+        if ($item->isHit()) {
+            return true;
+        }
+
+        $upToDate = $this->checkUpToDate();
+
+        if ($upToDate) {
+            $this->cache->save($item->set(true)->expiresAfter(300));
+        }
+
+        return $upToDate;
+    }
+
+    private function checkUpToDate(): bool
     {
         $statusCalculator = $this->migrationDependencyFactory->getMigrationStatusCalculator();
 

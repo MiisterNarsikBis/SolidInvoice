@@ -29,6 +29,16 @@ use function is_array;
  */
 class SettingsRepository extends EntityRepository
 {
+    /**
+     * Every setting of the current company, by key, loaded by the first lookup of the request.
+     * A page asks for dozens of settings (company name, currency, logo, ...); one query each
+     * was most of the database traffic of a page. Keyed by company, so switching company
+     * inside a process never serves the other company's values.
+     *
+     * @var array<string, array<string, Setting>>
+     */
+    private array $loaded = [];
+
     public function __construct(
         ManagerRegistry $registry,
         private readonly CompanySelector $companySelector,
@@ -43,6 +53,7 @@ class SettingsRepository extends EntityRepository
      */
     public function store(array $settings): void
     {
+        $this->loaded = [];
         $settings = $this->flatten($settings);
         $entityManager = $this->getEntityManager();
 
@@ -82,6 +93,7 @@ class SettingsRepository extends EntityRepository
 
     public function delete(string $key): void
     {
+        $this->loaded = [];
         $setting = $this->findOneBy(['key' => $key]);
 
         if ($setting === null) {
@@ -113,6 +125,21 @@ class SettingsRepository extends EntityRepository
 
     public function getSetting(string $key, ?Company $company): ?Setting
     {
+        if (! $company instanceof Company) {
+            $companyId = (string) $this->companySelector->getCompany();
+
+            // Without a company there is nothing to scope but the current one: read them all once.
+            if (! isset($this->loaded[$companyId])) {
+                $this->loaded[$companyId] = [];
+
+                foreach ($this->findAll() as $setting) {
+                    $this->loaded[$companyId][$setting->getKey()] = $setting;
+                }
+            }
+
+            return $this->loaded[$companyId][$key] ?? null;
+        }
+
         $params = ['key' => $key];
 
         if ($company instanceof Company) {
