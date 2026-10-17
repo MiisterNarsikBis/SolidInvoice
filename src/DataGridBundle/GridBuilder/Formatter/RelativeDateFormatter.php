@@ -19,6 +19,7 @@ use DateTimeInterface;
 use Exception;
 use SolidInvoice\DataGridBundle\GridBuilder\Column\Column;
 use SolidInvoice\DataGridBundle\GridBuilder\Column\RelativeDateColumn;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use function htmlspecialchars;
 use function sprintf;
 
@@ -31,6 +32,11 @@ use function sprintf;
  */
 final class RelativeDateFormatter implements FormatterInterface
 {
+    public function __construct(
+        private ?LocaleAwareInterface $localeProvider = null,
+    ) {
+    }
+
     public function format(Column $column, mixed $value): string
     {
         if (! $column instanceof RelativeDateColumn) {
@@ -50,12 +56,12 @@ final class RelativeDateFormatter implements FormatterInterface
             }
         }
 
-        $value = CarbonImmutable::instance($value);
+        $value = CarbonImmutable::instance($value)->locale($this->localeProvider?->getLocale() ?? 'en');
 
         $now = CarbonImmutable::now();
         $diff = $value->diff($now);
 
-        $absoluteDate = $value->format($column->getAbsoluteFormat());
+        $absoluteDate = $value->translatedFormat($column->getAbsoluteFormat());
         $isoDate = $value->format(DateTimeInterface::ATOM);
 
         // If beyond threshold, show absolute date
