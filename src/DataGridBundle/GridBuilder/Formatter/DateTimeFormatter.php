@@ -13,17 +13,24 @@ declare(strict_types=1);
 
 namespace SolidInvoice\DataGridBundle\GridBuilder\Formatter;
 
+use Carbon\CarbonImmutable;
 use DateTime;
 use DateTimeInterface;
 use SolidInvoice\DataGridBundle\GridBuilder\Column\Column;
 use SolidInvoice\DataGridBundle\GridBuilder\Column\DateTimeColumn;
 use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**
  * @see \SolidInvoice\DataGridBundle\Tests\GridBuilder\Formatter\DateTimeFormatterTest
  */
 class DateTimeFormatter implements FormatterInterface
 {
+    public function __construct(
+        private readonly ?LocaleAwareInterface $localeProvider = null,
+    ) {
+    }
+
     public function format(Column $column, mixed $value): string | TranslatableMessage
     {
         if (null === $value) {
@@ -36,6 +43,9 @@ class DateTimeFormatter implements FormatterInterface
             $value = new DateTime($value);
         }
 
-        return $value->format($column->getFormat());
+        // translatedFormat() renders month and day names in the user's locale
+        return CarbonImmutable::instance($value)
+            ->locale($this->localeProvider?->getLocale() ?? 'en')
+            ->translatedFormat($column->getFormat());
     }
 }

@@ -36,6 +36,7 @@ final readonly class MoneyFormatter implements FormatterInterface
             $value = new Money((string) $value, $this->config->getCurrency());
         }
 
-        return $this->moneyFormatter->format($value);
+        // The narrow no-break space of French grouping is not drawn by many fonts: use a plain no-break space
+        return str_replace("\u{202F}", "\u{00A0}", $this->moneyFormatter->format($value));
     }
 }
