@@ -33,7 +33,8 @@ export default class BillingIdController extends Controller<HTMLDivElement> {
                 return;
             }
 
-            const errorHtml = '<p class="si-error" data-billing-id-error>This value should not be blank.</p>';
+            const message = this.formTarget.dataset.errorBlank ?? '';
+            const errorHtml = `<p class="si-error" data-billing-id-error>${message}</p>`;
 
             this.formTarget.querySelector('.si-group')?.insertAdjacentHTML('afterend', errorHtml);
         } else {
