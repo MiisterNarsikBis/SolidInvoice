@@ -52,9 +52,17 @@ The interface is built on Tailwind CSS with the "Ledger" visual identity (see [`
 |---|---|
 | <img src="docs/static/img/readme/invoices.jpg" alt="Invoice list" /> | <img src="docs/static/img/readme/invoice-create.jpg" alt="Invoice creation form" /> |
 
-| Clients |
+| Clients | Client profile |
+|---|---|
+| <img src="docs/static/img/readme/clients.jpg" alt="Client list" /> | <img src="docs/static/img/readme/client-view.jpg" alt="Client profile" /> |
+
+| Invoice | Quotes |
+|---|---|
+| <img src="docs/static/img/readme/invoice-view.jpg" alt="Invoice detail" /> | <img src="docs/static/img/readme/quotes.jpg" alt="Quote list" /> |
+
+| Payments |
 |---|
-| <img src="docs/static/img/readme/clients.jpg" alt="Client list" /> |
+| <img src="docs/static/img/readme/payments.jpg" alt="Payment list" /> |
 
 ---
 
