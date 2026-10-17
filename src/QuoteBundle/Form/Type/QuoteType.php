@@ -76,6 +76,7 @@ class QuoteType extends AbstractType
             [
                 'class' => QuoteClientMode::class,
                 'expanded' => true,
+                'choice_label' => static fn (QuoteClientMode $mode): string => 'quote.client.mode.' . $mode->value,
                 'label' => false,
                 'choice_attr' => fn () => ['data-action' => 'live#$render'],
             ]

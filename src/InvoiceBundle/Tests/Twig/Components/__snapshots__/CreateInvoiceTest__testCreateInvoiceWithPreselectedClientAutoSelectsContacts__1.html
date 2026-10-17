@@ -11,10 +11,10 @@
                                 <div class="client-selection">
                     <div class="client-mode-toggle mb-3">
                         <div class="mb-4"><div id="invoice_clientMode" class="flex flex-wrap gap-x-5 gap-y-1 space-y-2">            <div class="flex items-center gap-2.5">
-<input type="radio" id="invoice_clientMode_0" name="invoice[clientMode]" data-required="required" data-action="live#$render" class="si-check" value="existing" checked><label class="text-base text-fg" for="invoice_clientMode_0">Existing</label>
+<input type="radio" id="invoice_clientMode_0" name="invoice[clientMode]" data-required="required" data-action="live#$render" class="si-check" value="existing" checked><label class="text-base text-fg" for="invoice_clientMode_0">Select existing client</label>
 </div>
                     <div class="flex items-center gap-2.5">
-<input type="radio" id="invoice_clientMode_1" name="invoice[clientMode]" data-required="required" data-action="live#$render" class="si-check" value="new"><label class="text-base text-fg" for="invoice_clientMode_1">NewClient</label>
+<input type="radio" id="invoice_clientMode_1" name="invoice[clientMode]" data-required="required" data-action="live#$render" class="si-check" value="new"><label class="text-base text-fg" for="invoice_clientMode_1">Create new client</label>
 </div>
         </div></div>
                     </div>
@@ -92,7 +92,7 @@
             <div>
                 <div class="invoice-dates-row grid gap-x-3 sm:grid-cols-3">
                     <div><div class="mb-4">
-<label for="invoice_invoiceDate" class="si-label">Invoice date<span class="text-danger-dark" aria-hidden="true"> *</span></label><input type="date" id="invoice_invoiceDate" name="invoice[invoiceDate]" data-required="required" class="si-control" value="2021-01-01">
+<label for="invoice_invoiceDate" class="si-label">Invoice Date<span class="text-danger-dark" aria-hidden="true"> *</span></label><input type="date" id="invoice_invoiceDate" name="invoice[invoiceDate]" data-required="required" class="si-control" value="2021-01-01">
 </div></div>
                     <div><div class="mb-4">
 <label for="invoice_paymentTerms" class="si-label">Payment terms<span class="text-danger-dark" aria-hidden="true"> *</span></label><select id="invoice_paymentTerms" name="invoice[paymentTerms]" data-controller="symfony--ux-autocomplete--autocomplete" data-symfony--ux-autocomplete--autocomplete-max-results-value="10" data-symfony--ux-autocomplete--autocomplete-loading-more-text-value="Loading more results..." data-symfony--ux-autocomplete--autocomplete-no-results-found-text-value="No results found" data-symfony--ux-autocomplete--autocomplete-no-more-results-text-value="No more results" data-symfony--ux-autocomplete--autocomplete-create-option-text-value="Add %placeholder%..." data-symfony--ux-autocomplete--autocomplete-preload-value="focus" class="si-control"><option value="due_on_receipt">Due on receipt</option>

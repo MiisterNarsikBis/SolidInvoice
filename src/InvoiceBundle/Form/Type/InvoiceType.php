@@ -77,6 +77,7 @@ class InvoiceType extends AbstractType
             [
                 'class' => InvoiceClientMode::class,
                 'expanded' => true,
+                'choice_label' => static fn (InvoiceClientMode $mode): string => 'invoice.client.mode.' . $mode->value,
                 'label' => false,
                 'choice_attr' => fn () => ['data-action' => 'live#$render'],
             ]
@@ -195,7 +196,7 @@ class InvoiceType extends AbstractType
         $builder->add('total', HiddenMoneyType::class, ['currency' => $options['currency']]);
         $builder->add('baseTotal', HiddenMoneyType::class, ['currency' => $options['currency']]);
         $builder->add('tax', HiddenMoneyType::class, ['currency' => $options['currency']]);
-        $builder->add('invoiceDate', DateType::class, ['widget' => 'single_text', 'input' => 'datetime_immutable']);
+        $builder->add('invoiceDate', DateType::class, ['label' => 'invoice.date', 'widget' => 'single_text', 'input' => 'datetime_immutable']);
         $builder->add('paymentTerms', EnumType::class, [
             'class' => PaymentTerms::class,
             'choice_label' => static fn (PaymentTerms $terms): string => $terms->getLabel(),
