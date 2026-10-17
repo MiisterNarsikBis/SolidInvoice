@@ -7,7 +7,40 @@
 # with this source code in the file LICENSE.
 #}
 
-{# The platform's profile chrome, so the app's pages share its navigation and header. #}
-{% extends profile_layout %}
+{#
+    The chrome of every profile page on the Tailwind shell: the navigation down the left, the page
+    beside it. It used to extend Platform's `profile_layout` (Tabler) and now builds on the shell.
 
-{% block page_title %}{{ block('title') }}{% endblock %}
+        {% extends '@SolidInvoiceUser/Layout/profile.html.twig' %}
+        {% block title %}{{ 'profile.title'|trans }}{% endblock %}
+        {% block profile_content %} ... {% endblock %}
+
+    Register a page in the navigation with a menu builder on PlatformProfileMenu::NAME; nothing
+    here has to change to add one.
+#}
+{% extends '@SolidInvoiceCore/Layout/shell.html.twig' %}
+
+{% block page_title %}{% if block('title') is defined %}{{ block('title') }}{% endif %}{% endblock %}
+
+{# The navigation column. Renders nothing when no builder registered `profile_menu`, in which case
+   the content takes the full width. #}
+{% block profile_nav %}
+    <twig:Si:SettingsNav menu="profile_menu" />
+{% endblock %}
+
+{# The page itself. This is the block a profile page fills. #}
+{% block profile_content %}{% endblock %}
+
+{% block content %}
+    {% set profile_nav = block('profile_nav')|trim %}
+
+    <div class="grid gap-6 {{ profile_nav is not empty ? 'lg:grid-cols-[16rem_minmax(0,1fr)]' : '' }}">
+        {% if profile_nav is not empty %}
+            <div>{{ profile_nav|raw }}</div>
+        {% endif %}
+
+        <div class="min-w-0 space-y-4">
+            {{ block('profile_content') }}
+        </div>
+    </div>
+{% endblock %}

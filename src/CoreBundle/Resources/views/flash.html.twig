@@ -1,21 +1,16 @@
 {#
- # This file is part of SolidInvoice package.
- #
- # (c) Pierre du Plessis <open-source@solidworx.co>
- #
- # This source file is subject to the MIT license that is bundled
- # with this source code in the file LICENSE.
- #}
+# This file is part of SolidInvoice package.
+#
+# (c) Pierre du Plessis <open-source@solidworx.co>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+#}
 
-{% for type, flashMessage in app.session.flashbag.all() %}
-    {% if type == 'error' %}
-        {% set type = 'danger' %}
-    {% endif %}
-
-    {% for message in flashMessage %}
-        <div class="alert alert-{{ type }} no-print">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'action.close'|trans }}"></button>
-                {{ message|trans }} <br />
-        </div>
+{# Flash messages for Tailwind pages (flash.html.twig is the Bootstrap one). Use it inside a Live
+   Component, where the shell's own flash block has already run for the page. #}
+{% for type, flashMessages in app.session.flashbag.all() %}
+    {% for message in flashMessages %}
+        <twig:Si:Alert type="{{ type == 'error' ? 'danger' : type }}" data-flash="{{ type }}" class="mb-4 print:hidden">{{ message|trans }}</twig:Si:Alert>
     {% endfor %}
 {% endfor %}

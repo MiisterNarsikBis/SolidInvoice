@@ -7,132 +7,33 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
 
-{% block title %}
-    {{ ux_icon('tabler:file-text', {width: 24, height: 24, class: 'me-2'}) }}{{ "quote.list.title"|trans }}
-{% endblock title %}
+{% block page_title %}{{ 'quote.list.title'|trans }}{% endblock page_title %}
 
-{% block heading %}
-    <a class="btn btn-primary" href="{{ path("_quotes_create") }}">
-        {{ ux_icon('tabler:plus', {width: 18, height: 18}) }}
-        {{ "quote.create.title"|trans }}
-    </a>
+{% block page_title_actions %}
+    <twig:Si:Button href="{{ path('_quotes_create') }}">
+        {{ ux_icon('tabler:plus', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+        {{ 'quote.create.title'|trans }}
+    </twig:Si:Button>
 {% endblock %}
 
 {% block content %}
-    {# Stats Row #}
-    <div class="row row-deck row-cards mb-4">
-        <div class="col-sm-6 col-lg-3">
-            <div class="card card-sm">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <span class="bg-primary text-white avatar">
-                                {{ ux_icon('tabler:file-text', {width: 24, height: 24}) }}
-                            </span>
-                        </div>
-                        <div class="col">
-                            <div class="fw-medium">
-                                {{ totalActiveQuotes }}
-                            </div>
-                            <div class="text-secondary">
-                                {{ 'quote.stats.total_quotes'|trans }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-6 col-lg-3">
-            <div class="card card-sm">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <span class="bg-warning text-white avatar">
-                                {{ ux_icon('tabler:clock', {width: 24, height: 24}) }}
-                            </span>
-                        </div>
-                        <div class="col">
-                            <div class="fw-medium">
-                                {{ pendingCount }}
-                            </div>
-                            <div class="text-secondary">
-                                {{ 'quote.stats.pending_quotes'|trans }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-6 col-lg-3">
-            <div class="card card-sm">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <span class="bg-success text-white avatar">
-                                {{ ux_icon('tabler:check', {width: 24, height: 24}) }}
-                            </span>
-                        </div>
-                        <div class="col">
-                            <div class="fw-medium">
-                                {{ acceptedCount }}
-                            </div>
-                            <div class="text-secondary">
-                                {{ 'quote.stats.accepted_quotes'|trans }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-6 col-lg-3">
-            <div class="card card-sm">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <span class="bg-danger text-white avatar">
-                                {{ ux_icon('tabler:x', {width: 24, height: 24}) }}
-                            </span>
-                        </div>
-                        <div class="col">
-                            <div class="fw-medium">
-                                {{ declinedCount }}
-                            </div>
-                            <div class="text-secondary">
-                                {{ 'quote.stats.declined_quotes'|trans }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    {# Stats #}
+    <div class="mb-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <twig:Si:Stat icon="tabler:file-text" label="{{ 'quote.stats.total_quotes'|trans }}">{{ totalActiveQuotes }}</twig:Si:Stat>
+        <twig:Si:Stat icon="tabler:clock" tone="warning" label="{{ 'quote.stats.pending_quotes'|trans }}">{{ pendingCount }}</twig:Si:Stat>
+        <twig:Si:Stat icon="tabler:check" tone="success" label="{{ 'quote.stats.accepted_quotes'|trans }}">{{ acceptedCount }}</twig:Si:Stat>
+        <twig:Si:Stat icon="tabler:x" tone="danger" label="{{ 'quote.stats.declined_quotes'|trans }}">{{ declinedCount }}</twig:Si:Stat>
     </div>
 
-    {# Quote List Card #}
-    <twig:Ui:Card>
+    {# Quote list #}
+    <twig:Si:Card>
         <twig:block name="header">
-            <div class="d-flex justify-content-between align-items-center w-100">
-                <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist" aria-label="{{ 'quote.tabs.label'|trans }}">
-                    <li class="nav-item" role="presentation">
-                        <a href="{{ path('_quotes_index') }}" class="nav-link{{ not isArchived ? ' active' : '' }}" role="tab" aria-selected="{{ not isArchived ? 'true' : 'false' }}">
-                            {{ ux_icon('tabler:file-text', {width: 16, height: 16}) }}
-                            {{ 'quote.tabs.active'|trans }}
-                            <span class="badge bg-primary-lt ms-2">{{ totalActiveQuotes }}</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a href="{{ path('_quotes_index', {archived: 1}) }}" class="nav-link{{ isArchived ? ' active' : '' }}" role="tab" aria-selected="{{ isArchived ? 'true' : 'false' }}">
-                            {{ ux_icon('tabler:archive', {width: 16, height: 16}) }}
-                            {{ 'quote.tabs.archived'|trans }}
-                            <span class="badge bg-secondary-lt ms-2">{{ totalArchivedQuotes }}</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <nav class="flex flex-wrap border-b border-line px-2" role="tablist" aria-label="{{ 'quote.tabs.label'|trans }}">
+                <twig:Si:Tab href="{{ path('_quotes_index') }}" :active="not isArchived" icon="tabler:file-text" :count="totalActiveQuotes">{{ 'quote.tabs.active'|trans }}</twig:Si:Tab>
+                <twig:Si:Tab href="{{ path('_quotes_index', {archived: 1}) }}" :active="isArchived" icon="tabler:archive" :count="totalArchivedQuotes">{{ 'quote.tabs.archived'|trans }}</twig:Si:Tab>
+            </nav>
         </twig:block>
 
         {% if isArchived %}
@@ -140,5 +41,5 @@
         {% else %}
             <twig:DataGrid name="quote_grid" />
         {% endif %}
-    </twig:Ui:Card>
+    </twig:Si:Card>
 {% endblock content %}

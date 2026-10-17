@@ -7,7 +7,9 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
+
+{% block page_title %}{{ 'add_client'|trans }}{% endblock page_title %}
 
 {% block content %}
     <twig:ClientForm />

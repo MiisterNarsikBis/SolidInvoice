@@ -1,118 +1,66 @@
 {% do form.finish.setRendered() %}
 
-<div class="col bg-light rounded p-4 position-relative" style="overflow: hidden;">
-    <canvas id="confetti-canvas" class="position-absolute top-0 start-0 w-100 h-100" style="pointer-events: none; z-index: 1;"></canvas>
+<div class="relative min-w-0 flex-1 overflow-hidden bg-canvas p-6 lg:px-12 lg:py-10">
+    <canvas id="confetti-canvas" class="pointer-events-none absolute inset-0 z-[1] size-full" aria-hidden="true"></canvas>
 
-    <div class="d-flex flex-column h-100 position-relative" style="z-index: 2;">
-        <div class="flex-grow-1">
-            <div class="card-body p-4 px-5 d-flex flex-column h-100">
-                <div class="flex-grow-1" style="min-height: 410px">
+    <div class="relative z-[2] min-h-[26rem]">
+        <div class="mb-6 text-center">
+            <span class="mx-auto flex size-20 items-center justify-center rounded-full bg-success-light text-success-dark">
+                {{ ux_icon('tabler:check', {class: 'size-12', 'aria-hidden': 'true'}) }}
+            </span>
+        </div>
 
-                    <div class="text-center mb-4">
-                        <div class="success-checkmark mb-4">
-                            <div class="check-icon">
-                                <span class="icon-line line-tip"></span>
-                                <span class="icon-line line-long"></span>
-                                <div class="icon-circle"></div>
-                                <div class="icon-fix"></div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="mb-8 text-center">
+            <h1 class="mb-3 flex items-center justify-center gap-2 text-3xl font-semibold text-success-dark">
+                {{ ux_icon('tabler:confetti', {class: 'size-9', 'aria-hidden': 'true'}) }}
+                {{ 'installation.finish_page.title'|trans }}
+            </h1>
+            <p class="text-lg text-fg-secondary">{{ 'installation.finish_page.subtitle'|trans }}</p>
+        </div>
 
-                    <div class="text-center mb-5">
-                        <h1 class="display-6 fw-bold text-success mb-3">
-                            {{ ux_icon('tabler:confetti', {width: 36, height: 36, class: 'me-2'}) }}
-                            {{ 'installation.finish_page.title'|trans }}
-                        </h1>
-                        <p class="lead text-dark mb-4">
-                            {{ 'installation.finish_page.subtitle'|trans }}
-                        </p>
-                    </div>
+        <hr class="mb-6 border-line">
 
-                    <hr class="border-secondary-subtle mb-4">
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-12">
-                            <h4 class="fw-bold mb-3 text-center">{{ 'installation.finish_page.whats_next'|trans }}</h4>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 border-primary shadow-sm">
-                                <div class="card-body text-center">
-                                    <div class="text-primary mb-3">
-                                        {{ ux_icon('tabler:users-plus', {width: 48, height: 48}) }}
-                                    </div>
-                                    <h5 class="fw-bold mb-2">{{ 'installation.finish_page.add_clients.title'|trans }}</h5>
-                                    <p class="text-muted small mb-0">
-                                        {{ 'installation.finish_page.add_clients.description'|trans }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 border-info shadow-sm">
-                                <div class="card-body text-center">
-                                    <div class="text-info mb-3">
-                                        {{ ux_icon('tabler:file-invoice', {width: 48, height: 48}) }}
-                                    </div>
-                                    <h5 class="fw-bold mb-2">{{ 'installation.finish_page.create_invoice.title'|trans }}</h5>
-                                    <p class="text-muted small mb-0">
-                                        {{ 'installation.finish_page.create_invoice.description'|trans }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 border-success shadow-sm">
-                                <div class="card-body text-center">
-                                    <div class="text-success mb-3">
-                                        {{ ux_icon('tabler:settings', {width: 48, height: 48}) }}
-                                    </div>
-                                    <h5 class="fw-bold mb-2">{{ 'installation.finish_page.configure_settings.title'|trans }}</h5>
-                                    <p class="text-muted small mb-0">
-                                        {{ 'installation.finish_page.configure_settings.description'|trans }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="alert alert-success border-0 shadow-sm mb-4">
-                        <div class="d-flex gap-3">
-                            <div class="flex-shrink-0">
-                                {{ ux_icon('tabler:info-circle', {width: 24, height: 24}) }}
-                            </div>
-                            <div>
-                                <h5 class="fw-bold mb-2">{{ 'installation.finish_page.summary.title'|trans }}</h5>
-                                <ul class="mb-0 small">
-                                    <li>{{ 'installation.finish_page.summary.database'|trans }}</li>
-                                    <li>{{ 'installation.finish_page.summary.migrations'|trans }}</li>
-                                    <li>{{ 'installation.finish_page.summary.admin'|trans }}</li>
-                                    <li>{{ 'installation.finish_page.summary.secret'|trans }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-column align-items-center mt-4">
-                        <p class="text-muted mb-3 text-center">{{ 'installation.finish_page.all_set'|trans }}</p>
-                        {{ form_widget(form.navigator.finish, {
-                            attr: {class: 'btn-success btn-lg px-5 shadow'},
-                            label: 'installation.finish_page.launch'|trans,
-                            icon: ux_icon('tabler:rocket', {width: 24, height: 24}),
-                        }) }}
-                    </div>
+        <h4 class="mb-4 text-center text-lg font-semibold text-fg">{{ 'installation.finish_page.whats_next'|trans }}</h4>
+        <div class="mb-6 grid gap-4 md:grid-cols-3">
+            {% for next in [
+                {icon: 'users-plus', tone: 'text-primary', border: 'border-primary/40', key: 'add_clients'},
+                {icon: 'file-invoice', tone: 'text-info-dark', border: 'border-info/40', key: 'create_invoice'},
+                {icon: 'settings', tone: 'text-success-dark', border: 'border-success/40', key: 'configure_settings'},
+            ] %}
+                <div class="rounded-lg border bg-surface p-5 text-center shadow-sm {{ next.border }}">
+                    <span class="{{ next.tone }}">{{ ux_icon('tabler:' ~ next.icon, {class: 'mx-auto mb-3 size-12', 'aria-hidden': 'true'}) }}</span>
+                    <h5 class="mb-1 font-semibold text-fg">{{ ('installation.finish_page.' ~ next.key ~ '.title')|trans }}</h5>
+                    <p class="text-sm text-fg-muted">{{ ('installation.finish_page.' ~ next.key ~ '.description')|trans }}</p>
                 </div>
-            </div>
+            {% endfor %}
+        </div>
+
+        <twig:Si:Alert type="success">
+            <h5 class="mb-1 font-semibold">{{ 'installation.finish_page.summary.title'|trans }}</h5>
+            <ul class="list-disc space-y-0.5 pl-5 text-sm">
+                <li>{{ 'installation.finish_page.summary.database'|trans }}</li>
+                <li>{{ 'installation.finish_page.summary.migrations'|trans }}</li>
+                <li>{{ 'installation.finish_page.summary.admin'|trans }}</li>
+                <li>{{ 'installation.finish_page.summary.secret'|trans }}</li>
+            </ul>
+        </twig:Si:Alert>
+
+        <div class="mt-8 flex flex-col items-center">
+            <p class="mb-3 text-center text-fg-muted">{{ 'installation.finish_page.all_set'|trans }}</p>
+            {{ form_widget(form.navigator.finish, {
+                attr: {class: 'si-btn si-btn--lg si-btn--primary px-8 shadow-md'},
+                label: 'installation.finish_page.launch'|trans,
+                icon: ux_icon('tabler:rocket', {class: 'size-6', 'aria-hidden': 'true'}),
+            }) }}
         </div>
     </div>
 </div>
 
 <script>
-// Confetti Animation
-(function() {
+// Confetti
+(function () {
     const canvas = document.getElementById('confetti-canvas');
-    if (!canvas) return;
+    if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const ctx = canvas.getContext('2d');
     canvas.width = canvas.offsetWidth;
@@ -123,11 +71,11 @@
     const terminalVelocity = 5;
     const drag = 0.075;
     const colors = [
-        { front: '#206bc4', back: '#1a569d' }, // primary
-        { front: '#4CAF50', back: '#45a049' }, // success
-        { front: '#d63939', back: '#bd3030' }, // danger
-        { front: '#f59f00', back: '#dd8d00' }, // warning
-        { front: '#4299e1', back: '#3182ce' }, // info
+        { front: '#1d4ed8', back: '#1e40af' },
+        { front: '#16a34a', back: '#15803d' },
+        { front: '#dc2626', back: '#b91c1c' },
+        { front: '#f59e0b', back: '#d97706' },
+        { front: '#0ea5e9', back: '#0284c7' },
     ];
 
     let confetti = [];
@@ -153,12 +101,10 @@
             this.vy = Math.min(this.vy, terminalVelocity);
             this.vx *= (1 - drag);
             this.vy *= (1 - drag);
-
             this.x += this.vx;
             this.y += this.vy;
             this.rotation += this.rotationSpeed;
 
-            // Flip effect
             if (Math.abs(this.vx) < 0.1) {
                 this.front = !this.front;
             }
@@ -168,13 +114,9 @@
             ctx.save();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.rotation);
-
-            const scaleX = Math.cos(this.rotation * 2);
-            ctx.scale(scaleX, 1);
-
+            ctx.scale(Math.cos(this.rotation * 2), 1);
             ctx.fillStyle = this.front ? this.color.front : this.color.back;
             ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
-
             ctx.restore();
         }
 
@@ -183,37 +125,27 @@
         }
     }
 
-    function initConfetti() {
-        confetti = [];
-        for (let i = 0; i < confettiCount; i++) {
-            confetti.push(new ConfettiPiece());
-        }
-    }
-
     function render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        confetti.forEach((piece, index) => {
+        confetti = confetti.filter((piece) => {
             piece.update();
             piece.draw();
 
-            // Remove pieces that have fallen off screen
-            if (piece.isOffScreen()) {
-                confetti.splice(index, 1);
-            }
+            return !piece.isOffScreen();
         });
 
-        // Continue animation if there are still pieces
         if (confetti.length > 0) {
             requestAnimationFrame(render);
         }
     }
 
-    // Start confetti animation
-    initConfetti();
+    for (let i = 0; i < confettiCount; i++) {
+        confetti.push(new ConfettiPiece());
+    }
+
     render();
 
-    // Handle window resize
     window.addEventListener('resize', () => {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;

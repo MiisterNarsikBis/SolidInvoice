@@ -1,44 +1,43 @@
+{# Inside a component slot `this` is the slot's component, so the selected method is captured here. #}
+{% set selectedMethod = this.method %}
+
 <div {{ attributes }}>
     {% include "@SolidInvoiceCore/flash.html.twig" %}
-    <section class="row">
-        <aside class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <div class="dropdown">
-                            <a href="#" class="btn btn-outline-success w-100 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ ux_icon('tabler:circle-plus', {width: 16, height: 16}) }}
-                                {{ 'payment.method.add'|trans }}
-                            </a>
-                            <div class="dropdown-menu w-100">
-                                {% for method in availablePaymentMethods %}
-                                    <a class="dropdown-item" href="?method={{ method }}">{{ method|humanize|title }}</a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-muted small mb-2">{{ 'payment.methods.available'|trans }}</p>
-                    <ul class="nav flex-column" role="tablist">
-                        {% for method in paymentMethods %}
-                            <li class="nav-item">
-                                <a href="?method={{ method.gatewayName }}" aria-controls="{{ method.gatewayName }}" data-method="{{ method.gatewayName }}" class="nav-link{{ method.gatewayName is same as(this.method) ? ' active' }}">
-                                    {% if method.isEnabled == 'enabled' %}
-                                        {{ ux_icon('tabler:circle-check', {width: 16, height: 16, class: 'text-success'}) }}
-                                    {% else %}
-                                        {{ ux_icon('tabler:circle-x', {width: 16, height: 16, class: 'text-muted'}) }}
-                                    {% endif %}
-                                    {{ method.name }}
-                                </a>
-                            </li>
+    <div class="grid gap-6 md:grid-cols-12">
+        <aside class="md:col-span-3">
+            <twig:Si:Card :padded="true">
+                <div class="mb-4">
+                    <twig:Si:Dropdown label="{{ 'payment.method.add'|trans }}" align="start" triggerClass="si-btn si-btn--outline si-btn--md w-full" panelClass="w-full">
+                        <twig:block name="trigger">
+                            {{ ux_icon('tabler:circle-plus', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                            {{ 'payment.method.add'|trans }}
+                        </twig:block>
+                        {% for method in availablePaymentMethods %}
+                            <twig:Si:MenuItem href="?method={{ method }}">{{ method|humanize|title }}</twig:Si:MenuItem>
                         {% endfor %}
-                    </ul>
+                    </twig:Si:Dropdown>
                 </div>
-            </div>
+                <p class="mb-2 text-sm text-fg-muted">{{ 'payment.methods.available'|trans }}</p>
+                <ul class="space-y-0.5" role="tablist">
+                    {% for method in paymentMethods %}
+                        <li>
+                            <a href="?method={{ method.gatewayName }}" aria-controls="{{ method.gatewayName }}" data-method="{{ method.gatewayName }}" class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm hover:bg-surface-hover {{ method.gatewayName is same as(selectedMethod) ? 'bg-primary-light font-medium text-primary-dark' : 'text-fg-secondary' }}">
+                                {% if method.isEnabled == 'enabled' %}
+                                    {{ ux_icon('tabler:circle-check', {class: 'size-4 text-success-dark', 'aria-hidden': 'true'}) }}
+                                {% else %}
+                                    {{ ux_icon('tabler:circle-x', {class: 'size-4 text-fg-muted', 'aria-hidden': 'true'}) }}
+                                {% endif %}
+                                {{ method.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </twig:Si:Card>
         </aside>
-        <section class="col-md-9">
-            {% if this.method is not empty %}
-                <twig:PaymentSettings method="{{ this.method }}" />
+        <section class="md:col-span-9">
+            {% if selectedMethod is not empty %}
+                <twig:PaymentSettings method="{{ selectedMethod }}" />
             {% endif %}
         </section>
-    </section>
+    </div>
 </div>

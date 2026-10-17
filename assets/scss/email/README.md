@@ -10,7 +10,7 @@ This directory contains SCSS source files for email styles using the SolidInvoic
 
 ## Design System Integration
 
-All color values are derived from `assets/scss/design-system/_tokens.scss` to ensure brand consistency across the application and emails.
+These values were derived from the application's design tokens when the emails were built, and are a **snapshot of the original green/amber palette**. The application itself has since moved to the "Ledger" identity (blue, see `DESIGN.md`) and `_tokens.scss` no longer matches this table. Customer-facing email is intentionally not restyled as part of a theme change; bringing it onto the new palette is a product decision, and the hex values below are the ones to change when it is made.
 
 ### Color Mapping
 

@@ -1,28 +1,32 @@
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
+
+{# Inside a component slot `this` and `computed` are the slot's component, so capture them here. #}
+{% set address = computed.address %}
+{% set editing = this.edit %}
+
 <div {{ attributes }}>
-    <div class="client-address-card card">
-        <div class="card-header">
-            <div class="d-flex align-items-center justify-content-between w-100">
-                <span class="d-flex align-items-center gap-2">
-                    {{ ux_icon('tabler:map-pin', {width: 16, height: 16, class: 'text-muted'}) }}
-                    <span class="fw-medium">{{ 'client.address.label'|trans }}</span>
+    <twig:Si:Card class="h-full">
+        <twig:block name="header">
+            <div class="flex items-center justify-between gap-2 border-b border-line-light px-4 py-3">
+                <span class="flex items-center gap-2">
+                    <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary-dark">
+                        {{ ux_icon('tabler:map-pin', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                    </span>
+                    <span class="font-medium text-fg">{{ 'client.address.label'|trans }}</span>
                 </span>
-                <div class="d-flex gap-1">
-                    <button type="button" class="btn btn-ghost-secondary btn-icon btn-icon-sm"
-                            title="{{ 'client.address.edit'|trans }}"
-                            data-model="edit" data-value="true" data-action="live#update:prevent">
-                        {{ ux_icon('tabler:pencil', {width: 16, height: 16}) }}
+                <div class="flex shrink-0 gap-1">
+                    <button type="button" class="si-btn si-btn--ghost si-btn--sm" title="{{ 'client.address.edit'|trans }}" aria-label="{{ 'client.address.edit'|trans }}" data-model="edit" data-value="true" data-action="live#update:prevent">
+                        {{ ux_icon('tabler:pencil', {class: 'size-4', 'aria-hidden': 'true'}) }}
                     </button>
-                    <button type="button" class="btn btn-ghost-danger btn-icon btn-icon-sm"
-                            title="{{ 'client.address.delete'|trans }}"
-                            data-bs-toggle="modal" data-bs-target="#delete-address-{{ computed.address.id }}">
-                        {{ ux_icon('tabler:trash', {width: 16, height: 16}) }}
+                    <button type="button" class="si-btn si-btn--danger-ghost si-btn--sm" title="{{ 'client.address.delete'|trans }}" aria-label="{{ 'client.address.delete'|trans }}" data-si-modal-open="#delete-address-{{ address.id }}">
+                        {{ ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'}) }}
                     </button>
                 </div>
             </div>
-        </div>
+        </twig:block>
 
-        <div class="card-body">
-            {% if this.edit %}
+        <div class="p-4">
+            {% if editing %}
                 {{ form_start(form, {attr: {
                     'data-action': 'live#action:prevent',
                     'data-live-action-param': 'save'
@@ -30,43 +34,36 @@
 
                 {{ form_row(form) }}
 
-                <div class="client-form-actions">
-                    <button type="button" class="btn btn-ghost" data-model="edit" data-value="false" data-action="live#update:prevent">
-                        {{ 'action.cancel'|trans }}
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        {{ ux_icon('tabler:device-floppy', {width: 16, height: 16}) }}
+                <div class="flex justify-end gap-2">
+                    <twig:Si:Button type="button" variant="ghost" data-model="edit" data-value="false" data-action="live#update:prevent">{{ 'action.cancel'|trans }}</twig:Si:Button>
+                    <twig:Si:Button type="submit">
+                        {{ ux_icon('tabler:device-floppy', {class: 'size-4', 'aria-hidden': 'true'}) }}
                         {{ 'action.save'|trans }}
-                    </button>
+                    </twig:Si:Button>
                 </div>
                 {{ form_end(form) }}
             {% else %}
-                <div class="client-address-text">{{ computed.address }}</div>
-                <a href="https://maps.google.com/?q={{ computed.address.street1 }}+{{ computed.address.street2 }}+{{ computed.address.city }}+{{ computed.address.state }}+{{ computed.address.zip }}+{{ computed.address.country }}"
-                   target="_blank"
-                   rel="external noreferrer noopener"
-                   class="btn btn-sm btn-ghost client-address-map-link">
-                    {{ ux_icon('tabler:map', {width: 14, height: 14}) }}
+                <div class="whitespace-pre-line text-fg-secondary">{{ address }}</div>
+                <a href="https://maps.google.com/?q={{ address.street1 }}+{{ address.street2 }}+{{ address.city }}+{{ address.state }}+{{ address.zip }}+{{ address.country }}" target="_blank" rel="external noreferrer noopener" class="si-btn si-btn--ghost si-btn--sm mt-3">
+                    {{ ux_icon('tabler:map', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
                     {{ 'client.address.view_map'|trans }}
                 </a>
             {% endif %}
         </div>
-    </div>
+    </twig:Si:Card>
 
-    <twig:Ui:Modal id="delete-address-{{ computed.address.id }}" title="{{ 'action.confirm'|trans }}" status="danger" :centered="true">
-        <div class="text-center py-3">
-            <div class="mb-3">
-                {{ ux_icon('tabler:map-pin-off', {width: 48, height: 48, class: 'text-danger'}) }}
-            </div>
-            <p>{{ 'client.address.delete_confirm_inline'|trans }}</p>
+    <twig:Si:Modal id="delete-address-{{ address.id }}" title="{{ 'action.confirm'|trans }}" status="danger" size="sm">
+        <div class="py-3 text-center">
+            {{ ux_icon('tabler:map-pin-off', {class: 'mx-auto mb-3 size-12 text-danger', 'aria-hidden': 'true'}) }}
+            <p class="text-fg-secondary">{{ 'client.address.delete_confirm_inline'|trans }}</p>
         </div>
 
         <twig:block name="footer">
-            <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">{{ 'action.cancel'|trans }}</button>
-            <button type="button" class="btn btn-danger" data-action="live#action:prevent" data-live-action-param="delete">
-                {{ ux_icon('tabler:trash', {width: 16, height: 16}) }}
+            <twig:Si:Button type="button" variant="ghost" data-si-modal-close>{{ 'action.cancel'|trans }}</twig:Si:Button>
+            <twig:Si:Button type="button" variant="danger" data-action="live#action:prevent" data-live-action-param="delete">
+                {{ ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'}) }}
                 {{ 'action.confirm'|trans }}
-            </button>
+            </twig:Si:Button>
         </twig:block>
-    </twig:Ui:Modal>
+    </twig:Si:Modal>
 </div>

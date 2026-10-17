@@ -409,7 +409,7 @@ final class TwoFactorSettingsTest extends LiveComponentTest
 
         // Verify the rendered output uses the updated state
         $html = $this->component->render()->toString();
-        self::assertStringContainsString('bg-success-lt', $html);
+        self::assertStringContainsString('Enabled', $html);
     }
 
     public function testSecurityTokenIsRefreshedAfterDisablingEmailAuth(): void
@@ -432,7 +432,7 @@ final class TwoFactorSettingsTest extends LiveComponentTest
         self::assertFalse($user->isEmailAuthEnabled());
 
         $html = $this->component->render()->toString();
-        self::assertStringContainsString('bg-secondary-lt', $html);
+        self::assertStringNotContainsString('Enabled', $html);
     }
 
     public function testMultiple2FAMethodsCanBeEnabledSimultaneously(): void

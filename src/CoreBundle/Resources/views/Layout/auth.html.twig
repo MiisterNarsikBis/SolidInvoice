@@ -1,0 +1,60 @@
+{#
+# This file is part of SolidInvoice package.
+#
+# (c) Pierre du Plessis <open-source@solidworx.co>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+#}
+
+{#
+    The Tailwind layout for authentication screens: login, and the OAuth consent screens that
+    reuse the old `login.html.twig` layout. A small card centred over the photo background.
+
+    Blocks:
+        contents   the card body (the name the Tabler `login.html.twig` layout used)
+        below_card extra content under the card (a register link, ...)
+
+    `login` is a webpack style entry that carries only the background photo; the layout and
+    components come from `public/ui/app.css`.
+#}
+{% extends '@SolidInvoiceCore/Layout/document.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('login') }}
+{% endblock stylesheets %}
+
+{% block body_class %}min-h-screen{% endblock %}
+
+{% block body %}
+    <div class="page relative flex min-h-screen flex-col items-center justify-center px-4 py-12">
+        <a href="{{ path('_home') }}" class="mb-8 flex items-center gap-3 text-3xl font-semibold text-white">
+            {{ app_logo(showDefault: true, showOnlyAppIcon: true) }} {{ app_name }}
+        </a>
+
+        {# A plain element, not <twig:Si:Card>: blocks inside a component slot cannot be overridden by child templates. #}
+        <div class="w-full max-w-sm rounded-lg border border-line-light bg-surface p-8 shadow-sm">
+            {% block flashes %}
+                {% set flash_types = {error: 'danger', danger: 'danger', warning: 'warning', success: 'success', notice: 'info', info: 'info'} %}
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <twig:Si:Alert type="{{ flash_types[label]|default('info') }}" data-flash="{{ label }}" class="mb-5">{{ message|trans }}</twig:Si:Alert>
+                    {% endfor %}
+                {% endfor %}
+            {% endblock flashes %}
+
+            {% block contents %}{% endblock contents %}
+        </div>
+
+        {% block below_card %}{% endblock below_card %}
+
+        <p class="mt-6 text-sm text-white/80">
+            {{ 'powered_by'|trans }} <a href="https://solidinvoice.co" class="text-white hover:underline">{{ constant('SolidInvoice\\CoreBundle\\SolidInvoiceCoreBundle::APP_NAME') }}</a>{% if app_version %} - {{ app_version }}{% endif %}
+        </p>
+
+        <a href="https://unsplash.com/@julian_zett?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="external noopener noreferrer" class="absolute bottom-0 right-0 rounded-tl-md bg-ink-900/80 px-3 py-1.5 text-xs text-white hover:bg-ink-900" title="{{ 'layout.unsplash_credit'|trans }}">
+            Julian Zett / Unsplash
+        </a>
+    </div>
+{% endblock body %}

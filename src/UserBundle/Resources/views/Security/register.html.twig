@@ -7,14 +7,11 @@
 # with this source code in the file LICENSE.
 #}
 
-{% extends '@SolidInvoiceCore/Layout/base.html.twig' %}
+{% extends '@SolidInvoiceCore/Layout/document.html.twig' %}
+
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
 
 {% block page_title %}{{ app_name }} - {{ "security.register.title"|trans }}{% endblock page_title %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('register') }}
-{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -23,196 +20,111 @@
     {% endtoggle %}
 {% endblock %}
 
+{% block body_class %}min-h-screen bg-surface{% endblock %}
+
 {% block body %}
-    <div class="container-fluid registration-split-layout">
-        <div class="row min-vh-100">
-            {# LEFT SIDE: Registration Form #}
-            <div class="col-12 col-lg-6 registration-form-side d-flex align-items-center justify-content-center">
-                <div class="registration-form-container w-100">
-                    {# Logo & Title #}
-                    <div class="text-center mb-4">
-                        <span class="navbar-brand navbar-brand-autodark h1">
-                            {{ app_logo(showDefault: true, showOnlyAppIcon: true) }} {{ app_name }}
-                        </span>
-                    </div>
+    {% set features = [
+        {icon: 'file-invoice', key: 'invoices'},
+        {icon: 'users', key: 'clients'},
+        {icon: 'credit-card', key: 'payments'},
+        {icon: 'receipt-tax', key: 'tax'},
+    ] %}
+    <div class="grid min-h-screen lg:grid-cols-2">
+        {# LEFT SIDE: registration form #}
+        <div class="flex items-center justify-center px-4 py-12">
+            <div class="w-full max-w-md">
+                <div class="mb-8 flex items-center justify-center gap-3 text-2xl font-semibold text-fg">
+                    {{ app_logo(showDefault: true, showOnlyAppIcon: true) }} {{ app_name }}
+                </div>
 
-                    {# Main Card #}
-                    <div class="card card-md">
-                        <div class="card-body">
-                            <h2 class="h2 text-center mb-4">
-                                {{ 'security.register.heading'|trans }}
-                            </h2>
-                            <p class="text-muted text-center mb-4">
-                                {{ 'security.register.subheading'|trans }}
-                            </p>
+                <div class="rounded-lg border border-line-light bg-surface p-8 shadow-sm">
+                    <h1 class="mb-2 text-center text-xl font-semibold text-fg">{{ 'security.register.heading'|trans }}</h1>
+                    <p class="mb-6 text-center text-fg-muted">{{ 'security.register.subheading'|trans }}</p>
 
-                            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                        {{ form_row(form.email) }}
 
-                            {# Email Field #}
-                            <div class="mb-3">
-                                {{ form_widget(form.email) }}
-                                {{ form_errors(form.email) }}
-                            </div>
-
-                            {# Password Field with Strength Indicator #}
-                            <div class="mb-3">
-
-                                <div class="input-group input-group-flat" {{ stimulus_controller('password-visibility', controllerClasses = { 'hidden': 'd-none' }) }}>
-                                    <div class="input-group-text">
-                                        {{ ux_icon('tabler:password', {width: 24, height: 24}) }}
-                                    </div>
-
-                                    {{ form_widget(form.plainPassword, {
-                                        'class': 'form-control',
-                                        'attr': {
-                                            'placeholder': 'security.register.placeholders.password'|trans,
-                                            'autocomplete': 'new-password',
-                                            'data-password-visibility-target': 'input',
-                                        }|merge(stimulus_target('password-visibility', 'input').toArray())
-                                    }) }}
-
-                                    <span class="input-group-text">
-                                        <a href="#" class="link-secondary" data-bs-toggle="tooltip" aria-label="{{ 'security.register.show_password'|trans }}" data-bs-original-title="{{ 'security.register.show_password'|trans }}" {{ stimulus_action('password-visibility', 'toggle') }}>
-                                            <span {{ stimulus_target('password-visibility', 'icon') }}>
-                                                {{ ux_icon('tabler:eye', {width: 24, height: 24}) }}
-                                            </span>
-                                            <span {{ stimulus_target('password-visibility', 'icon') }} class="d-none">
-                                                {{ ux_icon('tabler:eye-closed', {width: 24, height: 24}) }}
-                                            </span>
-                                        </a>
-                                    </span>
-                                    {{ form_errors(form.plainPassword) }}
-                                </div>
-                            </div>
-
-                            {# Terms & Conditions Checkbox #}
-                            <div class="mb-3">
-                                {{ form_widget(form.acceptTerms, {'attr': {'class': 'form-check-input'}}) }}
-                                {{ form_errors(form.acceptTerms) }}
-                            </div>
-
-                            {% toggle 'turnstile_captcha' %}
-                                <div class="mb-3">
-                                    <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
-                                    {{ form_errors(form.captcha) }}
-                                </div>
-                            {% endtoggle %}
-
-                            <div class="form-footer">
-                                <button type="submit" class="btn btn-primary btn-lg w-100">
-                                    {{ ux_icon('tabler:user-plus', {width: 24, height: 24}) }} {{ 'security.register.cta'|trans }}
+                        <div class="mb-4" {{ stimulus_controller('password-visibility', controllerClasses = {'hidden': 'hidden'}) }}>
+                            {{ form_label(form.plainPassword) }}
+                            <div class="relative">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-fg-muted">
+                                    {{ ux_icon('tabler:lock', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                                </span>
+                                {{ form_widget(form.plainPassword, {
+                                    'attr': {
+                                        'class': 'si-control pl-10 pr-10',
+                                        'placeholder': 'security.register.placeholders.password'|trans,
+                                        'autocomplete': 'new-password',
+                                        'data-password-visibility-target': 'input',
+                                    }|merge(stimulus_target('password-visibility', 'input').toArray())
+                                }) }}
+                                <button type="button" class="absolute inset-y-0 right-0 flex items-center rounded-md px-3.5 text-fg-muted transition-colors hover:text-fg" aria-label="{{ 'security.register.show_password'|trans }}" title="{{ 'security.register.show_password'|trans }}" {{ stimulus_action('password-visibility', 'toggle') }}>
+                                    <span {{ stimulus_target('password-visibility', 'icon') }}>{{ ux_icon('tabler:eye', {class: 'size-5', 'aria-hidden': 'true'}) }}</span>
+                                    <span {{ stimulus_target('password-visibility', 'icon') }} class="hidden">{{ ux_icon('tabler:eye-closed', {class: 'size-5', 'aria-hidden': 'true'}) }}</span>
                                 </button>
                             </div>
-
-                            {{ form_end(form) }}
-                            
-                            {% toggle 'google_oauth_login' %}
-                                <div class="hr-text">{{ 'or'|trans }}</div>
-                                <div class="row">
-                                    <div class="col">
-                                        <a href="{{ path('_oauth_connect', {'service': 'google' }) }}" class="btn btn-outline-secondary w-100">
-                                            {{ ux_icon('tabler:brand-google', {width: 24, height: 24}) }}
-                                            {{ 'security.register.links.google'|trans }}
-                                        </a>
-                                    </div>
-                                </div>
-                            {% endtoggle %}
+                            {{ form_errors(form.plainPassword) }}
                         </div>
-                    </div>
-                    
-                    <div class="text-center text-secondary mt-3">
-                        {{ "security.register.links.login"|trans }}
-                        <a href="{{ path('_login_main') }}" class="link-primary">
-                            {{ 'security.register.links.signin'|trans }}
-                        </a>
-                    </div>
+
+                        {{ form_row(form.acceptTerms) }}
+
+                        {% toggle 'turnstile_captcha' %}
+                            <div class="mb-4">
+                                <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+                                {{ form_errors(form.captcha) }}
+                            </div>
+                        {% endtoggle %}
+
+                        <twig:Si:Button type="submit" size="lg" class="w-full">
+                            {{ ux_icon('tabler:user-plus', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                            {{ 'security.register.cta'|trans }}
+                        </twig:Si:Button>
+                    {{ form_end(form) }}
+
+                    {% toggle 'google_oauth_login' %}
+                        <div class="my-5 flex items-center gap-3 text-sm text-fg-muted before:h-px before:flex-1 before:bg-line after:h-px after:flex-1 after:bg-line">{{ 'or'|trans }}</div>
+                        <twig:Si:Button variant="outline" size="lg" href="{{ path('_oauth_connect', {'service': 'google'}) }}" class="w-full">
+                            {{ ux_icon('tabler:brand-google', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                            {{ 'security.register.links.google'|trans }}
+                        </twig:Si:Button>
+                    {% endtoggle %}
                 </div>
+
+                <p class="mt-4 text-center text-fg-secondary">
+                    {{ "security.register.links.login"|trans }}
+                    <a href="{{ path('_login_main') }}" class="font-medium text-primary hover:underline">{{ 'security.register.links.signin'|trans }}</a>
+                </p>
             </div>
-            
-            <div class="col-lg-6 d-none d-lg-flex registration-features-side">
-                <div class="registration-features-content d-flex align-items-center">
-                    <div class="w-100 p-5">
-                        <h2 class="h1 text-white mb-4">
-                            {{ 'security.register.features.title'|trans }}
-                        </h2>
-                        <p class="text-white-50 fs-4 mb-5">
-                            {{ 'security.register.features.subtitle'|trans }}
-                        </p>
+        </div>
 
-                        <div class="row g-4">
-                            <div class="col-12">
-                                <div class="d-flex gap-3">
-                                    <div class="text-primary bg-white rounded p-2 align-self-center flex-shrink-0">
-                                        {{ ux_icon('tabler:file-invoice', {width: 32, height: 32}) }}
-                                    </div>
-                                    <div>
-                                        <h3 class="h4 text-white mb-2">{{ 'security.register.features.invoices.title'|trans }}</h3>
-                                        <p class="text-white-50">{{ 'security.register.features.invoices.description'|trans }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-12">
-                                <div class="d-flex gap-3">
-                                    <div class="text-primary bg-white rounded p-2 align-self-center flex-shrink-0">
-                                        {{ ux_icon('tabler:users', {width: 32, height: 32}) }}
-                                    </div>
-                                    <div>
-                                        <h3 class="h4 text-white mb-2">{{ 'security.register.features.clients.title'|trans }}</h3>
-                                        <p class="text-white-50">{{ 'security.register.features.clients.description'|trans }}</p>
-                                    </div>
-                                </div>
-                            </div>
+        {# RIGHT SIDE: product pitch #}
+        <div class="hidden items-center bg-ink-900 p-12 text-white lg:flex">
+            <div class="mx-auto w-full max-w-lg">
+                <h2 class="mb-3 text-3xl font-semibold tracking-tight">{{ 'security.register.features.title'|trans }}</h2>
+                <p class="mb-10 text-lg text-white/70">{{ 'security.register.features.subtitle'|trans }}</p>
 
-                            <div class="col-12">
-                                <div class="d-flex gap-3">
-                                    <div class="text-primary bg-white rounded p-2 align-self-center flex-shrink-0">
-                                        {{ ux_icon('tabler:credit-card', {width: 32, height: 32}) }}
-                                    </div>
-                                    <div>
-                                        <h3 class="h4 text-white mb-2">{{ 'security.register.features.payments.title'|trans }}</h3>
-                                        <p class="text-white-50">{{ 'security.register.features.payments.description'|trans }}</p>
-                                    </div>
-                                </div>
+                <ul class="space-y-6">
+                    {% for feature in features %}
+                        <li class="flex gap-4">
+                            <span class="flex size-12 shrink-0 items-center justify-center self-center rounded-lg bg-white text-primary">
+                                {{ ux_icon('tabler:' ~ feature.icon, {class: 'size-6', 'aria-hidden': 'true'}) }}
+                            </span>
+                            <div>
+                                <h3 class="mb-1 font-semibold">{{ ('security.register.features.' ~ feature.key ~ '.title')|trans }}</h3>
+                                <p class="text-white/70">{{ ('security.register.features.' ~ feature.key ~ '.description')|trans }}</p>
                             </div>
+                        </li>
+                    {% endfor %}
+                </ul>
 
-                            <div class="col-12">
-                                <div class="d-flex gap-3">
-                                    <div class="text-primary bg-white rounded p-2 align-self-center flex-shrink-0">
-                                        {{ ux_icon('tabler:receipt-tax', {width: 32, height: 32}) }}
-                                    </div>
-                                    <div>
-                                        <h3 class="h4 text-white mb-2">{{ 'security.register.features.tax.title'|trans }}</h3>
-                                        <p class="text-white-50">{{ 'security.register.features.tax.description'|trans }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-5 pt-4 border-top border-white-10">
-                            <div class="row g-3 align-items-center">
-                                <div class="col-auto">
-                                    <div class="d-flex gap-2 align-items-center">
-                                        {{ ux_icon('tabler:shield-check', {width: 24, height: 24, class: 'text-white'}) }}
-                                        <span class="text-white-50">{{ 'security.register.trust.encryption'|trans }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="d-flex gap-2 align-items-center">
-                                        {{ ux_icon('tabler:brand-github', {width: 24, height: 24, class: 'text-white'}) }}
-                                        <span class="text-white-50">{{ 'security.register.trust.opensource'|trans }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="d-flex gap-2 align-items-center">
-                                        {{ ux_icon('tabler:lock', {width: 24, height: 24, class: 'text-white'}) }}
-                                        <span class="text-white-50">{{ 'security.register.trust.control'|trans }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-6 text-sm text-white/70">
+                    {% for trust in [{icon: 'shield-check', key: 'encryption'}, {icon: 'brand-github', key: 'opensource'}, {icon: 'lock', key: 'control'}] %}
+                        <li class="flex items-center gap-2">
+                            {{ ux_icon('tabler:' ~ trust.icon, {class: 'size-5 text-white', 'aria-hidden': 'true'}) }}
+                            {{ ('security.register.trust.' ~ trust.key)|trans }}
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

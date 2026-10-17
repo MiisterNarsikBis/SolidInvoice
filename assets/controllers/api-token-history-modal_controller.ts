@@ -1,42 +1,36 @@
 import { Controller } from '@hotwired/stimulus';
-// Tabler's bundled Bootstrap types return BaseComponent from the static lookups, so the
-// instance has to be narrowed back to Modal at the call site.
-import { Modal } from '@tabler/core';
+import { closeModal, openModal } from '../lib/modal';
 
 /**
- * Manages the API token history modal display and URL parameter cleanup
+ * Shows the API token history dialog (a <twig:Si:Modal>) when the page was opened with a
+ * `view_history` token, and drops that query parameter again when it is closed.
  */
 export default class extends Controller<HTMLElement> {
-    private modalElement: HTMLElement | null = null;
-    private modalInstance: Modal | null = null;
+    private dialog: HTMLDialogElement | null = null;
 
     connect(): void {
-        // Find the modal element within our wrapper
-        this.modalElement = this.element.querySelector('.modal');
+        // The dialog is only rendered when there is a token to show.
+        this.dialog = this.element.querySelector('dialog');
 
-        if (this.modalElement) {
-            // Only show modal if it has actual content (not just loading spinner)
-            const hasContent = this.modalElement.querySelector('.modal-header');
-
-            if (hasContent) {
-                // Create Bootstrap modal instance and show it
-                this.modalInstance = Modal.getOrCreateInstance(this.modalElement) as Modal;
-                this.modalInstance.show();
-
-                // Remove view_history parameter when modal is hidden
-                this.modalElement.addEventListener('hidden.bs.modal', () => {
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete('view_history');
-                    window.location.href = url.toString();
-                });
-            }
+        if (!this.dialog) {
+            return;
         }
+
+        this.element.addEventListener('si-modal:hidden', this.onHidden);
+        openModal(this.dialog);
     }
 
     disconnect(): void {
-        // Clean up modal instance
-        if (this.modalInstance) {
-            this.modalInstance.dispose();
+        this.element.removeEventListener('si-modal:hidden', this.onHidden);
+
+        if (this.dialog) {
+            closeModal(this.dialog);
         }
     }
+
+    private onHidden = (): void => {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('view_history');
+        window.location.href = url.toString();
+    };
 }

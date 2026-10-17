@@ -98,7 +98,7 @@ final class ResetPasswordTest extends WebTestCase
             ->assertRedirectedTo('/login')
             ->followRedirect()
             ->assertOn('/login')
-            ->assertSeeIn('.alert-success', 'Your password has been changed successfully. You can now log in.')
+            ->assertSeeIn('[data-flash="success"]', 'Your password has been changed successfully. You can now log in.')
         ;
 
         $user = $this->userRepository->findOneBy(['email' => 'me@example.com']);

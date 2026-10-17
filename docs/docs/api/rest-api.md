@@ -14,7 +14,7 @@ Prefer a flexible query language over fixed endpoints? See the [GraphQL API](./g
 
 ## Creating an API token
 
-Sign in to SolidInvoice and open `Settings` → `API Keys` (or visit `/profile/api` directly). Click the green `+ Create Token` button at the top right of the list.
+Sign in to SolidInvoice and open `Settings` → `API Keys` (or visit `/profile/api` directly). Click the blue `+ Create Token` button at the top right of the list.
 
 ![The API Tokens page with the stats row, info banner, Create Token button, and one existing token](/img/api/api-tokens-page.png)
 

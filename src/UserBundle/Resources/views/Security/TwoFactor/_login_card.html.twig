@@ -1,0 +1,88 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    The two-factor login card shared by the TOTP and e-mail providers. Embed it and fill:
+
+        hint        the helper line under the code input
+        after_form  anything between the form and the alternative methods (the e-mail resend link)
+
+    Variables: icon, title, description, success (bool, green icon). The remaining variables
+    (authenticationError, checkPathUrl, ...) come from the Scheb two-factor bundle.
+#}
+<div class="rounded-lg border border-line-light bg-surface p-8 shadow-sm">
+    <span class="mx-auto mb-5 flex size-16 items-center justify-center rounded-full {{ success|default(false) ? 'bg-success-light text-success-dark' : 'bg-primary-light text-primary' }}">
+        {{ ux_icon('tabler:' ~ icon, {class: 'size-8', 'aria-hidden': 'true'}) }}
+    </span>
+
+    <h2 class="mb-2 text-center text-xl font-semibold text-fg">{{ title|trans }}</h2>
+    <p class="mb-6 text-center text-fg-muted">{{ description|trans }}</p>
+
+    {% if authenticationError %}
+        <twig:Si:Alert type="danger" class="mb-5">{{ authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') }}</twig:Si:Alert>
+    {% endif %}
+
+    <form action="{{ checkPathUrl ?: path(checkPathRoute) }}" method="post">
+        <div class="mb-4">
+            <label for="two_factor_code" class="sr-only">{{ 'security.two_factor.verification_code'|trans }}</label>
+            <input
+                id="two_factor_code"
+                name="{{ authCodeParameterName }}"
+                type="text"
+                class="si-control h-14 text-center font-mono text-2xl tracking-[0.5em]"
+                maxlength="6"
+                pattern="[0-9]*"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                placeholder="{{ 'security.two_factor.code_placeholder'|trans }}"
+                autofocus
+                aria-label="{{ 'security.two_factor.code_aria_label'|trans }}"
+            />
+            <p class="mt-2 text-center text-sm text-fg-muted">{% block hint %}{% endblock hint %}</p>
+        </div>
+
+        {% if isCsrfProtectionEnabled %}
+            <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}" />
+        {% endif %}
+
+        {% if displayTrustedOption %}
+            <label for="_trusted" class="mb-4 flex cursor-pointer items-center gap-2 text-sm text-fg-secondary">
+                <input id="_trusted" type="checkbox" name="{{ trustedParameterName }}" class="si-check" />
+                {{ ux_icon('tabler:device-check', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                {{ 'security.two_factor.trust_device'|trans }}
+            </label>
+        {% endif %}
+
+        <twig:Si:Button type="submit" size="lg" class="w-full">
+            {{ ux_icon('tabler:lock-open', {class: 'size-5', 'aria-hidden': 'true'}) }}
+            {{ 'security.two_factor.verify_continue'|trans }}
+        </twig:Si:Button>
+    </form>
+
+    {% block after_form %}{% endblock after_form %}
+
+    {% if availableTwoFactorProviders|length > 1 %}
+        <div class="mt-6 border-t border-line-light pt-5 text-center">
+            <p class="mb-3 text-sm text-fg-muted">{{ 'security.two_factor.try_another_method'|trans }}</p>
+            <div class="flex flex-wrap justify-center gap-2">
+                {% for provider in availableTwoFactorProviders|filter(v => v != twoFactorProvider) %}
+                    <twig:Si:Button variant="outline" href="{{ path('2fa_login', {'preferProvider': provider}) }}">
+                        {{ ux_icon(provider == 'totp' ? 'tabler:device-mobile' : (provider == 'email' ? 'tabler:mail' : 'tabler:shield-lock'), {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                        {{ ('Use ' ~ provider)|trans }}
+                    </twig:Si:Button>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<p class="mt-4 flex items-center justify-center gap-1.5 text-sm text-fg-muted">
+    {{ ux_icon('tabler:info-circle', {class: 'size-4', 'aria-hidden': 'true'}) }}
+    <span>{{ 'security.two_factor.security_notice'|trans }}</span>
+</p>

@@ -1,0 +1,63 @@
+{#
+    One setting: an icon, what it is, what it currently says, and the buttons that change it. The
+    Tailwind counterpart of Platform's <twig:Ui:SettingRow>, with the same props.
+
+        <twig:Si:SettingRow
+            icon="tabler:lock"
+            title="{{ 'Password'|trans }}"
+            description="{{ 'Change the password you sign in with'|trans }}"
+            status="{{ 'Enabled'|trans }}" statusColor="success" statusIcon="tabler:check"
+        >
+            <twig:Si:Button variant="outline" size="sm" href="...">{{ 'Change'|trans }}</twig:Si:Button>
+        </twig:Si:SettingRow>
+
+    Rows are meant to sit in a `divide-y divide-line-light` list inside a card. Everything passed in
+    is already translated. `iconColor` and `statusColor` are neutral | primary | success | danger |
+    warning | info (Platform's `secondary` maps to neutral).
+#}
+{% props title = '', description = '', icon = '', iconColor = 'primary', status = '', statusColor = 'neutral', statusIcon = '', note = '', noteIcon = '' %}
+
+{%- set tints = {
+    primary: 'bg-primary-light text-primary-dark',
+    success: 'bg-success-light text-success-dark',
+    danger: 'bg-danger-light text-danger-dark',
+    warning: 'bg-warning-light text-warning-dark',
+    info: 'bg-info-light text-info-dark',
+    neutral: 'bg-ink-100 text-fg-secondary',
+    secondary: 'bg-ink-100 text-fg-secondary',
+} -%}
+{%- set actions = block('content') is defined ? block('content')|trim : '' -%}
+
+<div {{ attributes.defaults({class: 'flex flex-wrap items-center gap-4 px-5 py-4'}) }}>
+    {% if icon is not empty %}
+        <span class="flex size-9 shrink-0 items-center justify-center rounded-md {{ tints[iconColor]|default(tints.primary) }}">
+            {{ ux_icon(icon, {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+        </span>
+    {% endif %}
+
+    <div class="min-w-0 flex-1">
+        {% if title is not empty %}<div class="font-medium text-fg">{{ title }}</div>{% endif %}
+        {% if description is not empty %}<div class="text-fg-secondary">{{ description }}</div>{% endif %}
+
+        {% if status is not empty %}
+            <div class="mt-2">
+                <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold {{ tints[statusColor]|default(tints.neutral) }}">
+                    {% if statusIcon is not empty %}{{ ux_icon(statusIcon, {class: 'size-3.5', 'aria-hidden': 'true'}) }}{% endif %}
+                    {{ status }}
+                </span>
+            </div>
+        {% endif %}
+
+        {% if note is not empty %}
+            <div class="mt-2 flex items-center gap-1 text-sm text-fg-muted">
+                {% if noteIcon is not empty %}{{ ux_icon(noteIcon, {class: 'size-3.5', 'aria-hidden': 'true'}) }}{% endif %}
+                {{ note }}
+            </div>
+        {% endif %}
+    </div>
+
+    {# The actions wrap onto their own line below the description on narrow screens. #}
+    {% if actions is not empty %}
+        <div class="flex w-full flex-wrap items-center justify-end gap-2 sm:ml-auto sm:w-auto">{{ actions|raw }}</div>
+    {% endif %}
+</div>

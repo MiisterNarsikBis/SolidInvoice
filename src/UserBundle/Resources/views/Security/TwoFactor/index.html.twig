@@ -1,36 +1,20 @@
 {#
-# This file is part of SolidInvoice package.
-#
-# (c) Pierre du Plessis <open-source@solidworx.co>
-#
-# This source file is subject to the MIT license that is bundled
-# with this source code in the file LICENSE.
-#}
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
 
 {% set menuItem = '2fa' %}
 
 {% extends "@SolidInvoiceUser/Layout/profile.html.twig" %}
 
-{% block title %}{{ ux_icon('tabler:shield-check', {width: 24, height: 24, class: 'me-2'}) }}{{ 'security.two_factor.title'|trans }}{% endblock title %}
+{% block title %}{{ 'security.two_factor.title'|trans }}{% endblock title %}
 
 {% block profile_content %}
-    <div class="form-page">
-        <div class="form-page-container form-page-container--narrow">
-            {# Page Header #}
-            <div class="form-page-header">
-                <div class="form-page-header-content">
-                    <div class="form-page-icon form-page-icon--security">
-                        {{ ux_icon('tabler:shield-lock', {width: 28, height: 28}) }}
-                    </div>
-                    <div>
-                        <h1 class="form-page-title">{{ 'security.two_factor.title'|trans }}</h1>
-                        <p class="form-page-subtitle">{{ 'security.two_factor.subtitle'|trans }}</p>
-                    </div>
-                </div>
-            </div>
+    <p class="-mt-2 mb-4 text-fg-muted">{{ 'security.two_factor.subtitle'|trans }}</p>
 
-            {# New LiveComponent #}
-            <twig:User:TwoFactorSettings />
-        </div>
-    </div>
+    <twig:User:TwoFactorSettings />
 {% endblock profile_content %}

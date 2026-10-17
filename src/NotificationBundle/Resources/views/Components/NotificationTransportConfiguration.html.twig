@@ -1,122 +1,95 @@
 {#
-# This file is part of SolidInvoice package.
-#
-# (c) Pierre du Plessis <open-source@solidworx.co>
-#
-# This source file is subject to the MIT license that is bundled
-# with this source code in the file LICENSE.
-#}
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{# The configuration form shown inside the marketplace dialog. #}
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
 
 <div {{ attributes }}>
-    <twig:Ui:Card>
-        <twig:block name="header">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <h3 class="card-title mb-1 d-flex align-items-center gap-2">
-                        {{ ux_icon('tabler:bell-ringing', {width: 20, height: 20, class: 'text-primary'}) }}
-                        {% if not isNewSetting %}
-                            {{ transportSetting.name }}
-                        {% else %}
-                            {{ 'notification.integration.add'|trans({'%type%': notificationType}) }}
-                        {% endif %}
-                    </h3>
-                    <p class="text-muted small mb-0">
-                        {{ 'notification.integration.configure_credentials'|trans }}
-                    </p>
-                </div>
-                <a href="{{ path('_notification_integration') }}"
-                   class="btn btn-ghost btn-icon"
-                   aria-label="{{ 'action.close'|trans }}">
-                    {{ ux_icon('tabler:x', {width: 20, height: 20}) }}
-                </a>
-            </div>
-        </twig:block>
-
-        {{ form_start(form, {
-            attr: {
-                'data-action': 'live#action:prevent',
-                'data-live-action-param': 'save'
-            }
-        }) }}
-            <div class="mb-4">
-                {{ form_widget(form) }}
-            </div>
-        {{ form_end(form) }}
-
-        <twig:block name="footer">
-            <div class="d-flex justify-content-between align-items-center gap-3">
+    <div class="mb-4 flex items-start justify-between gap-3">
+        <div>
+            <h3 class="flex items-center gap-2 text-lg font-semibold text-fg">
+                {{ ux_icon('tabler:bell-ringing', {class: 'size-5 text-primary', 'aria-hidden': 'true'}) }}
                 {% if not isNewSetting %}
-                    <button type="button"
-                            class="btn btn-outline-danger"
-                            data-action="live#action"
-                            data-live-action-param="showDeleteConfirmation"
-                            aria-label="{{ 'notification.integration.delete'|trans }}">
-                        {{ ux_icon('tabler:trash', {width: 18, height: 18}) }}
-                        {{ 'action.delete'|trans }}
-                    </button>
+                    {{ transportSetting.name }}
                 {% else %}
-                    <a href="{{ path('_notification_integration') }}"
-                       class="btn btn-ghost">
-                        {{ ux_icon('tabler:x', {width: 18, height: 18}) }}
-                        {{ 'action.cancel'|trans }}
-                    </a>
+                    {{ 'notification.integration.add'|trans({'%type%': notificationType}) }}
                 {% endif %}
-                <button type="submit"
-                        class="btn btn-primary btn-save"
-                        data-action="live#action"
-                        data-live-action-param="save"
-                        data-loading="addAttribute(disabled)"
-                        aria-label="{{ 'notification.integration.save'|trans }}">
-                    {{ ux_icon('tabler:device-floppy', {width: 18, height: 18}) }}
-                    {{ 'notification.integration.save_button'|trans }}
-                </button>
-            </div>
-        </twig:block>
-    </twig:Ui:Card>
-
-    {# Delete Confirmation Nested Modal #}
-    {% if showDeleteConfirmation %}
-        <div class="delete-confirmation-backdrop"
-             role="presentation"
-             aria-hidden="true"
-             data-action="click->live#action"
-             data-live-action-param="cancelDelete">
+            </h3>
+            <p class="mt-0.5 text-sm text-fg-muted">{{ 'notification.integration.configure_credentials'|trans }}</p>
         </div>
-        <div class="delete-confirmation-modal"
-             role="dialog"
-             aria-modal="true"
-             aria-labelledby="delete-modal-title">
-            <div class="delete-confirmation-container">
-                <div class="delete-confirmation-header">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="delete-icon-wrapper">
-                            {{ ux_icon('tabler:alert-triangle', {width: 24, height: 24, class: 'text-danger'}) }}
-                        </div>
-                        <div>
-                            <h4 id="delete-modal-title" class="mb-1">{{ 'notification.integration.delete_title'|trans }}</h4>
-                            <p class="text-muted small mb-0">{{ 'notification.integration.delete_undone'|trans }}</p>
-                        </div>
+    </div>
+
+    {{ form_start(form, {
+        attr: {
+            'data-action': 'live#action:prevent',
+            'data-live-action-param': 'save'
+        }
+    }) }}
+        <div class="mb-4">
+            {{ form_widget(form) }}
+        </div>
+    {{ form_end(form) }}
+
+    <div class="flex items-center justify-between gap-3 border-t border-line-light pt-4">
+        {% if not isNewSetting %}
+            <button
+                type="button"
+                class="si-btn si-btn--md si-btn--danger-ghost"
+                data-action="live#action"
+                data-live-action-param="showDeleteConfirmation"
+                aria-label="{{ 'notification.integration.delete'|trans }}"
+            >
+                {{ ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                {{ 'action.delete'|trans }}
+            </button>
+        {% else %}
+            <a href="{{ path('_notification_integration') }}" class="si-btn si-btn--md si-btn--ghost">
+                {{ ux_icon('tabler:x', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                {{ 'action.cancel'|trans }}
+            </a>
+        {% endif %}
+        <button
+            type="submit"
+            class="si-btn si-btn--md si-btn--primary"
+            data-action="live#action"
+            data-live-action-param="save"
+            data-loading="addAttribute(disabled)"
+            aria-label="{{ 'notification.integration.save'|trans }}"
+        >
+            {{ ux_icon('tabler:device-floppy', {class: 'size-4', 'aria-hidden': 'true'}) }}
+            {{ 'notification.integration.save_button'|trans }}
+        </button>
+    </div>
+
+    {# Delete confirmation, stacked above the configuration dialog while `showDeleteConfirmation` is set #}
+    {% if showDeleteConfirmation %}
+        <div class="fixed inset-0 z-[60] bg-ink-900/55" role="presentation" aria-hidden="true" data-action="click->live#action" data-live-action-param="cancelDelete"></div>
+        <div class="pointer-events-none fixed inset-0 z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+            <div class="pointer-events-auto w-full max-w-md overflow-hidden rounded-xl bg-surface shadow-lg">
+                <div class="h-1 bg-danger" aria-hidden="true"></div>
+                <div class="flex items-start gap-3 px-5 pt-5">
+                    <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-danger-light text-danger-dark">
+                        {{ ux_icon('tabler:alert-triangle', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                    </span>
+                    <div>
+                        <h4 id="delete-modal-title" class="text-lg font-semibold text-fg">{{ 'notification.integration.delete_title'|trans }}</h4>
+                        <p class="text-sm text-fg-muted">{{ 'notification.integration.delete_undone'|trans }}</p>
                     </div>
                 </div>
-                <div class="delete-confirmation-body">
-                    <p class="mb-0">
-                        {{ 'notification.integration.delete_confirm'|trans }} <strong>{{ transportSetting.name }}</strong>?
-                        {{ 'notification.integration.delete_warning'|trans }}
-                    </p>
-                </div>
-                <div class="delete-confirmation-footer">
-                    <button type="button"
-                            class="btn btn-ghost"
-                            data-action="live#action"
-                            data-live-action-param="cancelDelete">
-                        {{ 'action.cancel'|trans }}
-                    </button>
-                    <button type="button"
-                            class="btn btn-danger"
-                            data-action="live#action"
-                            data-live-action-param="confirmDelete"
-                            data-loading="addAttribute(disabled)">
-                        {{ ux_icon('tabler:trash', {width: 16, height: 16}) }}
+                <p class="px-5 py-4 text-fg-secondary">
+                    {{ 'notification.integration.delete_confirm'|trans }} <strong class="text-fg">{{ transportSetting.name }}</strong>?
+                    {{ 'notification.integration.delete_warning'|trans }}
+                </p>
+                <div class="flex justify-end gap-2 border-t border-line-light px-5 py-3">
+                    <button type="button" class="si-btn si-btn--md si-btn--ghost" data-action="live#action" data-live-action-param="cancelDelete">{{ 'action.cancel'|trans }}</button>
+                    <button type="button" class="si-btn si-btn--md si-btn--danger" data-action="live#action" data-live-action-param="confirmDelete" data-loading="addAttribute(disabled)">
+                        {{ ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'}) }}
                         {{ 'notification.integration.delete_title'|trans }}
                     </button>
                 </div>

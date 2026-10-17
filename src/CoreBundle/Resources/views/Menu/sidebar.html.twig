@@ -1,0 +1,79 @@
+{#
+# This file is part of SolidInvoice package.
+#
+# (c) Pierre du Plessis <open-source@solidworx.co>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+#}
+
+{#
+    The sidebar menu of the Tailwind shell, as a KnpMenu template:
+
+        {{ render_menu('sidebar', {template: '@SolidInvoiceCore/Menu/sidebar.html.twig'}) }}
+
+    Groups (items with children) are native <details> elements, so they open and close without
+    any JavaScript and stay open on the active route. Only `icon` is read from the item extras
+    (every sidebar builder sets nothing else). Labels go through `block('label')` exactly as
+    Platform's own menu template does, so translation and `safe_label` behave the same.
+
+    Every Tailwind class below is written out in full so the Tailwind scanner can see it.
+#}
+
+{% extends 'knp_menu.html.twig' %}
+
+{% block list %}
+    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+        {% if item.level == 0 %}
+            <ul class="space-y-0.5 px-2 py-2">
+                {{ block('children') }}
+            </ul>
+        {% else %}
+            <ul class="mb-1 ml-5 mt-0.5 space-y-0.5 border-l border-line pl-2">
+                {{ block('children') }}
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block item %}
+    {% if item.displayed %}
+        {%- set current = matcher.isCurrent(item) -%}
+        {%- set expanded = current or matcher.isAncestor(item, options.matchingDepth) -%}
+        {%- set isGroup = item.hasChildren and options.depth is not same as(0) and item.displayChildren -%}
+        {%- set iconName = item.extras.icon is defined ? 'tabler:' ~ item.extras.icon : null -%}
+
+        <li>
+            {% if isGroup %}
+                <details class="group/menu"{{ expanded ? ' open' }}>
+                    <summary class="flex cursor-pointer list-none items-center gap-2 rounded-md px-2.5 py-2 text-base font-medium transition-colors hover:bg-surface-hover hover:text-fg {{ expanded ? 'text-fg' : 'text-fg-secondary' }} [&::-webkit-details-marker]:hidden">
+                        {% if iconName %}{{ ux_icon(iconName, {class: 'size-[1.125rem] shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}{% endif %}
+                        <span class="flex-1">{{ block('label') }}</span>
+                        {{ ux_icon('tabler:chevron-down', {class: 'size-4 shrink-0 text-fg-muted transition-transform group-open/menu:rotate-180', 'aria-hidden': 'true'}) }}
+                    </summary>
+                    {{ block('list') }}
+                </details>
+            {% elseif item.uri is not empty %}
+                <a
+                    href="{{ item.uri }}"
+                    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-base transition-colors {{ current ? 'bg-primary-lighter font-semibold text-primary-dark' : 'font-medium text-fg-secondary hover:bg-surface-hover hover:text-fg' }}"
+                    {% if current %}aria-current="page"{% endif %}
+                >
+                    {% if iconName %}{{ ux_icon(iconName, {class: 'size-[1.125rem] shrink-0 ' ~ (current ? 'text-primary-dark' : 'text-fg-muted'), 'aria-hidden': 'true'}) }}{% endif %}
+                    <span>{{ block('label') }}</span>
+                </a>
+            {% else %}
+                <span class="flex items-center gap-2 px-2.5 py-2 text-base text-fg-muted">{{ block('label') }}</span>
+            {% endif %}
+        </li>
+    {% endif %}
+{% endblock %}
+
+{# Labels are translation keys (`menu.top.*`); same behaviour as Platform's own menu template. #}
+{% block label %}
+    {% if options.allow_safe_labels and item.getExtra('safe_label', false) %}
+        {{ item.label|trans|raw }}
+    {% else %}
+        {{ item.label|trans }}
+    {% endif %}
+{% endblock %}

@@ -6,7 +6,7 @@ sidebar_position: 3
 
 # Managing the schedule
 
-Once a recurring invoice exists, you control its lifecycle from the view page — the green button at the top right is the primary action, and the `⋮` `More Actions` dropdown next to it holds the rest.
+Once a recurring invoice exists, you control its lifecycle from the view page — the blue primary button at the top right is the main action, and the `⋮` `More Actions` dropdown next to it holds the rest.
 
 ![A recurring invoice's view page with the actions dropdown open](/img/recurring-invoices/recurring-invoice-actions-menu.png)
 
@@ -23,7 +23,7 @@ A recurring invoice moves through these states:
 
 ## Activate a draft
 
-A draft recurring invoice has a green `Activate` button at the top right. Click it to move the recurring invoice from `Draft` to `Active`. The scheduler picks it up on its next run.
+A draft recurring invoice has a blue `Activate` button at the top right. Click it to move the recurring invoice from `Draft` to `Active`. The scheduler picks it up on its next run.
 
 ## Pause and resume
 
@@ -31,7 +31,7 @@ While a recurring invoice is `Active`, the `More Actions` dropdown includes a `P
 
 ![A paused recurring invoice with the Resume button](/img/recurring-invoices/recurring-invoice-paused.png)
 
-While the recurring invoice is `Paused`, the green button at the top right changes to `Resume`. Clicking it puts the schedule back in `Active`. Generation picks up from the next matching date — there's no catch-up for missed dates while paused.
+While the recurring invoice is `Paused`, the primary button at the top right changes to `Resume`. Clicking it puts the schedule back in `Active`. Generation picks up from the next matching date — there's no catch-up for missed dates while paused.
 
 ## Cancel
 

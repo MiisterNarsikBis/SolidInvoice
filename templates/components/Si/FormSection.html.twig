@@ -1,0 +1,29 @@
+{#
+    A titled section of a form page: a card with an icon, a heading, an optional description and
+    the fields in the body. The Tailwind counterpart of the `form-page-section` markup.
+
+        <twig:Si:FormSection title="{{ 'tax.rates.details'|trans }}" description="{{ 'tax.rates.form.description'|trans }}" icon="tabler:settings">
+            <div class="grid gap-x-4 sm:grid-cols-2">
+                <div class="sm:col-span-2">{{ form_row(form.name) }}</div>
+                <div>{{ form_row(form.rate) }}</div>
+            </div>
+        </twig:Si:FormSection>
+
+    Everything passed in is already translated.
+#}
+{% props title, description = null, icon = null, id = null %}
+
+<section {{ attributes.defaults({class: 'rounded-lg border border-line-light bg-surface shadow-sm'}) }}{% if id %} id="{{ id }}"{% endif %}>
+    <header class="flex items-start gap-3 border-b border-line-light px-5 py-4">
+        {% if icon %}
+            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-lighter text-primary-dark">
+                {{ ux_icon(icon, {class: 'size-5', 'aria-hidden': 'true'}) }}
+            </span>
+        {% endif %}
+        <div class="min-w-0">
+            <h2 class="text-lg font-semibold text-fg">{{ title }}</h2>
+            {% if description %}<p class="text-sm text-fg-muted">{{ description }}</p>{% endif %}
+        </div>
+    </header>
+    <div class="p-5">{% block content %}{% endblock %}</div>
+</section>

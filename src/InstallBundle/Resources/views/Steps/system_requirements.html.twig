@@ -1,322 +1,149 @@
 {% from _self import requirementCheck %}
 
 {% macro requirementCheck(requirement) %}
-    <div class="d-flex align-items-start gap-3 py-3 border-bottom">
-        <div class="flex-shrink-0">
+    <div class="flex items-start gap-3 border-b border-line-light py-3 last:border-b-0">
+        <span class="shrink-0">
             {% if requirement.fulfilled %}
-                <span class="badge bg-success-subtle text-success rounded-circle p-1">
-                    {{ ux_icon('tabler:check', {width: 20, height: 20}) }}
-                </span>
+                <span class="flex size-7 items-center justify-center rounded-full bg-success-light text-success-dark">{{ ux_icon('tabler:check', {class: 'size-4', 'aria-hidden': 'true'}) }}</span>
             {% elseif not requirement.optional %}
-                <span class="badge bg-danger-subtle text-danger rounded-circle p-1">
-                    {{ ux_icon('tabler:x', {width: 20, height: 20}) }}
-                </span>
+                <span class="flex size-7 items-center justify-center rounded-full bg-danger-light text-danger-dark">{{ ux_icon('tabler:x', {class: 'size-4', 'aria-hidden': 'true'}) }}</span>
             {% else %}
-                <span class="badge bg-warning-subtle text-warning rounded-circle p-1">
-                    {{ ux_icon('tabler:alert-circle', {width: 20, height: 20}) }}
-                </span>
+                <span class="flex size-7 items-center justify-center rounded-full bg-warning-light text-warning-dark">{{ ux_icon('tabler:alert-circle', {class: 'size-4', 'aria-hidden': 'true'}) }}</span>
             {% endif %}
-        </div>
-        <div class="flex-grow-1">
-            <div class="fw-semibold mb-1" style="overflow-wrap: anywhere;">{{ requirement.testMessage }}</div>
+        </span>
+        <div class="min-w-0 flex-1">
+            <div class="font-medium text-fg [overflow-wrap:anywhere]">{{ requirement.testMessage }}</div>
             {% if not requirement.fulfilled %}
-                <div class="text-muted small">{{ requirement.helpHtml|raw }}</div>
+                <div class="text-sm text-fg-muted">{{ requirement.helpHtml|raw }}</div>
             {% endif %}
         </div>
-        <div class="flex-shrink-0">
+        <span class="shrink-0">
             {% if requirement.fulfilled %}
-                <span class="badge bg-success-lt">{{ 'installation.requirements_page.status.passed'|trans }}</span>
+                <twig:Si:Badge tone="success">{{ 'installation.requirements_page.status.passed'|trans }}</twig:Si:Badge>
+            {% elseif requirement.optional %}
+                <twig:Si:Badge tone="warning">{{ 'installation.requirements_page.status.warning'|trans }}</twig:Si:Badge>
             {% else %}
-                <span class="badge bg-{{ requirement.optional ? 'warning' : 'danger' }}-lt">{{ requirement.optional ? 'installation.requirements_page.status.warning'|trans : 'installation.requirements_page.status.failed'|trans }}</span>
+                <twig:Si:Badge tone="danger">{{ 'installation.requirements_page.status.failed'|trans }}</twig:Si:Badge>
             {% endif %}
-        </div>
+        </span>
     </div>
 {% endmacro %}
 
 {% set progress = (((form.vars.cursor.steps|filter(v => v is same as(form.vars.cursor.currentStep))|keys|first+1)/form.vars.cursor.steps|length)*100)|round %}
+{% set failed = computed.appRequirements.failedRequirements|length > 0 %}
+{# Inside a component slot `this` and `computed` are the slot's component, so what is needed from them is captured here. #}
+{% set requirements = computed.appRequirements %}
+{% set info = this %}
 
-<div class="progress progress-sm card-progress">
-    <div class="progress-bar bg-primary" style="width: {{ progress }}%" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
-        <span class="visually-hidden">{{ 'installation.progress_complete'|trans({'%progress%': progress}) }}</span>
-    </div>
-</div>
+{% include '@SolidInvoiceInstall/Steps/_sidebar.html.twig' %}
 
-<div class="col-4 bg-light rounded-start p-4">
-    <div class="d-flex flex-column h-100">
-        <div class="flex-grow-1">
-            <h2 class="card-title pb-3">
-                {{ app_logo(showDefault: true) }}
-                {{ app_name }} {{ 'installation.label'|trans }}
-            </h2>
-            <div class="vstack gap-4 my-4">
-                {% for step in form.vars.visible_steps|filter(v => v.name != 'start') %}
-                    <div class="d-flex gap-2 align-items-center {{ step.index > form.vars.cursor.stepIndex ? 'text-muted' }}">
-                        <span class="align-self-start">
-                            {% if step.is_current_step %}
-                                <span class="text-warning">
-                                    {{ ux_icon('tabler:circle-dot', {width: 32, height: 32}) }}
-                                </span>
-                            {% elseif step.index > form.vars.cursor.stepIndex %}
-                                {{ ux_icon('tabler:circle-dashed', {width: 32, height: 32}) }}
-                            {% else %}
-                                <span class="text-primary">
-                                    {{ ux_icon('tabler:circle-check', {width: 32, height: 32}) }}
-                                </span>
-                            {% endif %}
-                        </span>
-                        <div class="d-flex flex-column">
-                            <strong>{{ step.name|u.replace('_', ' ').title(allWords: true) }}</strong>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+<div class="min-w-0 flex-1">
+    <div class="h-1 bg-ink-100" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+        <div class="h-full bg-primary" style="width: {{ progress }}%"></div>
+        <span class="sr-only">{{ 'installation.progress_complete'|trans({'%progress%': progress}) }}</span>
     </div>
-</div>
-<div class="col-8">
+
     {% set current_step = form.vars.cursor.currentStep %}
-    {% set current_step_block_name = 'installation_' ~ current_step ~ '_step' %}
 
-    <div class="card-body p-4 px-5 d-flex flex-column h-100">
-        <div class="flex-grow-1" style="min-height: 410px">
-            <h4 class="card-title">{{ field_label(form[current_step]) }}</h4>
-            <p class="card-text text-muted mb-4">{{ field_help(form[current_step]) }}</p>
+    <div class="flex h-full flex-col p-6 lg:px-10 lg:py-8">
+        <div class="min-h-[26rem] flex-1">
+            <h4 class="text-xl font-semibold text-fg">{{ field_label(form[current_step]) }}</h4>
+            <p class="mb-4 text-fg-muted">{{ field_help(form[current_step]) }}</p>
 
-            <hr class="border-secondary-subtle">
+            <hr class="mb-6 border-line-light">
 
-            {% if computed.appRequirements.failedRequirements|length > 0 %}
-                <div class="alert alert-danger d-flex align-items-center gap-3 mb-4">
-                    <div class="flex-shrink-0">
-                        {{ ux_icon('tabler:alert-triangle', {width: 24, height: 24}) }}
-                    </div>
-                    <div>
-                        <strong class="d-block mb-1">{{ 'installation.requirements.not_met'|trans }}</strong>
-                        <span>{{ 'installation.requirements.message'|trans }}</span>
-                    </div>
-                </div>
+            {% if failed %}
+                <twig:Si:Alert type="danger" class="mb-6" data-requirements-alert="danger">
+                    <strong class="block">{{ 'installation.requirements.not_met'|trans }}</strong>
+                    {{ 'installation.requirements.message'|trans }}
+                </twig:Si:Alert>
             {% else %}
-                <div class="alert alert-success d-flex align-items-center gap-3 mb-4">
-                    <div class="flex-shrink-0">
-                        {{ ux_icon('tabler:check', {width: 24, height: 24}) }}
-                    </div>
-                    <div>
-                        <strong class="d-block mb-1">
-                            {{ 'installation.requirements.all_met'|trans }}
-                        </strong>
-                        <span>
-                            {{ 'installation.requirements.all_met_message'|trans }}
-                        </span>
-                    </div>
-                </div>
+                <twig:Si:Alert type="success" class="mb-6">
+                    <strong class="block">{{ 'installation.requirements.all_met'|trans }}</strong>
+                    {{ 'installation.requirements.all_met_message'|trans }}
+                </twig:Si:Alert>
             {% endif %}
 
-            <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                    <div class="card border-primary">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <div class="text-muted small text-uppercase mb-1">{{ 'installation.requirements_page.required'|trans }}</div>
-                                    <div class="h3 mb-0">
-                                        {{ computed.appRequirements.requirements|filter(r => r.fulfilled)|length }} / {{ computed.appRequirements.requirements|length }}
-                                    </div>
-                                </div>
-                                <div class="text-primary">
-                                    {{ ux_icon('tabler:shield-check', {width: 40, height: 40}) }}
-                                </div>
-                            </div>
-                        </div>
+            <div class="mb-6 grid gap-4 md:grid-cols-2">
+                <div class="flex items-center justify-between rounded-lg border border-primary/40 bg-surface p-4">
+                    <div>
+                        <div class="text-xs font-semibold tracking-wide text-fg-muted uppercase">{{ 'installation.requirements_page.required'|trans }}</div>
+                        <div class="tabular text-2xl font-semibold text-fg">{{ requirements.requirements|filter(r => r.fulfilled)|length }} / {{ requirements.requirements|length }}</div>
                     </div>
+                    <span class="text-primary">{{ ux_icon('tabler:shield-check', {class: 'size-10', 'aria-hidden': 'true'}) }}</span>
                 </div>
-                <div class="col-md-6">
-                    <div class="card border-info">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <div class="text-muted small text-uppercase mb-1">{{ 'installation.requirements_page.recommended'|trans }}</div>
-                                    <div class="h3 mb-0">
-                                        {{ computed.appRequirements.recommendations|filter(r => r.fulfilled)|length }} / {{ computed.appRequirements.recommendations|length }}
-                                    </div>
-                                </div>
-                                <div class="text-info">
-                                    {{ ux_icon('tabler:star', {width: 40, height: 40}) }}
-                                </div>
-                            </div>
-                        </div>
+                <div class="flex items-center justify-between rounded-lg border border-info/40 bg-surface p-4">
+                    <div>
+                        <div class="text-xs font-semibold tracking-wide text-fg-muted uppercase">{{ 'installation.requirements_page.recommended'|trans }}</div>
+                        <div class="tabular text-2xl font-semibold text-fg">{{ requirements.recommendations|filter(r => r.fulfilled)|length }} / {{ requirements.recommendations|length }}</div>
                     </div>
+                    <span class="text-info-dark">{{ ux_icon('tabler:star', {class: 'size-10', 'aria-hidden': 'true'}) }}</span>
                 </div>
             </div>
 
-            <div class="card mb-4">
-                <div class="card-body p-0">
-                    <div class="accordion">
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <button class="accordion-button{{ computed.appRequirements.failedRequirements|length == 0 ? ' collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#mandatory-requirements" aria-expanded="{{ computed.appRequirements.failedRequirements|length > 0 ? 'true' : 'false' }}">
-                                    {{ ux_icon('tabler:checkbox', {width: 20, height: 20, class: 'text-' ~ (computed.appRequirements.failedRequirements|length > 0 ? 'danger' : 'primary')}) }}
-                                    <strong class="text-{{ computed.appRequirements.failedRequirements|length > 0 ? 'danger' : 'primary' }}">{{ 'installation.requirements.mandatory'|trans }}</strong>
-                                    <div class="accordion-button-toggle">
-                                        {{ ux_icon('tabler:chevron-down', {width: 24, height: 24}) }}
-                                    </div>
-                                </button>
-                            </div>
-                            <div id="mandatory-requirements" class="accordion-collapse collapse{{ computed.appRequirements.failedRequirements|length > 0 ? ' show' : '' }}" data-bs-parent="#accordion-default">
-                                <div class="accordion-body text-dark">
-                                    {% for requirement in computed.appRequirements.requirements %}
-                                        {{ requirementCheck(requirement) }}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#optional-requirements" aria-expanded="false">
-                                    {{ ux_icon('tabler:info-circle', {width: 20, height: 20, class: 'text-info'}) }}
-                                    <strong class="text-info">{{ 'installation.requirements.optional'|trans }}</strong>
-                                    <div class="accordion-button-toggle">
-                                        {{ ux_icon('tabler:chevron-down', {width: 24, height: 24}) }}
-                                    </div>
-                                </button>
-                            </div>
-                            <div id="optional-requirements" class="accordion-collapse collapse" data-bs-parent="#accordion-default">
-                                <div class="accordion-body text-dark">
-                                    {% for requirement in computed.appRequirements.recommendations %}
-                                        {{ requirementCheck(requirement) }}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
+            {# The checks, in two collapsible lists #}
+            <div class="mb-6 divide-y divide-line-light rounded-lg border border-line-light">
+                <details id="mandatory-requirements" class="group"{{ failed ? ' open' }}>
+                    <summary class="flex cursor-pointer list-none items-center gap-2 px-4 py-3 [&::-webkit-details-marker]:hidden">
+                        <span class="{{ failed ? 'text-danger-dark' : 'text-primary' }}">{{ ux_icon('tabler:checkbox', {class: 'size-5', 'aria-hidden': 'true'}) }}</span>
+                        <strong class="flex-1 {{ failed ? 'text-danger-dark' : 'text-primary' }}">{{ 'installation.requirements.mandatory'|trans }}</strong>
+                        {{ ux_icon('tabler:chevron-down', {class: 'size-5 text-fg-muted transition-transform group-open:rotate-180', 'aria-hidden': 'true'}) }}
+                    </summary>
+                    <div class="px-4 pb-2">
+                        {% for requirement in requirements.requirements %}
+                            {{ requirementCheck(requirement) }}
+                        {% endfor %}
                     </div>
-                </div>
+                </details>
+
+                <details id="optional-requirements" class="group">
+                    <summary class="flex cursor-pointer list-none items-center gap-2 px-4 py-3 [&::-webkit-details-marker]:hidden">
+                        <span class="text-info-dark">{{ ux_icon('tabler:info-circle', {class: 'size-5', 'aria-hidden': 'true'}) }}</span>
+                        <strong class="flex-1 text-info-dark">{{ 'installation.requirements.optional'|trans }}</strong>
+                        {{ ux_icon('tabler:chevron-down', {class: 'size-5 text-fg-muted transition-transform group-open:rotate-180', 'aria-hidden': 'true'}) }}
+                    </summary>
+                    <div class="px-4 pb-2">
+                        {% for requirement in requirements.recommendations %}
+                            {{ requirementCheck(requirement) }}
+                        {% endfor %}
+                    </div>
+                </details>
             </div>
 
-            <div class="card bg-light-subtle border-0 mb-4">
-                <div class="card-body">
-                    <div class="d-flex align-items-start gap-3">
-                        <div class="flex-shrink-0 text-primary">
-                            {{ ux_icon('tabler:info-circle', {width: 32, height: 32}) }}
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="card-title mb-3">{{ 'installation.requirements_page.system_information'|trans }}</h5>
-                            <div class="vstack gap-2">
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.operating_system'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark">{{ constant('PHP_OS') }} ({{ constant('PHP_OS_FAMILY') }})</code>
-                                    </div>
+            {# System information #}
+            <div class="flex gap-3 rounded-lg bg-canvas p-5">
+                <span class="shrink-0 text-primary">{{ ux_icon('tabler:info-circle', {class: 'size-8', 'aria-hidden': 'true'}) }}</span>
+                <div class="min-w-0 flex-1">
+                    <h5 class="mb-3 font-semibold text-fg">{{ 'installation.requirements_page.system_information'|trans }}</h5>
+                    <dl class="space-y-2 text-sm">
+                        {% for item in [
+                            {label: 'installation.requirements_page.operating_system', value: constant('PHP_OS') ~ ' (' ~ constant('PHP_OS_FAMILY') ~ ')'},
+                            {label: 'installation.requirements_page.web_server', value: app.request.server.get('SERVER_SOFTWARE', 'Unknown')},
+                            {label: 'installation.requirements_page.current_user', value: info.getCurrentUser()},
+                            {label: 'installation.requirements_page.php_version', value: constant('PHP_VERSION')},
+                            {label: 'installation.requirements_page.php_config_file', value: requirements.getPhpIniPath(), hint: 'installation.requirements_page.edit_config_hint'},
+                            {label: 'installation.requirements_page.memory_limit', value: info.iniGet('memory_limit')},
+                            {label: 'installation.requirements_page.max_execution_time', value: info.iniGet('max_execution_time') ~ 's'},
+                            {label: 'installation.requirements_page.upload_max_size', value: info.iniGet('upload_max_filesize')},
+                            {label: 'installation.requirements_page.config_directory', value: info.configDir},
+                            {label: 'installation.requirements_page.cache_directory', value: info.cacheDir},
+                            {label: 'installation.requirements_page.log_directory', value: info.logsDir},
+                        ] %}
+                            {% if item.value %}
+                                <div class="flex flex-wrap items-start gap-x-3">
+                                    <dt class="w-44 shrink-0 font-semibold text-fg-muted">{{ item.label|trans }}:</dt>
+                                    <dd class="min-w-0 flex-1">
+                                        <code class="text-fg [overflow-wrap:anywhere]">{{ item.value }}</code>
+                                        {% if item.hint is defined %}<div class="mt-1 text-fg-muted">{{ item.hint|trans }}</div>{% endif %}
+                                    </dd>
                                 </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.web_server'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark text-break">{{ app.request.server.get('SERVER_SOFTWARE', 'Unknown') }}</code>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.current_user'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark">{{ this.getCurrentUser() }}</code>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.php_version'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark">{{ constant('PHP_VERSION') }}</code>
-                                    </div>
-                                </div>
-                                {% if computed.appRequirements.getPhpIniPath() %}
-                                    <div class="d-flex align-items-start gap-2">
-                                        <div class="flex-shrink-0 text-muted sysinfo-label">
-                                            <strong>{{ 'installation.requirements_page.php_config_file'|trans }}:</strong>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <code class="text-dark text-break">{{ computed.appRequirements.getPhpIniPath() }}</code>
-                                            <div class="text-muted small mt-1">
-                                                {{ 'installation.requirements_page.edit_config_hint'|trans }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.memory_limit'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark">{{ this.iniGet('memory_limit') }}</code>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.max_execution_time'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark">{{ this.iniGet('max_execution_time') }}s</code>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.upload_max_size'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark">{{ this.iniGet('upload_max_filesize') }}</code>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.config_directory'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark" style="overflow-wrap: anywhere;">{{ this.configDir }}</code>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.cache_directory'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark" style="overflow-wrap: anywhere;">{{ this.cacheDir }}</code>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-start gap-2">
-                                    <div class="flex-shrink-0 text-muted sysinfo-label">
-                                        <strong>{{ 'installation.requirements_page.log_directory'|trans }}:</strong>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <code class="text-dark" style="overflow-wrap: anywhere;">{{ this.logsDir }}</code>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            {% endif %}
+                        {% endfor %}
+                    </dl>
                 </div>
             </div>
         </div>
-        <div>
-            <div class="d-flex justify-content-between border-top border-dark border-opacity-10 pt-3 mt-3">
-                <div class="d-flex gap-3">
-                    {% if form.navigator.previous is defined %}
-                        {{ form_widget(form.navigator.previous, {
-                            attr: {class: 'btn-outline-secondary'},
-                            icon: ux_icon('tabler:arrow-left', {width: 20, height: 20}),
-                        }) }}
-                    {% endif %}
-                </div>
-                <div class="d-flex gap-3">
-                    {% if form.navigator.next is defined %}
-                        {{ form_widget(form.navigator.next, {
-                            attr: {class: 'btn-primary flex-row-reverse', disabled: computed.appRequirements.failedRequirements|length > 0},
-                            icon: ux_icon('tabler:arrow-right', {width: 20, height: 20}),
-                        }) }}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+
+        {% include '@SolidInvoiceInstall/Steps/_nav.html.twig' with {nextDisabled: failed} %}
     </div>
 </div>

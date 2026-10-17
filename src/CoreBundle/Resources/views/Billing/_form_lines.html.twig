@@ -1,0 +1,198 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    The line items of a quote / invoice / recurring invoice form, and the document-level taxes
+    under them. Shared by the three `Create*` Live Components; they differ only by the translation
+    prefix.
+
+    Variables: form, prefix ('quote' | 'invoice'), currency, hasTax (bool).
+
+    Everything the Stimulus controllers need is a `data-*` hook (`data-line-reorder-row`,
+    `data-line-tax-target="row"`, `data-invoice-tax-target="row"`, ...); the classes are layout only.
+#}
+{% set cols = hasTax
+    ? 'lg:grid-cols-[1.75rem_minmax(0,2.6fr)_minmax(7rem,1.1fr)_4rem_minmax(9rem,1fr)_minmax(5rem,0.5fr)_1.5rem]'
+    : 'lg:grid-cols-[1.75rem_minmax(0,3.8fr)_minmax(7rem,1fr)_4rem_minmax(5rem,0.5fr)_1.5rem]' %}
+{% set label_class = 'mb-1 block text-xs font-semibold tracking-wide text-fg-muted uppercase lg:hidden' %}
+{% set icon_button = 'si-btn si-btn--sm si-btn--danger-ghost' %}
+
+<section class="rounded-lg border border-line-light bg-surface shadow-sm">
+    <header class="flex items-center gap-3 border-b border-line-light px-5 py-4">
+        <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-lighter text-primary-dark">
+            {{ ux_icon('tabler:list-details', {class: 'size-5', 'aria-hidden': 'true'}) }}
+        </span>
+        <h2 class="text-lg font-semibold text-fg">{{ (prefix ~ '.items.title')|trans }}</h2>
+    </header>
+
+    <div class="p-5">
+        {% if form.lines|length == 0 %}
+            <twig:Si:EmptyState icon="tabler:file-plus" title="{{ (prefix ~ '.items.empty.title')|trans }}" description="{{ (prefix ~ '.items.empty.description')|trans }}" />
+        {% else %}
+            <div {{ stimulus_controller('line-reorder', {announcement: (prefix ~ '.item.reordered')|trans}) }} {{ stimulus_action('line-reorder', 'keydown', 'keydown') }}>
+                {# Column headings (wide screens; narrow screens label each field instead) #}
+                <div class="mb-2 hidden gap-3 px-3 text-xs font-semibold tracking-wide text-fg-muted uppercase lg:grid {{ cols }}">
+                    <div></div>
+                    <div>{{ (prefix ~ '.item.heading.name')|trans }}</div>
+                    <div>{{ (prefix ~ '.item.heading.price')|trans }}</div>
+                    <div>{{ (prefix ~ '.item.heading.qty')|trans }}</div>
+                    {% if hasTax %}<div>{{ (prefix ~ '.item.heading.tax')|trans }}</div>{% endif %}
+                    <div class="text-right">{{ (prefix ~ '.item.heading.total')|trans }}</div>
+                    <div></div>
+                </div>
+
+                <div class="space-y-3">
+                    {% for index, item in form.lines %}
+                        <div class="grid grid-cols-2 items-start gap-x-3 gap-y-3 rounded-lg border border-line-light bg-canvas p-3 lg:items-start lg:bg-transparent {{ cols }}" data-line-reorder-row>
+                            <div class="order-first flex items-center lg:block">
+                                <button type="button" class="inline-flex size-7 cursor-grab items-center justify-center rounded text-fg-muted hover:bg-surface-hover hover:text-fg" data-line-reorder-handle title="{{ (prefix ~ '.item.reorder')|trans }}" aria-label="{{ (prefix ~ '.item.reorder')|trans }}">
+                                    {{ ux_icon('tabler:grip-vertical', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                                </button>
+                            </div>
+
+                            <div class="col-span-2 min-w-0 lg:col-span-1">
+                                <span class="{{ label_class }}">{{ (prefix ~ '.item.heading.name')|trans }}</span>
+                                {{ form_widget(item.name, {attr: {placeholder: (prefix ~ '.item.name.placeholder')|trans, 'aria-label': (prefix ~ '.item.name.label')|trans}}) }}
+                                {{ form_errors(item.name) }}
+                                <details class="mt-1.5"{{ item.description.vars.value is not empty ? ' open' }}>
+                                    <summary class="cursor-pointer text-sm text-primary hover:underline">{{ (prefix ~ '.item.description.add')|trans }}</summary>
+                                    <div class="mt-1.5">
+                                        {{ form_widget(item.description, {attr: {placeholder: (prefix ~ '.item.description.placeholder')|trans, rows: 2, 'aria-label': (prefix ~ '.item.description.label')|trans}}) }}
+                                        {{ form_errors(item.description) }}
+                                    </div>
+                                </details>
+                            </div>
+
+                            <div class="min-w-0">
+                                <span class="{{ label_class }}">{{ (prefix ~ '.item.heading.price')|trans }}</span>
+                                {{ form_widget(item.price) }}
+                                {{ form_errors(item.price) }}
+                            </div>
+
+                            <div class="min-w-0">
+                                <span class="{{ label_class }}">{{ (prefix ~ '.item.heading.qty')|trans }}</span>
+                                {{ form_widget(item.qty) }}
+                                {{ form_errors(item.qty) }}
+                            </div>
+
+                            {% if hasTax %}
+                                <div class="col-span-2 min-w-0 lg:col-span-1">
+                                    <span class="{{ label_class }}">{{ (prefix ~ '.item.heading.tax')|trans }}</span>
+                                    {% if item.taxes is defined %}
+                                        <div class="line-tax-collection space-y-2" {{ stimulus_controller('line-tax') }}>
+                                            {% for taxIndex, lineTax in item.taxes %}
+                                                <div class="flex items-start gap-1.5" data-line-tax-target="row">
+                                                    <div class="min-w-0 flex-1">
+                                                        {{ form_widget(lineTax.tax) }}
+                                                        {{ form_errors(lineTax.tax) }}
+                                                    </div>
+                                                    {{ form_widget(lineTax.sequence) }}
+                                                    {{ form_widget(lineTax.vars.button_delete, {
+                                                        label: ux_icon('tabler:x', {class: 'size-3.5', 'aria-hidden': 'true'})|raw,
+                                                        label_html: true,
+                                                        attr: {class: icon_button, title: (prefix ~ '.item.tax.remove')|trans, 'aria-label': (prefix ~ '.item.tax.remove')|trans}
+                                                    }) }}
+                                                </div>
+                                            {% endfor %}
+                                            {{ form_widget(item.taxes.vars.button_add, {
+                                                label: (prefix ~ '.item.tax.add')|trans,
+                                                attr: {class: 'line-tax-add-btn si-btn si-btn--sm si-btn--ghost'}
+                                            }) }}
+                                        </div>
+
+                                        {# Hand-rendered, so mark it rendered — see the note on the document-level taxes below. #}
+                                        {%- do item.taxes.setRendered() -%}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+
+                            <div class="flex items-baseline justify-between lg:block lg:text-right">
+                                <span class="{{ label_class }}">{{ (prefix ~ '.item.heading.total')|trans }}</span>
+                                <span class="item-total-value tabular font-semibold text-fg lg:inline-block lg:pt-2">{{ item.vars.value.total|formatCurrency(currency) }}</span>
+                            </div>
+
+                            <div class="flex justify-end lg:block">
+                                {% if form.lines|length > 1 %}
+                                    {{ form_widget(item.vars.button_delete, {
+                                        label: ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'})|raw,
+                                        label_html: true,
+                                        attr: {class: 'remove-item-btn ' ~ icon_button, title: (prefix ~ '.item.remove')|trans, 'aria-label': (prefix ~ '.item.remove')|trans}
+                                    }) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mt-4">
+            {{ form_widget(form.lines.vars.button_add, {
+                label: (prefix ~ '.item.add')|trans,
+                attr: {class: 'add-item-btn si-btn si-btn--sm si-btn--outline'}
+            }) }}
+        </div>
+    </div>
+
+    {% if hasTax %}
+        {# Document-level taxes (withholding and adjustments) #}
+        <div class="border-t border-line-light p-5" {{ stimulus_controller('invoice-tax') }}>
+            <div class="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span class="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary-lighter text-primary-dark">
+                    {{ ux_icon('tabler:receipt-tax', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                </span>
+                <h3 class="text-base font-semibold text-fg">{{ (prefix ~ '.invoice_taxes.title')|trans }}</h3>
+                <p class="text-sm text-fg-muted">{{ (prefix ~ '.invoice_taxes.subtitle')|trans }}</p>
+            </div>
+
+            {% if form.invoiceTaxes|length > 0 %}
+                <div class="space-y-3">
+                    {% for index, invoiceTax in form.invoiceTaxes %}
+                        <div class="grid items-start gap-x-3 gap-y-3 rounded-lg border border-line-light bg-canvas p-3 md:grid-cols-[minmax(0,2fr)_minmax(9rem,1fr)_minmax(0,3fr)_auto] md:bg-transparent" data-invoice-tax-target="row">
+                            <div class="min-w-0">
+                                <span class="{{ label_class|replace({'lg:hidden': 'md:hidden'}) }}">{{ (prefix ~ '.invoice_taxes.heading.tax')|trans }}</span>
+                                {{ form_widget(invoiceTax.tax) }}
+                                {{ form_errors(invoiceTax.tax) }}
+                            </div>
+                            <div class="min-w-0">
+                                <span class="{{ label_class|replace({'lg:hidden': 'md:hidden'}) }}">{{ (prefix ~ '.invoice_taxes.heading.direction')|trans }}</span>
+                                {{ form_widget(invoiceTax.direction) }}
+                                {{ form_errors(invoiceTax.direction) }}
+                            </div>
+                            <div class="min-w-0">
+                                <span class="{{ label_class|replace({'lg:hidden': 'md:hidden'}) }}">{{ (prefix ~ '.invoice_taxes.heading.note')|trans }}</span>
+                                {{ form_widget(invoiceTax.note) }}
+                                {{ form_errors(invoiceTax.note) }}
+                            </div>
+                            {{ form_widget(invoiceTax.sequence) }}
+                            <div class="flex justify-end">
+                                {{ form_widget(invoiceTax.vars.button_delete, {
+                                    label: ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'})|raw,
+                                    label_html: true,
+                                    attr: {class: 'remove-item-btn ' ~ icon_button, title: (prefix ~ '.invoice_taxes.remove')|trans, 'aria-label': (prefix ~ '.invoice_taxes.remove')|trans}
+                                }) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="mt-4">
+                {{ form_widget(form.invoiceTaxes.vars.button_add, {
+                    label: (prefix ~ '.invoice_taxes.add')|trans,
+                    attr: {class: 'add-item-btn si-btn si-btn--sm si-btn--outline'}
+                }) }}
+            </div>
+        </div>
+    {% endif %}
+
+    {# The rows above are rendered by hand, so the collection itself still counts as unrendered and
+       `form_end()` would dump a second, unstyled copy below the form. #}
+    {%- do form.invoiceTaxes.setRendered() -%}
+</section>

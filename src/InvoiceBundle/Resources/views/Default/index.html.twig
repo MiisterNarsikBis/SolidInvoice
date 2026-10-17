@@ -7,23 +7,21 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
 
-{% block title %}
-    {{ ux_icon('tabler:file-invoice', {width: 24, height: 24, class: 'me-2'}) }}{{ (recurring ? "invoice.list.recurring_title" : "invoice.list.title")|trans }}
-{% endblock title %}
+{% block page_title %}{{ (recurring ? "invoice.list.recurring_title" : "invoice.list.title")|trans }}{% endblock page_title %}
 
-{% block heading %}
+{% block page_title_actions %}
     {% if recurring %}
-        <a class="btn btn-primary" href="{{ path("_invoices_create_recurring") }}">
-            {{ ux_icon('tabler:plus', {width: 18, height: 18}) }}
+        <twig:Si:Button href="{{ path("_invoices_create_recurring") }}">
+            {{ ux_icon('tabler:plus', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
             {{ "invoice.action.create_recurring"|trans }}
-        </a>
+        </twig:Si:Button>
     {% else %}
-        <a class="btn btn-primary" href="{{ path("_invoices_create") }}">
-            {{ ux_icon('tabler:plus', {width: 18, height: 18}) }}
+        <twig:Si:Button href="{{ path("_invoices_create") }}">
+            {{ ux_icon('tabler:plus', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
             {{ "invoice.action.create"|trans }}
-        </a>
+        </twig:Si:Button>
     {% endif %}
 {% endblock %}
 
@@ -31,129 +29,24 @@
     {{ feature_usage_banner('invoices_per_month', invoicesThisMonth) }}
 
     {% if recurring %}
-        {# Recurring Invoices Stats Row #}
-        <div class="row row-deck row-cards mb-4">
-            <div class="col-sm-6 col-lg-3">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-primary text-white avatar">
-                                    {{ ux_icon('tabler:repeat', {width: 24, height: 24}) }}
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="fw-medium">
-                                    {{ totalActiveRecurring }}
-                                </div>
-                                <div class="text-secondary">
-                                    {{ 'invoice.stats.active_recurring'|trans }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-info text-white avatar">
-                                    {{ ux_icon('tabler:calendar-event', {width: 24, height: 24}) }}
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="fw-medium">
-                                    {{ upcomingIn7Days }}
-                                </div>
-                                <div class="text-secondary">
-                                    {{ 'invoice.stats.upcoming_7_days'|trans }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-warning text-white avatar">
-                                    {{ ux_icon('tabler:list-check', {width: 24, height: 24}) }}
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="fw-medium">
-                                    {{ 'invoice.stats.status_format'|trans({
-                                        '%active%': activeCount,
-                                        '%draft%': draftCount,
-                                        '%paused%': pausedCount
-                                    }) }}
-                                </div>
-                                <div class="text-secondary">
-                                    {{ 'invoice.stats.status_breakdown'|trans }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-success text-white avatar">
-                                    {{ ux_icon('tabler:file-invoice', {width: 24, height: 24}) }}
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="fw-medium">
-                                    {{ totalGeneratedInvoices }}
-                                </div>
-                                <div class="text-secondary">
-                                    {{ 'invoice.stats.total_generated'|trans }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="mb-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <twig:Si:Stat icon="tabler:repeat" label="{{ 'invoice.stats.active_recurring'|trans }}">{{ totalActiveRecurring }}</twig:Si:Stat>
+            <twig:Si:Stat icon="tabler:calendar-event" tone="info" label="{{ 'invoice.stats.upcoming_7_days'|trans }}">{{ upcomingIn7Days }}</twig:Si:Stat>
+            <twig:Si:Stat icon="tabler:list-check" tone="warning" label="{{ 'invoice.stats.status_breakdown'|trans }}">{{ 'invoice.stats.status_format'|trans({
+                '%active%': activeCount,
+                '%draft%': draftCount,
+                '%paused%': pausedCount
+            }) }}</twig:Si:Stat>
+            <twig:Si:Stat icon="tabler:file-invoice" tone="success" label="{{ 'invoice.stats.total_generated'|trans }}">{{ totalGeneratedInvoices }}</twig:Si:Stat>
         </div>
 
-        {# Recurring Invoice List Card with Tabs #}
-        <twig:Ui:Card>
+        <twig:Si:Card>
             <twig:block name="header">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist" aria-label="{{ 'invoice.tabs.label'|trans }}">
-                        <li class="nav-item" role="presentation">
-                            <a href="{{ path('_invoices_index_recurring') }}" class="nav-link{{ not isArchived and not isCompleted ? ' active' : '' }}" role="tab" aria-selected="{{ not isArchived and not isCompleted ? 'true' : 'false' }}">
-                                {{ ux_icon('tabler:repeat', {width: 16, height: 16}) }}
-                                {{ 'invoice.tabs.recurring_active'|trans }}
-                                <span class="badge bg-primary-lt ms-2">{{ totalActiveRecurring }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a href="{{ path('_invoices_index_recurring', {completed: 1}) }}" class="nav-link{{ isCompleted ? ' active' : '' }}" role="tab" aria-selected="{{ isCompleted ? 'true' : 'false' }}">
-                                {{ ux_icon('tabler:check', {width: 16, height: 16}) }}
-                                {{ 'invoice.tabs.recurring_completed'|trans }}
-                                <span class="badge bg-success-lt ms-2">{{ completeCount }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a href="{{ path('_invoices_index_recurring', {archived: 1}) }}" class="nav-link{{ isArchived ? ' active' : '' }}" role="tab" aria-selected="{{ isArchived ? 'true' : 'false' }}">
-                                {{ ux_icon('tabler:archive', {width: 16, height: 16}) }}
-                                {{ 'invoice.tabs.recurring_archived'|trans }}
-                                <span class="badge bg-secondary-lt ms-2">{{ totalArchivedRecurring }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <nav class="flex flex-wrap border-b border-line px-2" role="tablist" aria-label="{{ 'invoice.tabs.label'|trans }}">
+                    <twig:Si:Tab href="{{ path('_invoices_index_recurring') }}" :active="not isArchived and not isCompleted" icon="tabler:repeat" :count="totalActiveRecurring">{{ 'invoice.tabs.recurring_active'|trans }}</twig:Si:Tab>
+                    <twig:Si:Tab href="{{ path('_invoices_index_recurring', {completed: 1}) }}" :active="isCompleted" icon="tabler:check" :count="completeCount">{{ 'invoice.tabs.recurring_completed'|trans }}</twig:Si:Tab>
+                    <twig:Si:Tab href="{{ path('_invoices_index_recurring', {archived: 1}) }}" :active="isArchived" icon="tabler:archive" :count="totalArchivedRecurring">{{ 'invoice.tabs.recurring_archived'|trans }}</twig:Si:Tab>
+                </nav>
             </twig:block>
 
             {% if isArchived %}
@@ -163,131 +56,38 @@
             {% else %}
                 <twig:DataGrid name="recurring_invoice_grid" />
             {% endif %}
-        </twig:Ui:Card>
+        </twig:Si:Card>
     {% else %}
-        {# Stats Row #}
-        <div class="row row-deck row-cards mb-4">
-            <div class="col-sm-6 col-lg-3">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-primary text-white avatar">
-                                    {{ ux_icon('tabler:file-invoice', {width: 24, height: 24}) }}
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="fw-medium">
-                                    {{ totalActiveInvoices }}
-                                </div>
-                                <div class="text-secondary">
-                                    {{ 'invoice.stats.total_invoices'|trans }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-warning text-white avatar">
-                                    {{ ux_icon('tabler:clock', {width: 24, height: 24}) }}
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="fw-medium">
-                                    {{ pendingCount }}
-                                    {% if overdueCount > 0 %}
-                                        <span class="text-danger ms-1">({{ overdueCount }} {{ 'invoice.stats.overdue'|trans }})</span>
-                                    {% endif %}
-                                </div>
-                                <div class="text-secondary">
-                                    {{ 'invoice.stats.pending_invoices'|trans }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-success text-white avatar">
-                                    {{ ux_icon('tabler:cash', {width: 24, height: 24}) }}
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="fw-medium">
-                                    {% for currency, amount in total_income %}
-                                        {{ amount|formatCurrency(currency) }}{% if not loop.last %}<br>{% endif %}
-                                    {% else %}
-                                        {{ 0|formatCurrency }}
-                                    {% endfor %}
-                                </div>
-                                <div class="text-secondary">
-                                    {{ 'invoice.stats.total_income'|trans }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-danger text-white avatar">
-                                    {{ ux_icon('tabler:currency-dollar', {width: 24, height: 24}) }}
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="fw-medium">
-                                    {% for currency, amount in total_outstanding %}
-                                        {{ amount|formatCurrency(currency) }}{% if not loop.last %}<br>{% endif %}
-                                    {% else %}
-                                        {{ 0|formatCurrency }}
-                                    {% endfor %}
-                                </div>
-                                <div class="text-secondary">
-                                    {{ 'invoice.stats.outstanding_balance'|trans }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="mb-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <twig:Si:Stat icon="tabler:file-invoice" label="{{ 'invoice.stats.total_invoices'|trans }}">{{ totalActiveInvoices }}</twig:Si:Stat>
+            <twig:Si:Stat icon="tabler:clock" tone="warning" label="{{ 'invoice.stats.pending_invoices'|trans }}">
+                {{ pendingCount }}
+                {% if overdueCount > 0 %}
+                    <span class="ml-1 text-base font-medium text-danger-dark">({{ overdueCount }} {{ 'invoice.stats.overdue'|trans }})</span>
+                {% endif %}
+            </twig:Si:Stat>
+            <twig:Si:Stat icon="tabler:cash" tone="success" label="{{ 'invoice.stats.total_income'|trans }}">
+                {% for currency, amount in total_income %}
+                    <div>{{ amount|formatCurrency(currency) }}</div>
+                {% else %}
+                    {{ 0|formatCurrency }}
+                {% endfor %}
+            </twig:Si:Stat>
+            <twig:Si:Stat icon="tabler:currency-dollar" tone="danger" label="{{ 'invoice.stats.outstanding_balance'|trans }}">
+                {% for currency, amount in total_outstanding %}
+                    <div>{{ amount|formatCurrency(currency) }}</div>
+                {% else %}
+                    {{ 0|formatCurrency }}
+                {% endfor %}
+            </twig:Si:Stat>
         </div>
 
-        {# Invoice List Card #}
-        <twig:Ui:Card>
+        <twig:Si:Card>
             <twig:block name="header">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist" aria-label="{{ 'invoice.tabs.label'|trans }}">
-                        <li class="nav-item" role="presentation">
-                            <a href="{{ path('_invoices_index') }}" class="nav-link{{ not isArchived ? ' active' : '' }}" role="tab" aria-selected="{{ not isArchived ? 'true' : 'false' }}">
-                                {{ ux_icon('tabler:file-invoice', {width: 16, height: 16}) }}
-                                {{ 'invoice.tabs.active'|trans }}
-                                <span class="badge bg-primary-lt ms-2">{{ totalActiveInvoices }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a href="{{ path('_invoices_index', {archived: 1}) }}" class="nav-link{{ isArchived ? ' active' : '' }}" role="tab" aria-selected="{{ isArchived ? 'true' : 'false' }}">
-                                {{ ux_icon('tabler:archive', {width: 16, height: 16}) }}
-                                {{ 'invoice.tabs.archived'|trans }}
-                                <span class="badge bg-secondary-lt ms-2">{{ totalArchivedInvoices }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <nav class="flex flex-wrap border-b border-line px-2" role="tablist" aria-label="{{ 'invoice.tabs.label'|trans }}">
+                    <twig:Si:Tab href="{{ path('_invoices_index') }}" :active="not isArchived" icon="tabler:file-invoice" :count="totalActiveInvoices">{{ 'invoice.tabs.active'|trans }}</twig:Si:Tab>
+                    <twig:Si:Tab href="{{ path('_invoices_index', {archived: 1}) }}" :active="isArchived" icon="tabler:archive" :count="totalArchivedInvoices">{{ 'invoice.tabs.archived'|trans }}</twig:Si:Tab>
+                </nav>
             </twig:block>
 
             {% if isArchived %}
@@ -295,7 +95,6 @@
             {% else %}
                 <twig:DataGrid name="invoice_grid" />
             {% endif %}
-        </twig:Ui:Card>
+        </twig:Si:Card>
     {% endif %}
 {% endblock content %}
-

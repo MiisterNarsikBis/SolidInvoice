@@ -56,8 +56,8 @@ final class NotificationPreferencesTest extends WebTestCase
 
         $crawler = $client->request(Request::METHOD_GET, '/profile/notifications');
 
-        self::assertSelectorExists('.integration-management-card');
-        self::assertSelectorTextContains('.integration-management-title', 'Notification Channels');
+        self::assertSelectorExists('[data-notification-channels]');
+        self::assertSelectorTextContains('[data-notification-channels-title]', 'Notification Channels');
     }
 
     public function testNotificationPreferencesDisplaysAvailableIntegrations(): void
@@ -83,7 +83,7 @@ final class NotificationPreferencesTest extends WebTestCase
 
         $crawler = $client->request(Request::METHOD_GET, '/profile/notifications');
 
-        self::assertSelectorExists('.integration-management-list');
+        self::assertSelectorExists('[data-notification-channels-list]');
         self::assertSelectorExists('.integration-badge', 'At least one integration badge should exist');
 
         // Check that we have both Email (always present) and Slack
@@ -104,8 +104,8 @@ final class NotificationPreferencesTest extends WebTestCase
 
         $crawler = $client->request(Request::METHOD_GET, '/profile/notifications');
 
-        self::assertSelectorExists('.notification-groups');
-        self::assertSelectorExists('.notification-group');
+        self::assertSelectorExists('[data-notification-groups]');
+        self::assertSelectorExists('[data-notification-group]');
         self::assertSelectorExists('.group-title');
     }
 
@@ -122,9 +122,9 @@ final class NotificationPreferencesTest extends WebTestCase
 
         $crawler = $client->request(Request::METHOD_GET, '/profile/notifications');
 
-        self::assertSelectorExists('.notification-card');
-        self::assertSelectorExists('.notification-title');
-        self::assertSelectorExists('.notification-description');
+        self::assertSelectorExists('[data-notification-card]');
+        self::assertSelectorExists('[data-notification-title]');
+        self::assertSelectorExists('[data-notification-description]');
     }
 
     public function testNotificationPreferencesContainsEmailCheckboxes(): void
@@ -186,7 +186,7 @@ final class NotificationPreferencesTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/profile/notifications');
 
         // Check that channel checkboxes are present
-        $channelCheckboxes = $crawler->filter('.notification-card-channels input[type="checkbox"]');
+        $channelCheckboxes = $crawler->filter('[data-notification-card-channels] input[type="checkbox"]');
         self::assertGreaterThan(0, $channelCheckboxes->count(), 'Channel checkboxes should be present');
     }
 
@@ -204,7 +204,7 @@ final class NotificationPreferencesTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/profile/notifications');
 
         // Check that there's a form with a submit button in the notifications actions
-        self::assertSelectorExists('.form-page-actions button[type="submit"]');
-        self::assertSelectorTextContains('.form-page-actions button', 'Save');
+        self::assertSelectorExists('[data-form-actions] button[type="submit"]');
+        self::assertSelectorTextContains('[data-form-actions] button', 'Save');
     }
 }

@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { setVisible } from '../lib/visibility';
 
 /* stimulusFetch: 'lazy' */
 export default class BillingIdController extends Controller<HTMLDivElement> {
@@ -17,8 +18,8 @@ export default class BillingIdController extends Controller<HTMLDivElement> {
 
     edit(e: Event) {
         e.preventDefault();
-        this.infoTarget.classList.add('d-none');
-        this.formTarget.classList.remove('d-none');
+        setVisible(this.infoTarget, false);
+        setVisible(this.formTarget, true);
     }
 
     save(e: Event) {
@@ -28,31 +29,29 @@ export default class BillingIdController extends Controller<HTMLDivElement> {
 
         if (value.length === 0) {
 
-            if (this.formTarget.querySelector('.invalid-feedback')) {
+            if (this.formTarget.querySelector('[data-billing-id-error]')) {
                 return;
             }
 
-            const errorHtml = `<span class="invalid-feedback d-block"><span class="d-block">
-                    <span class="form-error-icon badge badge-danger text-uppercase">Error</span> <span class="form-error-message">This value should not be blank.</span>
-                </span></span>`;
+            const errorHtml = '<p class="si-error" data-billing-id-error>This value should not be blank.</p>';
 
-            this.formTarget.querySelector('.input-group')?.insertAdjacentHTML('afterend', errorHtml);
+            this.formTarget.querySelector('.si-group')?.insertAdjacentHTML('afterend', errorHtml);
         } else {
-            this.formTarget.querySelector('.invalid-feedback')?.remove();
+            this.formTarget.querySelector('[data-billing-id-error]')?.remove();
 
             this.valueTarget.innerText = value;
 
-            this.infoTarget.classList.remove('d-none');
-            this.formTarget.classList.add('d-none');
+            setVisible(this.infoTarget, true);
+            setVisible(this.formTarget, false);
         }
     }
 
     cancel(e: Event) {
         e.preventDefault();
-        this.infoTarget.classList.remove('d-none');
-        this.formTarget.classList.add('d-none');
+        setVisible(this.infoTarget, true);
+        setVisible(this.formTarget, false);
 
-        this.formTarget.querySelector('.invalid-feedback')?.remove();
+        this.formTarget.querySelector('[data-billing-id-error]')?.remove();
         const input = this.formTarget.querySelector('input');
 
         if (input) {

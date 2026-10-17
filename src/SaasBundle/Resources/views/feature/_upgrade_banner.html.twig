@@ -7,27 +7,30 @@
  # with this source code in the file LICENSE.
  #
  # Upgrade-prompt banner. Rendered by UpgradePromptRenderer for both the
- # "feature locked" prompt and the "approaching limit" usage banner.
+ # "feature locked" prompt and the "approaching limit" usage banner. Tailwind markup: it is
+ # emitted from PHP (a Twig function), so it cannot adapt to the page; the pages that show it
+ # are on the Tailwind shell.
  #
- # @param string      type      - Tabler alert variant: warning, danger, info.
+ # @param string      type      - Alert variant: warning, danger, info.
  # @param string      icon      - Tabler icon name (e.g. 'tabler:arrow-up-circle').
  # @param string      title     - Bold title text.
  # @param string      message   - Body copy following the title.
  # @param string|null plan_name - Optional plan name; when set, renders an "Upgrade to {plan_name}" CTA pointing at the GET plan picker.
  #}
-<div class="alert alert-{{ type }} alert-banner mb-0" role="alert">
-    <div class="d-flex align-items-center gap-3">
-        <div class="alert-icon">
-            {{ ux_icon(icon, {width: 24, height: 24}) }}
-        </div>
-        <div class="flex-grow-1">
-            <strong>{{ title }}</strong> - {{ message }}
-        </div>
-        {% if plan_name is defined and plan_name %}
-            <a href="{{ path('saas_subscription_plans') }}" class="btn btn-{{ type }} btn-sm">
-                {{ ux_icon('tabler:arrow-up-circle', {width: 16, height: 16}) }}
-                {{ 'saas.feature.upgrade_to'|trans({'%plan%': plan_name}) }}
-            </a>
-        {% endif %}
+{% set styles = {
+    warning: 'border-warning/40 bg-warning-light text-warning-dark',
+    danger: 'border-danger/30 bg-danger-light text-danger-dark',
+    info: 'border-info/30 bg-info-light text-info-dark',
+} %}
+<div class="mb-4 flex flex-wrap items-center gap-3 rounded-md border px-4 py-3 {{ styles[type]|default(styles.info) }}" role="alert">
+    {{ ux_icon(icon, {class: 'size-6 shrink-0', 'aria-hidden': 'true'}) }}
+    <div class="min-w-0 flex-1">
+        <strong class="font-semibold">{{ title }}</strong> - {{ message }}
     </div>
+    {% if plan_name is defined and plan_name %}
+        <a href="{{ path('saas_subscription_plans') }}" class="si-btn si-btn--sm si-btn--outline">
+            {{ ux_icon('tabler:arrow-up-circle', {class: 'size-4', 'aria-hidden': 'true'}) }}
+            {{ 'saas.feature.upgrade_to'|trans({'%plan%': plan_name}) }}
+        </a>
+    {% endif %}
 </div>

@@ -1,0 +1,180 @@
+{#
+# This file is part of SolidInvoice package.
+#
+# (c) Pierre du Plessis <open-source@solidworx.co>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+#}
+
+{#
+    The application shell: the sidebar, the top bar and the page column. Every screen that belongs
+    to the signed-in app extends it. The look comes from `ui/app.css` (Tailwind); nothing else
+    styles the page.
+
+    Blocks:
+
+        page_title           the <h1> and the document title
+        page_title_actions   buttons next to the <h1>
+        content              the page body
+        stylesheets          extra <link> tags (call parent())
+        javascripts          extra scripts (call parent())
+
+    JavaScript is the pair of entries every layout loads (`_platform_ui` and `app`), in <head>
+    and deferred. The global search box is `Menu/search.html.twig`.
+#}
+{% extends '@SolidInvoiceCore/Layout/document.html.twig' %}
+
+{% block body_class %}min-h-screen bg-canvas text-fg{% endblock %}
+
+{% block body %}
+<div class="group/shell" data-controller="si-drawer">
+    <a href="#main" class="sr-only z-50 rounded-md bg-primary px-3 py-2 text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">{{ 'layout.skip_to_content'|trans }}</a>
+
+    {# ------------------------------------------------------------------ sidebar #}
+    <aside
+        id="sidebar"
+        class="fixed inset-y-0 left-0 z-40 flex w-56 -translate-x-full flex-col border-r border-line bg-surface transition-transform duration-150 group-data-[open]/shell:translate-x-0 lg:translate-x-0 print:hidden"
+    >
+        {% block sidebar_brand %}
+            <a href="{{ path('_dashboard') }}" aria-label="{{ company_name() }}" class="flex h-14 shrink-0 items-center gap-2.5 border-b border-line-light px-4 text-lg font-semibold text-fg">
+                {{ app_logo(28, showDefault: true) }}
+                <span class="truncate text-base">{{ company_name() }}</span>
+            </a>
+        {% endblock sidebar_brand %}
+
+        <nav class="flex-1 overflow-y-auto" aria-label="{{ 'layout.aria.main_navigation'|trans }}">
+            {% if menu_exists('sidebar') %}
+                {{ render_menu('sidebar', {template: '@SolidInvoiceCore/Menu/sidebar.html.twig'}) }}
+            {% endif %}
+        </nav>
+    </aside>
+
+    <div
+        class="fixed inset-0 z-30 hidden bg-ink-900/55 group-data-[open]/shell:block lg:hidden print:hidden"
+        data-action="click->si-drawer#close"
+        aria-hidden="true"
+    ></div>
+
+    <div class="lg:pl-56">
+        {# The anchor Platform injects the unverified-email banner after (EmailVerificationBannerListener). #}
+        <div class="page-wrapper">
+        {# ------------------------------------------------------------------ top bar #}
+        <header class="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-line bg-surface px-4 print:hidden lg:px-8">
+            <button
+                type="button"
+                class="-ml-2 inline-flex size-9 items-center justify-center rounded-md text-fg-secondary hover:bg-surface-hover pointer-coarse:size-11 lg:hidden"
+                data-si-drawer-toggle
+                data-action="si-drawer#toggle"
+                aria-controls="sidebar"
+                aria-expanded="false"
+                aria-label="{{ 'layout.aria.toggle_navigation'|trans }}"
+            >
+                {{ ux_icon('tabler:menu-2', {class: 'size-5', 'aria-hidden': 'true'}) }}
+            </button>
+
+            {% block topbar_search %}
+                {% include '@SolidInvoiceCore/Menu/search.html.twig' %}
+            {% endblock topbar_search %}
+
+            <div class="flex-1"></div>
+
+            {% block topbar_actions %}
+                {% if not is_custom_domain() %}
+                    {% set availableCompanies = app.user.companies|filter(v => not v.id.equals(company_id())) %}
+                    <twig:Si:Dropdown
+                        label="{{ 'layout.aria.open_company_menu'|trans }}"
+                        triggerClass="inline-flex h-9 items-center gap-2 rounded-md border border-line bg-surface px-3 text-base font-medium text-fg shadow-xs hover:bg-surface-hover pointer-coarse:h-11"
+                    >
+                        <twig:block name="trigger">
+                            <span class="max-w-40 truncate">{{ company_name() }}</span>
+                            {{ ux_icon('tabler:chevron-down', {class: 'size-4 text-fg-muted', 'aria-hidden': 'true'}) }}
+                        </twig:block>
+
+                        {% for company in availableCompanies %}
+                            <twig:Si:MenuItem href="{{ path('_switch_company', {'id': company.id}) }}">{{ company }}</twig:Si:MenuItem>
+                        {% endfor %}
+
+                        {% if availableCompanies|length > 0 %}
+                            <div class="my-1 h-px bg-line-light" role="separator"></div>
+                        {% endif %}
+
+                        <twig:Si:MenuItem href="{{ path('_create_company') }}" icon="tabler:plus">{{ 'layout.add_company'|trans }}</twig:Si:MenuItem>
+                    </twig:Si:Dropdown>
+                {% endif %}
+
+                <twig:Si:Dropdown
+                    label="{{ 'layout.aria.open_create_menu'|trans }}"
+                    triggerClass="inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-3.5 text-base font-medium text-white shadow-xs transition-colors hover:bg-primary-hover pointer-coarse:h-11"
+                >
+                    <twig:block name="trigger">
+                        {{ ux_icon('tabler:plus', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                        {{ 'menu.button.create'|trans }}
+                    </twig:block>
+
+                    <twig:Si:MenuItem href="{{ path('_clients_add') }}" icon="tabler:user-plus">{{ 'dashboard.create.client'|trans }}</twig:Si:MenuItem>
+                    <twig:Si:MenuItem href="{{ path('_quotes_create') }}" icon="tabler:file-text">{{ 'dashboard.create.quote'|trans }}</twig:Si:MenuItem>
+                    <twig:Si:MenuItem href="{{ path('_invoices_create') }}" icon="tabler:file-invoice">{{ 'dashboard.create.invoice'|trans }}</twig:Si:MenuItem>
+                </twig:Si:Dropdown>
+            {% endblock topbar_actions %}
+
+            {% block user_menu %}
+                {% if app.user is not null %}
+                    <twig:Si:Dropdown
+                        label="{{ 'Open user menu'|trans }}"
+                        triggerClass="inline-flex h-9 items-center gap-2 rounded-md px-1.5 hover:bg-surface-hover pointer-coarse:h-11"
+                    >
+                        <twig:block name="trigger">
+                            <span class="inline-flex size-7 items-center justify-center rounded-full bg-primary-light text-xs font-semibold text-primary-dark">{{ app.user.userIdentifier|slice(0, 2)|upper }}</span>
+                            <span class="hidden max-w-44 truncate text-base text-fg-secondary xl:inline">{{ app.user.userIdentifier }}</span>
+                        </twig:block>
+
+                        <twig:Si:MenuItem href="{{ path('_profile') }}" icon="tabler:user">{{ 'layout.profile'|trans }}</twig:Si:MenuItem>
+                        <div class="my-1 h-px bg-line-light" role="separator"></div>
+                        <twig:Si:MenuItem href="{{ path('_api_keys_index') }}" icon="tabler:lock">{{ 'layout.api_keys'|trans }}</twig:Si:MenuItem>
+                        <twig:Si:MenuItem href="{{ path('_export_list') }}" icon="tabler:database-export">{{ 'layout.data_export'|trans }}</twig:Si:MenuItem>
+                        <twig:Si:MenuItem href="{{ feedback_form_url }}" icon="tabler:message-circle" target="_blank" rel="noopener">{{ 'layout.feedback'|trans }}</twig:Si:MenuItem>
+                        <div class="my-1 h-px bg-line-light" role="separator"></div>
+                        <twig:Si:LogoutLink title="{{ 'Logout'|trans }}" />
+                    </twig:Si:Dropdown>
+                {% endif %}
+            {% endblock user_menu %}
+        </header>
+
+        {# --------------------------------------------------------------------- page #}
+        <main id="main" class="mx-auto w-full max-w-[88rem] px-4 py-6 lg:px-8">
+            {% set page_title = block('page_title') is defined ? block('page_title') : '' %}
+            {% set page_title_actions = block('page_title_actions') is defined ? block('page_title_actions') : '' %}
+
+            {% if page_title|trim is not empty or page_title_actions|trim is not empty %}
+                <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <h1 class="text-2xl font-semibold tracking-tight text-fg">{{ page_title|raw }}</h1>
+                    <div class="flex items-center gap-2">{{ page_title_actions|raw }}</div>
+                </div>
+            {% endif %}
+
+            {% block flashes %}
+                {% set flash_types = {error: 'danger', danger: 'danger', warning: 'warning', success: 'success', notice: 'info', info: 'info'} %}
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <twig:Si:Alert type="{{ flash_types[label]|default('info') }}" data-flash="{{ label }}" class="mb-4 print:hidden">{{ message|trans }}</twig:Si:Alert>
+                    {% endfor %}
+                {% endfor %}
+            {% endblock flashes %}
+
+            {% block content %}{% endblock content %}
+        </main>
+
+        {% block footer %}
+            <footer class="mx-auto w-full max-w-[88rem] px-4 pb-8 text-sm text-fg-muted print:hidden lg:px-8">
+                {{ 'powered_by'|trans }} <a href="https://solidinvoice.co" class="text-fg-secondary hover:text-primary hover:underline">{{ constant('SolidInvoice\\CoreBundle\\SolidInvoiceCoreBundle::APP_NAME') }}</a>{% if app_version %} - {{ app_version }}{% endif %}
+                &middot; <a href="{{ feedback_form_url }}" target="_blank" rel="noopener" class="text-fg-secondary hover:text-primary hover:underline">{{ 'layout.feedback'|trans }}</a>
+                {% if affiliate_program().enabled %}
+                    &middot; <a href="{{ path('_profile_affiliate', {source: 'footer'}) }}" class="text-fg-secondary hover:text-primary hover:underline">{{ 'affiliate.footer_link'|trans }}</a>
+                {% endif %}
+            </footer>
+        {% endblock footer %}
+        </div>
+    </div>
+</div>
+{% endblock body %}

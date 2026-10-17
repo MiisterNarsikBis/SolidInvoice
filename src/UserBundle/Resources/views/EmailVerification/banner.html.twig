@@ -7,8 +7,14 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends '@SolidWorxPlatform/EmailVerification/banner.html.twig' %}
-
-{% block title %}{{ 'email_verification.banner.title'|trans }}{% endblock %}
-
-{% block message %}{{ 'email_verification.banner.message'|trans }}{% endblock %}
+{# Injected at the top of every page while the signed-in user's e-mail address is unverified. The `alert-banner` class is the hook the tests look for. #}
+<div class="alert-banner border-b border-warning/40 bg-warning-light px-4 py-2.5 text-warning-dark print:hidden lg:px-8" role="alert">
+    <div class="mx-auto flex max-w-[88rem] flex-wrap items-center gap-3">
+        {{ ux_icon('tabler:mail-exclamation', {class: 'size-5 shrink-0', 'aria-hidden': 'true'}) }}
+        <p class="min-w-0 flex-1 text-sm">
+            <strong>{{ 'email_verification.banner.title'|trans }}</strong> -
+            {{ 'email_verification.banner.message'|trans }}
+        </p>
+        {% include '@SolidInvoiceUser/EmailVerification/_resend_form.html.twig' %}
+    </div>
+</div>

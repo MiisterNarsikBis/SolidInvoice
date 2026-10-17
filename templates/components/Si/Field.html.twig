@@ -1,0 +1,31 @@
+{#
+    A labelled text input with an optional leading icon and error message.
+
+        <twig:Si:Field label="{{ 'Email address'|trans }}" name="email" type="email" icon="tabler:mail" />
+
+    `label` must already be translated. Extra attributes (autocomplete, required, value,
+    autofocus, placeholder...) are put on the <input> itself.
+#}
+{% props label, name, type = 'text', icon = null, error = null, id = null %}
+{%- set fieldId = id ?? ('field-' ~ name) -%}
+
+<div>
+    <label for="{{ fieldId }}" class="si-label">{{ label }}</label>
+    <div class="relative">
+        {% if icon %}
+            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-fg-muted">
+                {{ ux_icon(icon, {class: 'size-5', 'aria-hidden': 'true'}) }}
+            </span>
+        {% endif %}
+        <input
+            id="{{ fieldId }}"
+            type="{{ type }}"
+            name="{{ name }}"
+            {% if error %}aria-invalid="true"{% endif %}
+            {{ attributes.defaults({class: 'si-control ' ~ (icon ? 'pl-10' : '')}) }}
+        />
+    </div>
+    {% if error %}
+        <p class="si-error">{{ error }}</p>
+    {% endif %}
+</div>

@@ -1,4 +1,6 @@
-{% extends '@SolidInvoiceCore/Layout/default.html.twig' %}
+{% extends '@SolidInvoiceCore/Layout/shell.html.twig' %}
+
+{% block page_title %}{{ 'menu.top.integrations'|trans }}{% endblock %}
 
 {% block content %}
     <twig:NotificationIntegrations />

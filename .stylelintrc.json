@@ -4,7 +4,8 @@
     "customSyntax": "postcss-scss",
     "ignoreFiles": [
         "assets/scss/email/**",
-        "assets/scss/email.scss"
+        "assets/scss/email.scss",
+        "assets/tailwind/**"
     ],
     "rules": {
         "no-duplicate-selectors": null,

@@ -1,55 +1,35 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{# The request history of one API token. The dialog only exists when a token is selected; the
+   `api-token-history-modal` controller opens it and removes `view_history` from the URL on close. #}
+{# Inside a component slot `this` is that component, so the token is read once here. #}
+{% set token = this.token %}
 <div {{ attributes.defaults({
     'data-controller': 'api-token-history-modal'
 }) }}>
-    <div class="modal modal-blur fade"
-         id="apiTokenHistoryModal"
-         tabindex="-1"
-         aria-labelledby="apiTokenHistoryModalLabel"
-         aria-hidden="true"
-         data-bs-backdrop="static"
-         data-bs-keyboard="false">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                {% if this.token %}
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="apiTokenHistoryModalLabel">
-                            {{ ux_icon('tabler:history', {width: 20, height: 20, class: 'me-2'}) }}
-                            API Request History - {{ this.token.name }}
-                        </h5>
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="{{ 'action.close'|trans }}"></button>
-                    </div>
-                    <div class="modal-body p-0">
-                        <div class="alert alert-info m-3 mb-0" role="alert">
-                            {{ ux_icon('tabler:info-circle', {width: 20, height: 20, class: 'me-2'}) }}
-                            Showing API requests made with this token.
-                        </div>
-                        <div class="p-3">
-                            <twig:DataGrid
-                                    name="api_token_history_grid"
-                                    :context="{ token_id: this.token.id }"
-                            />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button"
-                                class="btn"
-                                data-bs-dismiss="modal">
-                            Close
-                        </button>
-                    </div>
-                {% else %}
-                    <div class="modal-body">
-                        <div class="text-center py-5">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
+    {% if token %}
+        <twig:Si:Modal id="apiTokenHistoryModal" size="xl" :staticBackdrop="true" title="{{ 'profile.api.history.title'|trans ~ ' - ' ~ token.name }}">
+            <div class="-m-5">
+                <twig:Si:Alert type="info" class="m-4 mb-0">{{ 'profile.api.history.notice'|trans }}</twig:Si:Alert>
+                <div class="p-4">
+                    <twig:DataGrid
+                            name="api_token_history_grid"
+                            :context="{ token_id: token.id }"
+                           
+                    />
+                </div>
             </div>
-        </div>
-    </div>
+
+            <twig:block name="footer">
+                <button type="button" class="si-btn si-btn--md si-btn--outline" data-si-modal-close>{{ 'profile.api.history.actions.close'|trans }}</button>
+            </twig:block>
+        </twig:Si:Modal>
+    {% endif %}
 </div>

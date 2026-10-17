@@ -1,13 +1,57 @@
-{%- extends '@BabDevPagerfanta/twitter_bootstrap4.html.twig' -%}
+{#
+ # Pagerfanta view (used by the data grid with
+ # `pagerfanta(paginator, 'twig', {template: '@SolidInvoiceDataGrid/pagination.html.twig'})`).
+ # Page links are plain links to the URL carrying `?page=N`, as in the Bootstrap view.
+ #}
+{%- extends '@Pagerfanta/default.html.twig' -%}
+
+{%- block pager_widget -%}
+    <nav role="navigation" aria-label="Pagination" class="flex items-center gap-1">
+        {{- block('pager') -}}
+    </nav>
+{%- endblock pager_widget -%}
 
 {%- block page_link -%}
-    <li class="page-item"><a class="page-link" href="{{- path -}}" data-model="page" data-value="{{ page }}" data-action="live#update:prevent">{{- page -}}</a></li>
+    <a href="{{- path -}}" class="inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-sm font-medium text-fg-secondary transition-colors hover:bg-ink-100 hover:text-fg pointer-coarse:h-11 pointer-coarse:min-w-11">{{- page -}}</a>
 {%- endblock page_link -%}
 
+{%- block current_page_link -%}
+    <span aria-current="page" class="inline-flex h-8 min-w-8 items-center justify-center rounded-md bg-primary px-2 text-sm font-semibold text-white pointer-coarse:h-11 pointer-coarse:min-w-11">{{- page -}}</span>
+{%- endblock current_page_link -%}
+
 {%- block previous_page_link -%}
-    <li class="page-item"><a class="page-link" href="{{- path -}}" rel="prev" data-model="page" data-value="{{ current_page - 1 }}" data-action="live#update:prevent">{{- block('previous_page_message') -}}</a></li>
+    <a href="{{- path -}}" rel="prev" class="inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-fg-secondary transition-colors hover:bg-ink-100 hover:text-fg pointer-coarse:h-11 pointer-coarse:min-w-11">{{- block('previous_page_message') -}}</a>
 {%- endblock previous_page_link -%}
 
+{%- block previous_page_link_disabled -%}
+    <span aria-disabled="true" class="inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-ink-300 pointer-coarse:h-11 pointer-coarse:min-w-11">{{- block('previous_page_message') -}}</span>
+{%- endblock previous_page_link_disabled -%}
+
 {%- block next_page_link -%}
-    <li class="page-item"><a class="page-link" href="{{- path -}}" rel="next" data-model="page" data-value="{{ current_page + 1 }}" data-action="live#update:prevent">{{- block('next_page_message') -}}</a></li>
+    <a href="{{- path -}}" rel="next" class="inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-fg-secondary transition-colors hover:bg-ink-100 hover:text-fg pointer-coarse:h-11 pointer-coarse:min-w-11">{{- block('next_page_message') -}}</a>
 {%- endblock next_page_link -%}
+
+{%- block next_page_link_disabled -%}
+    <span aria-disabled="true" class="inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-ink-300 pointer-coarse:h-11 pointer-coarse:min-w-11">{{- block('next_page_message') -}}</span>
+{%- endblock next_page_link_disabled -%}
+
+{%- block ellipsis -%}
+    <span aria-hidden="true" class="inline-flex h-8 min-w-6 items-center justify-center text-fg-muted">&hellip;</span>
+{%- endblock ellipsis -%}
+
+{# The previous/next messages are icon markup produced by the caller, so they print unescaped. #}
+{%- block previous_page_message -%}
+    {%- if options['prev_message'] is defined -%}
+        {{- options['prev_message']|raw -}}
+    {%- else -%}
+        &lsaquo;
+    {%- endif -%}
+{%- endblock previous_page_message -%}
+
+{%- block next_page_message -%}
+    {%- if options['next_message'] is defined -%}
+        {{- options['next_message']|raw -}}
+    {%- else -%}
+        &rsaquo;
+    {%- endif -%}
+{%- endblock next_page_message -%}

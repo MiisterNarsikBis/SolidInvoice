@@ -128,8 +128,8 @@ final class ViewTest extends KernelTestCase
 
         $params = $action($request, $invoice);
 
-        $response = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig')
-            ->renderBlock('content', $params);
+        $template = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig');
+        $response = $template->renderBlock('page_title_actions', $params) . $template->renderBlock('content', $params);
 
         $this->assertMatchesHtmlSnapshot($response);
     }
@@ -202,8 +202,8 @@ final class ViewTest extends KernelTestCase
 
         $params = $action($request, $invoice);
 
-        $response = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig')
-            ->renderBlock('content', $params);
+        $template = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig');
+        $response = $template->renderBlock('page_title_actions', $params) . $template->renderBlock('content', $params);
 
         $this->assertMatchesHtmlSnapshot($response);
     }
@@ -285,8 +285,8 @@ final class ViewTest extends KernelTestCase
 
         $params = $action($request, $invoice);
 
-        $response = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig')
-            ->renderBlock('content', $params);
+        $template = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig');
+        $response = $template->renderBlock('page_title_actions', $params) . $template->renderBlock('content', $params);
 
         $this->assertMatchesHtmlSnapshot($response);
     }
@@ -352,8 +352,8 @@ final class ViewTest extends KernelTestCase
 
         $params = $action($request, $invoice);
 
-        $response = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig')
-            ->renderBlock('content', $params);
+        $template = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig');
+        $response = $template->renderBlock('page_title_actions', $params) . $template->renderBlock('content', $params);
 
         $this->assertMatchesHtmlSnapshot($response);
     }
@@ -428,8 +428,8 @@ final class ViewTest extends KernelTestCase
 
         $params = $action($request, $invoice);
 
-        $response = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig')
-            ->renderBlock('content', $params);
+        $template = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig');
+        $response = $template->renderBlock('page_title_actions', $params) . $template->renderBlock('content', $params);
 
         $this->assertMatchesHtmlSnapshot($response);
     }
@@ -501,8 +501,8 @@ final class ViewTest extends KernelTestCase
 
         $params = $action($request, $invoice);
 
-        $response = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig')
-            ->renderBlock('content', $params);
+        $template = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig');
+        $response = $template->renderBlock('page_title_actions', $params) . $template->renderBlock('content', $params);
 
         $this->assertMatchesHtmlSnapshot($response);
     }
@@ -577,8 +577,8 @@ final class ViewTest extends KernelTestCase
 
         $params = $action($request, $invoice);
 
-        $response = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig')
-            ->renderBlock('content', $params);
+        $template = $twig->resolveTemplate('@SolidInvoiceInvoice/Default/view.html.twig');
+        $response = $template->renderBlock('page_title_actions', $params) . $template->renderBlock('content', $params);
 
         $this->assertMatchesHtmlSnapshot($response);
     }

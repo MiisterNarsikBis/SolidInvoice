@@ -17,9 +17,10 @@
     },
     "homepage": "https://solidinvoice.co",
     "scripts": {
-        "dev": "encore dev",
+        "dev": "encore dev && tailwindcss -i assets/tailwind/app.css -o public/ui/app.css",
         "watch": "encore dev --watch",
-        "build": "encore production --progress",
+        "watch:tw": "tailwindcss -i assets/tailwind/app.css -o public/ui/app.css --watch",
+        "build": "encore production --progress && tailwindcss -i assets/tailwind/app.css -o public/ui/app.css --minify",
         "lint:js": "eslint assets",
         "lint:css": "stylelint 'assets/**/*.{scss,css}'"
     },
@@ -36,6 +37,7 @@
         "@symfony/ux-live-component": "file:vendor/symfony/ux-live-component/assets",
         "@symfony/ux-toggle-password": "file:vendor/symfony/ux-toggle-password/assets",
         "@symfony/webpack-encore": "^7.1.0",
+        "@tailwindcss/cli": "^4.3.3",
         "@types/jquery": "^3.5.29",
         "@types/sortablejs": "^1.15.9",
         "bootstrap": "^5.3.8",
@@ -53,6 +55,7 @@
         "stylelint-config-recommended": "^18.0.0",
         "stylelint-config-standard-scss": "^17.0.0",
         "stylelint-scss": "^7.2.0",
+        "tailwindcss": "^4.3.3",
         "tom-select": "^2.6.2",
         "ts-loader": "^9.6.2",
         "typescript": "^5.9.3",

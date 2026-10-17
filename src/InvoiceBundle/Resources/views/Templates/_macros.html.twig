@@ -273,4 +273,4 @@
  # `inline` for the PDF and email templates, which have no stylesheet to reach; the in-app
  # views pass false and take the Tabler utilities instead, so the text follows the theme.
  #}
-{% macro line_description(line, inline = true) %}{% if line.description is not empty and line.description|trim != line.name %}<div class="line-item-description{% if not inline %} text-secondary small{% endif %}"{% if inline %} style="font-size: 0.85em; color: #64748b; margin-top: 3px;"{% endif %}>{{ line.description|nl2br }}</div>{% endif %}{% endmacro %}
+{% macro line_description(line, inline = true) %}{% if line.description is not empty and line.description|trim != line.name %}<div class="line-item-description{% if not inline %} mt-0.5 text-sm text-fg-muted{% endif %}"{% if inline %} style="font-size: 0.85em; color: #64748b; margin-top: 3px;"{% endif %}>{{ line.description|nl2br }}</div>{% endif %}{% endmacro %}

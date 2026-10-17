@@ -30,7 +30,7 @@ The two icons at the right of every row are `View` (eye icon) — opens the clie
 
 ## Creating a client
 
-Click the green `+ Create Client` button at the top right. See [Creating a client](./create-new-client.md) for the full form walkthrough.
+Click the blue `+ Create Client` button at the top right. See [Creating a client](./create-new-client.md) for the full form walkthrough.
 
 ## Archiving a client
 

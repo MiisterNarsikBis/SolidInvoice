@@ -7,7 +7,24 @@
 # with this source code in the file LICENSE.
 #}
 
-{% form_theme form '@SolidInvoiceSettings/Form/fields.html.twig' %}
+{#
+ # The application settings page (a Live Component): a tab per section, the section's form in a
+ # card, and for the system section the company tax identifiers and the danger zone below it.
+ #
+ # Built with plain elements rather than <twig:Si:Card>: the macro below is not visible inside a
+ # component slot.
+ #}
+{% form_theme form '@SolidInvoiceSettings/Form/tailwind.html.twig' %}
+
+{# A section heading: an icon, a title and an optional line of help. #}
+{% macro head(icon, title, help = null) %}
+    <h3 class="mb-3 flex items-center gap-2 text-lg font-semibold text-fg">
+        {{ ux_icon(icon, {class: 'size-5 text-primary', 'aria-hidden': 'true'}) }}
+        {{ title }}
+    </h3>
+    {% if help %}<p class="-mt-1 mb-4 text-sm text-fg-muted">{{ help }}</p>{% endif %}
+{% endmacro %}
+{% import _self as ui %}
 
 {# Tab metadata for navigation #}
 {% set tabMeta = {
@@ -17,27 +34,18 @@
     'email': {'title': 'settings.page.tab.email'|trans, 'icon': 'tabler:mail'},
     'design': {'title': 'settings.page.tab.design'|trans, 'icon': 'tabler:palette'}
 } %}
+{% set sectionBox = 'mb-6 border-b border-line-light pb-6' %}
 
-<div class="settings-page"{{ attributes }}>
-    {# Tabs Navigation #}
-    <ul class="nav nav-underline mb-4" role="tablist">
+<div {{ attributes }}>
+    <nav class="mb-5 flex flex-wrap gap-x-1 border-b border-line" role="tablist">
         {% for settingsSection, setting in appSettings %}
             {% set meta = tabMeta[settingsSection]|default({
                 'title': settingsSection|replace({'_': ' '})|title|trans,
                 'icon': 'tabler:settings'
             }) %}
-            <li class="nav-item">
-                <a href="{{ path('_settings', {section: settingsSection}) }}"
-                   class="nav-link{{ settingsSection is same as section ? ' active' : '' }}"
-                   {% if settingsSection is same as section %}aria-current="page"{% endif %}>
-                    <span class="nav-link-icon d-none d-sm-inline-block">
-                        {{ ux_icon(meta.icon, {width: 16, height: 16}) }}
-                    </span>
-                    <span>{{ meta.title }}</span>
-                </a>
-            </li>
+            <twig:Si:Tab href="{{ path('_settings', {section: settingsSection}) }}" :active="settingsSection is same as section" icon="{{ meta.icon }}">{{ meta.title }}</twig:Si:Tab>
         {% endfor %}
-    </ul>
+    </nav>
 
     {{ form_start(form, {
         attr: {
@@ -46,46 +54,28 @@
         }
     }) }}
 
-    {# Settings Content Card #}
-    <div class="card settings-content-card">
-        <div class="card-body">
-            {# Render form fields with better organization #}
+    <div class="max-w-4xl rounded-lg border border-line-light bg-surface shadow-sm">
+        <div class="p-6">
             {% if section == 'system' %}
-                {# Company Settings - Custom Layout #}
                 {% if form.company is defined %}
-                    {# Company Profile Section - Name first, then Logo #}
-                    <div class="mb-4 pb-4 border-bottom">
-                        <h3 class="d-flex align-items-center gap-2 mb-3">
-                            {{ ux_icon('tabler:building', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                            {{ 'settings.page.company.profile'|trans }}
-                        </h3>
-                        <div class="row g-4">
-                            {% if form.company.company_name is defined %}
-                                <div class="col-12">
-                                    {{ form_row(form.company.company_name, {
-                                        label: 'settings.page.company.name'|trans,
-                                        attr: {placeholder: 'settings.page.company.name_placeholder'|trans}
-                                    }) }}
-                                </div>
-                            {% endif %}
-                            {% if form.company.logo is defined %}
-                                <div class="col-12">
-                                    <label class="form-label">{{ 'settings.page.company.logo'|trans }}</label>
-                                    {{ form_row(form.company.logo) }}
-                                </div>
-                            {% endif %}
-                        </div>
+                    <div class="{{ sectionBox }}">
+                        {{ ui.head('tabler:building', 'settings.page.company.profile'|trans) }}
+                        {% if form.company.company_name is defined %}
+                            {{ form_row(form.company.company_name, {
+                                label: 'settings.page.company.name'|trans,
+                                attr: {placeholder: 'settings.page.company.name_placeholder'|trans}
+                            }) }}
+                        {% endif %}
+                        {% if form.company.logo is defined %}
+                            {{ form_row(form.company.logo, {label: 'settings.page.company.logo'|trans}) }}
+                        {% endif %}
                     </div>
 
-                    {# Business Details Section #}
-                    <div class="mb-4 pb-4 border-bottom">
-                        <h3 class="d-flex align-items-center gap-2 mb-3">
-                            {{ ux_icon('tabler:file-text', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                            {{ 'settings.page.company.business_details'|trans }}
-                        </h3>
-                        <div class="row g-3">
+                    <div class="{{ sectionBox }}">
+                        {{ ui.head('tabler:file-text', 'settings.page.company.business_details'|trans) }}
+                        <div class="grid gap-x-4 md:grid-cols-2">
                             {% if form.company.currency is defined %}
-                                <div class="col-md-6">
+                                <div>
                                     {{ form_row(form.company.currency, {
                                         label: 'settings.page.company.currency'|trans,
                                         help: 'settings.page.company.currency_help'|trans
@@ -95,19 +85,12 @@
                         </div>
                     </div>
 
-                    {# Contact Details Section #}
                     {% if form.company.contact_details is defined %}
-                        <div class="mb-4 pb-4 border-bottom">
-                            <h3 class="d-flex align-items-center gap-2 mb-3">
-                                {{ ux_icon('tabler:map-pin', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                                {{ 'settings.page.company.contact_details'|trans }}
-                            </h3>
-                            <p class="text-muted small mb-3">
-                                {{ 'settings.page.company.contact_help'|trans }}
-                            </p>
-                            <div class="row g-3">
+                        <div class="{{ sectionBox }}">
+                            {{ ui.head('tabler:map-pin', 'settings.page.company.contact_details'|trans, 'settings.page.company.contact_help'|trans) }}
+                            <div class="grid gap-x-4 md:grid-cols-2">
                                 {% if form.company.contact_details.email is defined %}
-                                    <div class="col-md-6">
+                                    <div>
                                         {{ form_row(form.company.contact_details.email, {
                                             label: 'settings.page.company.contact_email'|trans,
                                             attr: {placeholder: 'settings.page.company.contact_email_placeholder'|trans}
@@ -115,7 +98,7 @@
                                     </div>
                                 {% endif %}
                                 {% if form.company.contact_details.phone_number is defined %}
-                                    <div class="col-md-6">
+                                    <div>
                                         {{ form_row(form.company.contact_details.phone_number, {
                                             label: 'settings.page.company.phone'|trans,
                                             attr: {placeholder: 'settings.page.company.phone_placeholder'|trans}
@@ -124,90 +107,62 @@
                                 {% endif %}
                             </div>
                             {% if form.company.contact_details.address is defined %}
-                                <div class="mt-3">
-                                    <label class="form-label fw-medium mb-2">{{ 'settings.page.company.business_address'|trans }}</label>
-                                    {{ form_widget(form.company.contact_details.address) }}
-                                </div>
+                                <span class="si-label">{{ 'settings.page.company.business_address'|trans }}</span>
+                                {{ form_widget(form.company.contact_details.address) }}
                             {% endif %}
                         </div>
                     {% endif %}
-
                 {% endif %}
 
-                {# Domain Section #}
                 {% if form.domain is defined and form.domain.custom_domain is defined %}
-                    <div class="mb-4 pb-4 border-bottom">
-                        <h3 class="d-flex align-items-center gap-2 mb-3">
-                            {{ ux_icon('tabler:world', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                            {{ 'settings.page.domain.title'|trans }}
-                        </h3>
-                        <p class="text-muted small mb-3">
-                            {{ 'settings.page.domain.subtitle'|trans }}
-                        </p>
+                    <div class="{{ sectionBox }}">
+                        {{ ui.head('tabler:world', 'settings.page.domain.title'|trans, 'settings.page.domain.subtitle'|trans) }}
                         {{ form_row(form.domain.custom_domain, {
                             label: 'settings.page.domain.custom_domain'|trans,
                             attr: {placeholder: 'invoices.yourcompany.com'}
                         }) }}
 
                         {% if custom_domain_dns_record is not empty %}
-                            <div class="alert alert-info mt-3" role="alert">
-                                <div class="d-flex">
-                                    <div class="me-3">
-                                        {{ ux_icon('tabler:info-circle', {width: 24, height: 24, 'aria-hidden': 'true'}) }}
+                            <div class="flex gap-3 rounded-md border border-info/30 bg-info-light px-4 py-3 text-info-dark" role="alert">
+                                {{ ux_icon('tabler:info-circle', {class: 'mt-0.5 size-5 shrink-0', 'aria-hidden': 'true'}) }}
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="font-semibold">{{ 'settings.page.domain.dns_title'|trans }}</h4>
+                                    <p class="mt-1 mb-3">{{ 'settings.page.domain.dns_help'|trans }}</p>
+                                    <div class="overflow-x-auto rounded-md border border-info/30 bg-surface text-fg">
+                                        <table class="w-full text-base">
+                                            <thead>
+                                                <tr class="border-b border-line-light text-left text-xs font-semibold uppercase tracking-wide text-fg-muted">
+                                                    <th scope="col" class="px-3 py-2">{{ 'settings.page.domain.dns_type'|trans }}</th>
+                                                    <th scope="col" class="px-3 py-2">{{ 'settings.page.domain.dns_name'|trans }}</th>
+                                                    <th scope="col" class="px-3 py-2">{{ 'settings.page.domain.dns_value'|trans }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="px-3 py-2"><code class="font-mono text-sm">CNAME</code></td>
+                                                    <td class="px-3 py-2"><code class="font-mono text-sm">{{ form.domain.custom_domain.vars.value|default('invoices.yourcompany.com') }}</code></td>
+                                                    <td class="px-3 py-2"><code class="font-mono text-sm">{{ custom_domain_dns_record }}</code></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="flex-grow-1">
-                                        <h4 class="alert-title mb-1">{{ 'settings.page.domain.dns_title'|trans }}</h4>
-                                        <p class="mb-2">
-                                            {{ 'settings.page.domain.dns_help'|trans }}
-                                        </p>
-                                        <div class="table-responsive">
-                                            <table class="table table-sm table-bordered mb-2 align-middle">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">{{ 'settings.page.domain.dns_type'|trans }}</th>
-                                                        <th scope="col">{{ 'settings.page.domain.dns_name'|trans }}</th>
-                                                        <th scope="col">{{ 'settings.page.domain.dns_value'|trans }}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td><code>CNAME</code></td>
-                                                        <td><code>{{ form.domain.custom_domain.vars.value|default('invoices.yourcompany.com') }}</code></td>
-                                                        <td><code>{{ custom_domain_dns_record }}</code></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <p class="text-muted small mb-0">
-                                            {{ 'settings.page.domain.dns_footer'|trans }}
-                                        </p>
-                                    </div>
+                                    <p class="mt-2 text-sm">{{ 'settings.page.domain.dns_footer'|trans }}</p>
                                 </div>
                             </div>
                         {% endif %}
                     </div>
                 {% endif %}
 
-                {# General Settings Section #}
                 {% if form.general is defined %}
                     <div>
-                        <h3 class="d-flex align-items-center gap-2 mb-3">
-                            {{ ux_icon('tabler:settings', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                            {{ 'settings.page.general.title'|trans }}
-                        </h3>
+                        {{ ui.head('tabler:settings', 'settings.page.general.title'|trans) }}
                         {{ form_widget(form.general) }}
                     </div>
                 {% endif %}
 
             {% elseif section == 'invoice' or section == 'quote' %}
-                {# Invoice/Quote Settings - Custom Layout #}
-
-                {# Display Settings #}
-                <div class="mb-4 pb-4 border-bottom">
-                    <h3 class="d-flex align-items-center gap-2 mb-3">
-                        {{ ux_icon('tabler:eye', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                        {{ 'settings.page.display.title'|trans }}
-                    </h3>
+                <div class="{{ sectionBox }}">
+                    {{ ui.head('tabler:eye', 'settings.page.display.title'|trans) }}
                     {% if form.watermark is defined %}
                         {{ form_row(form.watermark, {
                             label: 'settings.page.display.watermark'|trans,
@@ -216,13 +171,9 @@
                     {% endif %}
                 </div>
 
-                {# Payment Terms #}
                 {% if form.payment_terms is defined %}
-                    <div class="mb-4 pb-4 border-bottom">
-                        <h3 class="d-flex align-items-center gap-2 mb-3">
-                            {{ ux_icon('tabler:calendar-event', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                            {{ 'settings.page.payment_terms.title'|trans }}
-                        </h3>
+                    <div class="{{ sectionBox }}">
+                        {{ ui.head('tabler:calendar-event', 'settings.page.payment_terms.title'|trans) }}
                         {{ form_row(form.payment_terms, {
                             label: 'settings.page.payment_terms.label'|trans,
                             help: 'settings.page.payment_terms.help'|trans
@@ -230,55 +181,36 @@
                     </div>
                 {% endif %}
 
-                {# Email Settings #}
-                <div class="mb-4 pb-4 border-bottom">
-                    <h3 class="d-flex align-items-center gap-2 mb-3">
-                        {{ ux_icon('tabler:mail', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                        {{ 'settings.page.email.notifications'|trans }}
-                    </h3>
-                    <div class="row g-3">
-                        {% if form.email_subject is defined %}
-                            <div class="col-12">
-                                {{ form_row(form.email_subject, {
-                                    label: 'settings.page.email.subject'|trans,
-                                    help: 'settings.email_subject.help'|trans({'%type%': ('label.' ~ section)|trans}),
-                                    attr: {placeholder: 'settings.email_subject.placeholder'|trans({'%type%': ('label.' ~ section)|trans|title})}
-                                }) }}
-                            </div>
-                        {% endif %}
-                        {% if form.bcc_address is defined %}
-                            <div class="col-12">
-                                {{ form_row(form.bcc_address, {
-                                    label: 'settings.page.email.bcc'|trans,
-                                    help: 'settings.bcc_address.help'|trans({'%type%': ('label.' ~ section)|trans}),
-                                    attr: {placeholder: 'bcc@yourcompany.com'}
-                                }) }}
-                            </div>
-                        {% endif %}
-                    </div>
+                <div class="{{ sectionBox }}">
+                    {{ ui.head('tabler:mail', 'settings.page.email.notifications'|trans) }}
+                    {% if form.email_subject is defined %}
+                        {{ form_row(form.email_subject, {
+                            label: 'settings.page.email.subject'|trans,
+                            help: 'settings.email_subject.help'|trans({'%type%': ('label.' ~ section)|trans}),
+                            attr: {placeholder: 'settings.email_subject.placeholder'|trans({'%type%': ('label.' ~ section)|trans|title})}
+                        }) }}
+                    {% endif %}
+                    {% if form.bcc_address is defined %}
+                        {{ form_row(form.bcc_address, {
+                            label: 'settings.page.email.bcc'|trans,
+                            help: 'settings.bcc_address.help'|trans({'%type%': ('label.' ~ section)|trans}),
+                            attr: {placeholder: 'bcc@yourcompany.com'}
+                        }) }}
+                    {% endif %}
                 </div>
 
-                {# ID Generation Settings #}
                 {% if form.id_generation is defined %}
-                    <div>
-                        <h3 class="d-flex align-items-center gap-2 mb-3">
-                            {{ ux_icon('tabler:hash', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                            {{ 'settings.page.numbering.title'|trans }}
-                        </h3>
-                        <p class="text-muted small mb-3">
-                            {{ 'settings.numbering.description'|trans({'%type%': ('label.' ~ section)|trans}) }}
-                        </p>
-                        <div class="row g-3">
-                            {% if form.id_generation.strategy is defined %}
-                                <div class="col-12">
-                                    {{ form_row(form.id_generation.strategy, {
-                                        label: 'settings.page.numbering.strategy'|trans,
-                                        help: 'settings.numbering_strategy.help'|trans({'%type%': ('label.' ~ section)|trans})
-                                    }) }}
-                                </div>
-                            {% endif %}
+                    <div class="{{ section == 'invoice' and form.reminder is defined ? sectionBox : '' }}">
+                        {{ ui.head('tabler:hash', 'settings.page.numbering.title'|trans, 'settings.numbering.description'|trans({'%type%': ('label.' ~ section)|trans})) }}
+                        {% if form.id_generation.strategy is defined %}
+                            {{ form_row(form.id_generation.strategy, {
+                                label: 'settings.page.numbering.strategy'|trans,
+                                help: 'settings.numbering_strategy.help'|trans({'%type%': ('label.' ~ section)|trans})
+                            }) }}
+                        {% endif %}
+                        <div class="grid gap-x-4 md:grid-cols-2">
                             {% if form.id_generation.id_prefix is defined %}
-                                <div class="col-md-6">
+                                <div>
                                     {{ form_row(form.id_generation.id_prefix, {
                                         label: 'settings.page.numbering.prefix'|trans,
                                         help: 'settings.page.numbering.prefix_help'|trans,
@@ -287,7 +219,7 @@
                                 </div>
                             {% endif %}
                             {% if form.id_generation.id_suffix is defined %}
-                                <div class="col-md-6">
+                                <div>
                                     {{ form_row(form.id_generation.id_suffix, {
                                         label: 'settings.page.numbering.suffix'|trans,
                                         help: 'settings.page.numbering.suffix_help'|trans,
@@ -297,106 +229,69 @@
                             {% endif %}
                         </div>
 
-                        {# Preview of numbering #}
-                        <div class="mt-3 p-3 bg-light rounded-3">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted small">{{ 'settings.page.numbering.example'|trans }}</span>
-                                <code class="fs-6">
-                                    {% set prefix = form.id_generation.id_prefix.vars.value|default('') %}
-                                    {% set suffix = form.id_generation.id_suffix.vars.value|default('') %}
-                                    {{ prefix }}001{{ suffix }}
-                                </code>
-                            </div>
+                        <div class="flex items-center gap-2 rounded-lg bg-canvas px-4 py-3">
+                            <span class="text-sm text-fg-muted">{{ 'settings.page.numbering.example'|trans }}</span>
+                            <code class="font-mono text-base text-fg">
+                                {% set prefix = form.id_generation.id_prefix.vars.value|default('') %}
+                                {% set suffix = form.id_generation.id_suffix.vars.value|default('') %}
+                                {{ prefix }}001{{ suffix }}
+                            </code>
                         </div>
                     </div>
                 {% endif %}
 
-                {# Payment Reminders Section #}
                 {% if section == 'invoice' and form.reminder is defined %}
-                    <div class="mt-4">
-                        <h3 class="d-flex align-items-center gap-2 mb-3">
-                            {{ ux_icon('tabler:bell', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                            {{ 'settings.page.reminder.title'|trans }}
-                        </h3>
-                        <p class="text-muted small mb-3">
-                            {{ 'settings.page.reminder.subtitle'|trans }}
-                        </p>
+                    <div class="mt-6">
+                        {{ ui.head('tabler:bell', 'settings.page.reminder.title'|trans, 'settings.page.reminder.subtitle'|trans) }}
 
-                        {# Enable Reminders Toggle #}
                         {% if form.reminder.enabled is defined %}
-                            <div class="mb-4">
-                                {{ form_row(form.reminder.enabled, {
-                                    label: 'settings.page.reminder.enable'|trans,
-                                    help: 'settings.page.reminder.enable_help'|trans
-                                }) }}
-                            </div>
+                            {{ form_row(form.reminder.enabled, {
+                                label: 'settings.page.reminder.enable'|trans,
+                                help: 'settings.page.reminder.enable_help'|trans
+                            }) }}
                         {% endif %}
 
-                        {# Reminder Configuration Card #}
-                        <div class="card bg-light border-0">
-                            <div class="card-body">
-                                <div class="row g-4">
-                                    {# Pre-Due Reminder Settings #}
-                                    <div class="col-12">
-                                        <div class="d-flex align-items-start gap-3 mb-3 pb-3 border-bottom">
-                                            <div class="text-primary mt-1">
-                                                {{ ux_icon('tabler:calendar-event', {width: 20, height: 20, 'aria-hidden': 'true'}) }}
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <h5 class="mb-2">{{ 'settings.page.reminder.pre_due.title'|trans }}</h5>
-                                                <p class="text-muted small mb-3">
-                                                    {{ 'settings.page.reminder.pre_due.subtitle'|trans }}
-                                                </p>
+                        <div class="space-y-5 rounded-lg bg-canvas p-5">
+                            <div class="flex items-start gap-3 border-b border-line pb-5">
+                                {{ ux_icon('tabler:calendar-event', {class: 'mt-0.5 size-5 shrink-0 text-primary', 'aria-hidden': 'true'}) }}
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="font-semibold text-fg">{{ 'settings.page.reminder.pre_due.title'|trans }}</h4>
+                                    <p class="mt-1 mb-3 text-sm text-fg-muted">{{ 'settings.page.reminder.pre_due.subtitle'|trans }}</p>
 
-                                                {% if form.reminder.pre_due_enabled is defined %}
-                                                    {{ form_row(form.reminder.pre_due_enabled, {
-                                                        label: 'settings.page.reminder.pre_due.enable'|trans
-                                                    }) }}
-                                                {% endif %}
+                                    {% if form.reminder.pre_due_enabled is defined %}
+                                        {{ form_row(form.reminder.pre_due_enabled, {label: 'settings.page.reminder.pre_due.enable'|trans}) }}
+                                    {% endif %}
 
-                                                {% if form.reminder.pre_due_days is defined %}
-                                                    <div class="mt-3">
-                                                        {{ form_row(form.reminder.pre_due_days, {
-                                                            label: 'settings.page.reminder.pre_due.days'|trans,
-                                                            help: 'settings.page.reminder.pre_due.days_help'|trans,
-                                                            attr: {min: 0, max: 30, placeholder: '3'}
-                                                        }) }}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% if form.reminder.pre_due_days is defined %}
+                                        {{ form_row(form.reminder.pre_due_days, {
+                                            label: 'settings.page.reminder.pre_due.days'|trans,
+                                            help: 'settings.page.reminder.pre_due.days_help'|trans,
+                                            attr: {min: 0, max: 30, placeholder: '3'}
+                                        }) }}
+                                    {% endif %}
+                                </div>
+                            </div>
 
-                                    {# Overdue Reminder Schedule #}
-                                    <div class="col-12">
-                                        <div class="d-flex align-items-start gap-3">
-                                            <div class="text-warning mt-1">
-                                                {{ ux_icon('tabler:clock-exclamation', {width: 20, height: 20, 'aria-hidden': 'true'}) }}
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <h5 class="mb-2">{{ 'settings.page.reminder.overdue.title'|trans }}</h5>
-                                                <p class="text-muted small mb-3">
-                                                    {{ 'settings.page.reminder.overdue.subtitle'|trans }}
-                                                </p>
+                            <div class="flex items-start gap-3">
+                                {{ ux_icon('tabler:clock-exclamation', {class: 'mt-0.5 size-5 shrink-0 text-warning-dark', 'aria-hidden': 'true'}) }}
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="font-semibold text-fg">{{ 'settings.page.reminder.overdue.title'|trans }}</h4>
+                                    <p class="mt-1 mb-3 text-sm text-fg-muted">{{ 'settings.page.reminder.overdue.subtitle'|trans }}</p>
 
-                                                <div class="alert alert-info d-flex align-items-start gap-2 mb-0" role="status">
-                                                    {{ ux_icon('tabler:info-circle', {width: 20, height: 20, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true'}) }}
-                                                    <div class="small">
-                                                        <strong>{{ 'settings.page.reminder.overdue.tone_label'|trans }}</strong>
-                                                        {{ 'settings.page.reminder.overdue.tone_help'|trans }}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    <div class="flex items-start gap-2 rounded-md border border-info/30 bg-info-light px-3 py-2.5 text-sm text-info-dark" role="status">
+                                        {{ ux_icon('tabler:info-circle', {class: 'mt-0.5 size-5 shrink-0', 'aria-hidden': 'true'}) }}
+                                        <div>
+                                            <strong>{{ 'settings.page.reminder.overdue.tone_label'|trans }}</strong>
+                                            {{ 'settings.page.reminder.overdue.tone_help'|trans }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {# Information Alert #}
-                        <div class="alert alert-primary d-flex align-items-start gap-2 mt-3" role="status">
-                            {{ ux_icon('tabler:info-circle', {width: 20, height: 20, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true'}) }}
-                            <div class="small">
+                        <div class="mt-4 flex items-start gap-2 rounded-md border border-primary/25 bg-primary-lighter px-3 py-2.5 text-sm text-primary-dark" role="status">
+                            {{ ux_icon('tabler:info-circle', {class: 'mt-0.5 size-5 shrink-0', 'aria-hidden': 'true'}) }}
+                            <div>
                                 <strong>{{ 'settings.page.reminder.how_label'|trans }}</strong>
                                 {{ 'settings.page.reminder.how_help'|trans }}
                             </div>
@@ -405,20 +300,11 @@
                 {% endif %}
 
             {% elseif section == 'email' %}
-                {# Email Settings - Custom Layout #}
-
-                {# Sender Information #}
-                <div class="mb-4 pb-4 border-bottom">
-                    <h3 class="d-flex align-items-center gap-2 mb-3">
-                        {{ ux_icon('tabler:user', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                        {{ 'settings.page.email.sender.title'|trans }}
-                    </h3>
-                    <p class="text-muted small mb-3">
-                        {{ 'settings.page.email.sender.subtitle'|trans }}
-                    </p>
-                    <div class="row g-3">
+                <div class="{{ sectionBox }}">
+                    {{ ui.head('tabler:user', 'settings.page.email.sender.title'|trans, 'settings.page.email.sender.subtitle'|trans) }}
+                    <div class="grid gap-x-4 md:grid-cols-2">
                         {% if form.from_name is defined %}
-                            <div class="col-md-6">
+                            <div>
                                 {{ form_row(form.from_name, {
                                     label: 'settings.page.email.sender.from_name'|trans,
                                     help: 'settings.page.email.sender.from_name_help'|trans,
@@ -427,7 +313,7 @@
                             </div>
                         {% endif %}
                         {% if form.from_address is defined %}
-                            <div class="col-md-6">
+                            <div>
                                 {{ form_row(form.from_address, {
                                     label: 'settings.page.email.sender.from_address'|trans,
                                     help: 'settings.page.email.sender.from_address_help'|trans,
@@ -438,30 +324,16 @@
                     </div>
                 </div>
 
-                {# Mail Provider Settings #}
                 {% if form.sending_options is defined %}
                     <div>
-                        <h3 class="d-flex align-items-center gap-2 mb-3">
-                            {{ ux_icon('tabler:server', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                            {{ 'settings.page.email.delivery.title'|trans }}
-                        </h3>
-                        <p class="text-muted small mb-3">
-                            {{ 'settings.page.email.delivery.subtitle'|trans }}
-                        </p>
+                        {{ ui.head('tabler:server', 'settings.page.email.delivery.title'|trans, 'settings.page.email.delivery.subtitle'|trans) }}
                         {{ form_widget(form.sending_options) }}
                     </div>
                 {% endif %}
 
             {% elseif section == 'design' and form.template is defined %}
-                {# Design Settings - Invoice/Quote template picker (SaaS only) #}
                 <div>
-                    <h3 class="d-flex align-items-center gap-2 mb-3">
-                        {{ ux_icon('tabler:palette', {width: 22, height: 22, class: 'text-primary', 'aria-hidden': 'true'}) }}
-                        {{ 'settings.page.design.template.title'|trans }}
-                    </h3>
-                    <p class="text-muted small mb-3">
-                        {{ 'settings.page.design.template.subtitle'|trans }}
-                    </p>
+                    {{ ui.head('tabler:palette', 'settings.page.design.template.title'|trans, 'settings.page.design.template.subtitle'|trans) }}
 
                     {% if form.template.vars.feature_gated_active|default(false) %}
                         {{ upgrade_prompt(constant('SolidInvoice\\SaasBundle\\Feature\\Feature::CustomTemplates').value) }}
@@ -470,126 +342,77 @@
                     {{ form_widget(form.template) }}
                 </div>
             {% else %}
-                {# Default Rendering for Other Sections #}
                 {{ form_widget(form) }}
             {% endif %}
         </div>
 
-        {# Save Button Footer #}
-        <div class="card-footer bg-transparent border-top">
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary btn-save" aria-label="{{ 'settings.page.save'|trans }}">
-                    {{ ux_icon('tabler:device-floppy', {width: 18, height: 18, 'aria-hidden': 'true'}) }}
-                    {{ 'settings.page.save'|trans }}
-                </button>
-            </div>
+        <div class="flex justify-end rounded-b-lg border-t border-line-light px-6 py-3">
+            <button type="submit" class="si-btn si-btn--md si-btn--primary" aria-label="{{ 'settings.page.save'|trans }}">
+                {{ ux_icon('tabler:device-floppy', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                {{ 'settings.page.save'|trans }}
+            </button>
         </div>
     </div>
 
     {{ form_end(form) }}
 
-    {# Company Tax Identifiers - Only for System Section #}
     {% if section is same as('system') %}
-        <div class="card settings-content-card mt-4">
-            <div class="card-body">
-                <twig:CompanyTaxIdentifiers />
-            </div>
+        <div class="mt-6 max-w-4xl rounded-lg border border-line-light bg-surface p-6 shadow-sm">
+            <twig:CompanyTaxIdentifiers />
         </div>
-    {% endif %}
 
-    {# Danger Zone - Only for System Section #}
-    {% if section is same as('system') %}
-        <div class="settings-danger-zone mt-4" role="region" aria-labelledby="danger-zone-heading"
+        {# Danger zone: deleting the company asks for its name to be typed first. #}
+        <div class="mt-6 max-w-4xl" role="region" aria-labelledby="danger-zone-heading"
              {{ stimulus_controller('delete-company', {'company-name': company_name()}) }}>
-            <div class="card border-danger">
-                <div class="card-header bg-danger bg-opacity-10 border-danger">
-                    <h5 class="card-title text-danger mb-0 d-flex align-items-center gap-2" id="danger-zone-heading">
-                        {{ ux_icon('tabler:alert-triangle', {width: 20, height: 20, 'aria-hidden': 'true'}) }}
-                        {{ 'settings.page.danger.title'|trans }}
-                    </h5>
+            <div class="overflow-hidden rounded-lg border border-danger/50 bg-surface shadow-sm">
+                <div class="flex items-center gap-2 border-b border-danger/30 bg-danger-light px-5 py-3 text-danger-dark">
+                    {{ ux_icon('tabler:alert-triangle', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                    <h2 class="font-semibold" id="danger-zone-heading">{{ 'settings.page.danger.title'|trans }}</h2>
                 </div>
-                <div class="card-body">
-                    <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-3">
-                        <div>
-                            <h3 class="mb-1">{{ 'settings.page.danger.delete'|trans }}</h3>
-                            <p class="text-muted mb-0">
-                                {{ 'settings.page.danger.delete_help'|trans }}
-                            </p>
-                        </div>
-                        <button type="button"
-                                class="btn btn-outline-danger flex-shrink-0 gap-2"
-                                aria-label="{{ 'settings.page.danger.delete'|trans }}"
-                                {{ stimulus_action('delete-company', 'showModal', 'click') }}>
-                            {{ ux_icon('tabler:trash', {width: 16, height: 16, 'aria-hidden': 'true'}) }}
+                <div class="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="font-semibold text-fg">{{ 'settings.page.danger.delete'|trans }}</h3>
+                        <p class="text-fg-muted">{{ 'settings.page.danger.delete_help'|trans }}</p>
+                    </div>
+                    <button type="button" class="si-btn si-btn--md si-btn--outline shrink-0 border-danger/50 text-danger-dark" aria-label="{{ 'settings.page.danger.delete'|trans }}" {{ stimulus_action('delete-company', 'showModal', 'click') }}>
+                        {{ ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                        {{ 'settings.page.danger.delete'|trans }}
+                    </button>
+                </div>
+            </div>
+
+            <twig:Si:Modal id="deleteCompanyModal" size="sm" status="danger" title="{{ 'settings.page.danger.modal.title'|trans }}" data-delete-company-target="modal">
+                <twig:Si:Alert type="danger" class="mb-4">
+                    <strong>{{ 'settings.page.danger.modal.warning'|trans }}</strong>
+                    {{ 'settings.page.danger.modal.warning_help'|trans }}
+                </twig:Si:Alert>
+                <p class="mb-2 text-fg-secondary">{{ 'settings.page.danger.modal.confirm_prompt'|trans }}</p>
+                <p class="mb-4 font-mono text-lg font-bold text-danger-dark" aria-label="{{ 'settings.page.danger.modal.company_name_aria'|trans }}">{{ company_name() }}</p>
+                <label for="companyNameConfirmation" class="si-label">{{ 'settings.page.company.name'|trans }}</label>
+                <input
+                    type="text"
+                    class="si-control"
+                    id="companyNameConfirmation"
+                    name="company_name"
+                    form="deleteCompanyForm"
+                    autocomplete="off"
+                    aria-required="true"
+                    {{ stimulus_target('delete-company', 'companyNameInput') }}
+                    {{ stimulus_action('delete-company', 'validateInput', 'input') }}
+                    placeholder="{{ 'settings.page.danger.modal.input_placeholder'|trans }}"
+                >
+
+                <twig:block name="footer">
+                    <button type="button" class="si-btn si-btn--md si-btn--ghost" data-si-modal-close>{{ 'action.cancel'|trans }}</button>
+                    <form id="deleteCompanyForm" action="{{ path('_delete_company') }}" method="post">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete_company') }}">
+                        <button type="submit" class="si-btn si-btn--md si-btn--danger" aria-label="{{ 'settings.page.danger.delete'|trans }}" {{ stimulus_target('delete-company', 'confirmButton') }} disabled>
+                            {{ ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'}) }}
                             {{ 'settings.page.danger.delete'|trans }}
                         </button>
-                    </div>
-                </div>
-            </div>
-
-            {# Delete Company Modal #}
-            <div class="modal fade"
-                 id="deleteCompanyModal"
-                 tabindex="-1"
-                 aria-labelledby="deleteCompanyModalLabel"
-                 aria-hidden="true"
-                 {{ stimulus_target('delete-company', 'modal') }}>
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header border-0 pb-0">
-                            <h5 class="modal-title text-danger d-flex align-items-center gap-2" id="deleteCompanyModalLabel">
-                                {{ ux_icon('tabler:alert-triangle', {width: 20, height: 20, 'aria-hidden': 'true'}) }}
-                                {{ 'settings.page.danger.modal.title'|trans }}
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'action.close'|trans }}"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
-                                {{ ux_icon('tabler:alert-circle', {width: 20, height: 20, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true'}) }}
-                                <div>
-                                    <strong>{{ 'settings.page.danger.modal.warning'|trans }}</strong>
-                                    {{ 'settings.page.danger.modal.warning_help'|trans }}
-                                </div>
-                            </div>
-                            <p class="mb-2">
-                                {{ 'settings.page.danger.modal.confirm_prompt'|trans }}
-                            </p>
-                            <p class="fw-bold text-danger fs-5 mb-3 font-monospace" aria-label="{{ 'settings.page.danger.modal.company_name_aria'|trans }}">{{ company_name() }}</p>
-                            <div class="mb-3">
-                                <label for="companyNameConfirmation" class="form-label">
-                                    {{ 'settings.page.company.name'|trans }}
-                                </label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="companyNameConfirmation"
-                                       name="company_name"
-                                       form="deleteCompanyForm"
-                                       autocomplete="off"
-                                       aria-required="true"
-                                       {{ stimulus_target('delete-company', 'companyNameInput') }}
-                                       {{ stimulus_action('delete-company', 'validateInput', 'input') }}
-                                       placeholder="{{ 'settings.page.danger.modal.input_placeholder'|trans }}">
-                            </div>
-                        </div>
-                        <div class="modal-footer border-0 pt-0">
-                            <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">
-                                {{ 'action.cancel'|trans }}
-                            </button>
-                            <form id="deleteCompanyForm" action="{{ path('_delete_company') }}" method="post" class="d-inline">
-                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete_company') }}">
-                                <button type="submit"
-                                        class="btn btn-danger gap-2"
-                                        aria-label="{{ 'settings.page.danger.delete'|trans }}"
-                                        {{ stimulus_target('delete-company', 'confirmButton') }}
-                                        disabled>
-                                    {{ ux_icon('tabler:trash', {width: 16, height: 16, 'aria-hidden': 'true'}) }}
-                                    {{ 'settings.page.danger.delete'|trans }}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    </form>
+                </twig:block>
+            </twig:Si:Modal>
         </div>
     {% endif %}
 </div>

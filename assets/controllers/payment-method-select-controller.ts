@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { setVisible } from '../lib/visibility';
 
 /**
  * Controller for payment method card selection
@@ -21,14 +22,7 @@ export default class PaymentMethodSelectController extends Controller<HTMLDivEle
     /**
      * Called when a payment method card is selected
      */
-    select(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        const selectedCard = input.closest('.payment-method-card') as HTMLLabelElement;
-
-        if (!selectedCard) {
-            return;
-        }
-
+    select(): void {
         this.updateCaptureOnlineVisibility();
     }
 
@@ -48,7 +42,7 @@ export default class PaymentMethodSelectController extends Controller<HTMLDivEle
 
         if (!selectedCard) {
             // No selection, hide capture online
-            this.captureOnlineTarget.classList.add('d-none');
+            setVisible(this.captureOnlineTarget, false);
             return;
         }
 
@@ -56,10 +50,10 @@ export default class PaymentMethodSelectController extends Controller<HTMLDivEle
 
         if (isOffline) {
             // Offline payment method - hide capture online toggle
-            this.captureOnlineTarget.classList.add('d-none');
+            setVisible(this.captureOnlineTarget, false);
         } else {
             // Online payment method - show capture online toggle
-            this.captureOnlineTarget.classList.remove('d-none');
+            setVisible(this.captureOnlineTarget, true);
         }
     }
 }

@@ -7,19 +7,19 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends '@SolidInvoiceCore/Layout/default_no_nav.html.twig' %}
+{% extends '@SolidInvoiceCore/Layout/focus.html.twig' %}
+
+{% block page_title %}{{ 'saas.pricing.title'|trans }}{% endblock %}
+
+{% block page_heading %}{% endblock %}
+
+{% block container_class %}max-w-6xl{% endblock %}
 
 {% block content %}
-    <div class="subscription-page subscription-pricing-page">
-        <div class="subscription-container">
-            <h1 class="subscription-title">{{ 'saas.pricing.title'|trans }}</h1>
-            <p class="subscription-subtitle">
-                {{ 'saas.pricing.subtitle'|trans }}
-            </p>
+    <div class="subscription-pricing-page text-center">
+        <h1 class="mb-2 text-3xl font-semibold tracking-tight text-fg">{{ 'saas.pricing.title'|trans }}</h1>
+        <p class="mx-auto mb-8 max-w-xl text-lg text-fg-secondary">{{ 'saas.pricing.subtitle'|trans }}</p>
 
-            <div class="mt-4">
-                {% include '@SolidInvoiceSaas/subscription/_plans_grid.html.twig' with { plans: plans } only %}
-            </div>
-        </div>
+        {% include '@SolidInvoiceSaas/subscription/_plans_grid.html.twig' with { plans: plans } only %}
     </div>
 {% endblock content %}

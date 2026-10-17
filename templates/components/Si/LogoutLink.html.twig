@@ -1,0 +1,14 @@
+{#
+    Logout is a CSRF-protected POST, never a link (a GET /logout is a 403). Platform's own
+    `<twig:Ui:Security:LogoutLink>` hard-codes Bootstrap button classes, so the Tailwind shell
+    carries its own copy of the same form. `title` must already be translated.
+#}
+{% props title, icon = 'tabler:logout', firewall = null, csrf_token_id = 'logout' %}
+
+<form method="post" action="{{ logout_path(firewall) }}">
+    <input type="hidden" {{ stimulus_controller('csrf-protection') }} name="_csrf_token" value="{{ csrf_token(csrf_token_id) }}">
+    <button type="submit" role="menuitem" {{ attributes.defaults({class: 'flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-base text-fg-secondary transition-colors hover:bg-surface-hover hover:text-fg'}) }}>
+        {% if icon %}{{ ux_icon(icon, {class: 'size-4 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}{% endif %}
+        {{ title }}
+    </button>
+</form>

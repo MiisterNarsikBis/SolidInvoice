@@ -1,262 +1,226 @@
 <html><body>
-<div data-controller="two-factor-download two-factor-modal live" class="two-factor-settings" id="in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed" data-live-name-value="User:TwoFactorSettings" data-live-url-value="/_components/User:TwoFactorSettings" data-live-props-value='{"totpSecret":"01JBYEQCR7DJ2YW4EXP6FYJZCR01JBYEQCR7DJ2YW4EXP6FYJZCR","showBackupCodes":false,"showQrModal":false,"formName":"two_factor_verify","two_factor_verify":{"code":"","secret":"01JBYEQCR7DJ2YW4EXP6FYJZCR01JBYEQCR7DJ2YW4EXP6FYJZCR","_token":""},"isValidated":false,"validatedFields":[],"@attributes":{"id":"in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed"},"@checksum":"REPLACED_CHECKSUM"}'>
-    <div class="form-page-sections">
+<div data-controller="two-factor-download two-factor-modal live" id="in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed" data-live-name-value="User:TwoFactorSettings" data-live-url-value="/_components/User:TwoFactorSettings" data-live-props-value='{"totpSecret":"01JBYEQCR7DJ2YW4EXP6FYJZCR01JBYEQCR7DJ2YW4EXP6FYJZCR","showBackupCodes":false,"showQrModal":false,"formName":"two_factor_verify","two_factor_verify":{"code":"","secret":"01JBYEQCR7DJ2YW4EXP6FYJZCR01JBYEQCR7DJ2YW4EXP6FYJZCR","_token":""},"isValidated":false,"validatedFields":[],"@attributes":{"id":"in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed"},"@checksum":"REPLACED_CHECKSUM"}'>
+    <div class="space-y-4">
 
-                                <section class="form-page-section">
-            <div class="section-header">
-                <div class="section-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="m3 7l9 6l9-6"></path></g></svg>
-                </div>
-                <div class="section-header-text">
-                    <h2 class="section-title">Email Authentication</h2>
-                    <p class="section-description">Receive verification codes via email when logging in</p>
-                </div>
-            </div>
-
-            <div class="section-content">
-                <div class="two-factor-section-content">
-                    <div class="two-factor-section-info">
-                        <div class="mb-2">
-                            <span class="badge bg-success-lt">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12l5 5L20 7"></path></svg>
-                                Enabled
-                            </span>
-                        </div>
-                        <p class="text-muted mb-0 small">
-                            Codes will be sent to: <strong>test@example.com</strong>
-                        </p>
-                    </div>
-                    <div class="two-factor-section-actions">
-                                                    <button type="button" class="btn btn-danger" data-action="live#action:prevent" data-live-action-param="disableEmailAuth">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
-                                Disable
-                            </button>
-                                            </div>
-                </div>
-            </div>
-        </section>
-
-                                <section class="form-page-section">
-            <div class="section-header">
-                <div class="section-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2zm5-1h2m-1 13v.01"></path></svg>
-                </div>
-                <div class="section-header-text">
-                    <h2 class="section-title">Authenticator App</h2>
-                    <p class="section-description">Use Google Authenticator, Authy, or similar apps for verification</p>
-                </div>
-            </div>
-
-            <div class="section-content">
-                <div class="two-factor-section-content">
-                    <div class="two-factor-section-info">
-                        <div class="mb-2">
-                            <span class="badge bg-secondary-lt">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
-                                Disabled
-                            </span>
-                        </div>
-                        <p class="text-muted mb-0 small">
-                            Set up an authenticator app for enhanced security
-                        </p>
-                    </div>
-                    <div class="two-factor-section-actions">
-                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#totp-setup-modal">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zm3 12v.01M14 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zM7 7v.01M4 15a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zm13-8v.01M14 14h3m3 0v.01M14 14v3m0 3h3m0-3h3m0 0v3"></path></svg>
-                                Set Up
-                            </button>
-                                            </div>
-                </div>
-            </div>
-        </section>
-
-                                            <section class="form-page-section">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1-4.069 0l-.301-.301l-6.558 6.558a2 2 0 0 1-1.239.578L5.172 21H4a1 1 0 0 1-.993-.883L3 20v-1.172a2 2 0 0 1 .467-1.284l.119-.13L4 17h2v-2h2v-2l2.144-2.144l-.301-.301a2.877 2.877 0 0 1 0-4.069l2.643-2.643a2.877 2.877 0 0 1 4.069 0M15 9h.01"></path></svg>
-                    </div>
-                    <div class="section-header-text">
-                        <h2 class="section-title">Backup Codes</h2>
-                        <p class="section-description">Use these codes when you lose access to your authentication device</p>
-                    </div>
-                </div>
-
-                <div class="section-content">
-                    <div class="two-factor-section-content">
-                        <div class="two-factor-section-info">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="badge bg-success-lt">
-                                    8 codes available
-                                </span>
-                            </div>
-                            <p class="text-muted mb-0 small">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="16" height="16" class="text-warning" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m-1.637-9.409L2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0M12 16h.01"></path></svg>
-                                Store these safely - each can only be used once
-                            </p>
-                        </div>
-                        <div class="two-factor-section-actions">
-                            <button type="button" class="btn btn-ghost" data-bs-toggle="modal" data-bs-target="#backup-codes-modal">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0-4 0"></path><path d="M21 12q-3.6 6-9 6t-9-6q3.6-6 9-6t9 6"></path></g></svg>
-                                View Codes
-                            </button>
-                            <button type="button" class="btn btn-outline-primary" data-action="live#action:prevent" data-live-action-param="downloadBackupCodes">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5l5-5m-5-7v12"></path></svg>
-                                Download
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        
-                                
-    </div>
-
-                        
-        
-
-
-    
-
-<div class="modal fade" tabindex="-1" aria-hidden="true" aria-labelledby="totp-setup-modal-title" id="totp-setup-modal" data-controller="solidworx--platform--modal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            
-                                                <div class="modal-header">
-                                                            <h5 class="modal-title">Set Up Authenticator App</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            
-                                            </div>
                 
-                <div class="modal-body">
-                                    <div class="totp-setup-container">
-                                        <div class="setup-steps">
-                        <div class="step active">
-                            <span class="step-number">1</span>
-                            <span class="step-label">Scan QR Code</span>
-                        </div>
-                        <div class="step">
-                            <span class="step-number">2</span>
-                            <span class="step-label">Verify Code</span>
-                        </div>
+<section class="rounded-lg border border-line-light bg-surface shadow-sm">
+    <header class="flex items-start gap-3 border-b border-line-light px-5 py-4">
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-lighter text-primary-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="m3 7l9 6l9-6"></path></g></svg>
+            </span>
+                <div class="min-w-0">
+            <h2 class="text-lg font-semibold text-fg">Email Authentication</h2>
+            <p class="text-sm text-fg-muted">Receive verification codes via email when logging in</p>        </div>
+    </header>
+    <div class="p-5">
+<div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-success-light text-success-dark">
+    <span class="size-1.5 rounded-full bg-success" aria-hidden="true"></span>
+    Enabled
+                    </span>
+                    <p class="mt-2 text-sm text-fg-muted">
+                        Codes will be sent to: <strong class="text-fg">test@example.com</strong>
+                    </p>
+                </div>
+                <div>
+                                            <button type="button" class="si-btn si-btn--md si-btn--danger" data-action="live#action:prevent" data-live-action-param="disableEmailAuth">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
+                            Disable
+                        </button>
+                                    </div>
+            </div>
+        </div>
+</section>
+
+                
+<section class="rounded-lg border border-line-light bg-surface shadow-sm">
+    <header class="flex items-start gap-3 border-b border-line-light px-5 py-4">
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-lighter text-primary-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2zm5-1h2m-1 13v.01"></path></svg>
+            </span>
+                <div class="min-w-0">
+            <h2 class="text-lg font-semibold text-fg">Authenticator App</h2>
+            <p class="text-sm text-fg-muted">Use Google Authenticator, Authy, or similar apps for verification</p>        </div>
+    </header>
+    <div class="p-5">
+<div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-ink-100 text-fg-secondary">
+    <span class="size-1.5 rounded-full bg-ink-400" aria-hidden="true"></span>
+    Disabled
+                    </span>
+                    <p class="mt-2 text-sm text-fg-muted">
+                        Set up an authenticator app for enhanced security
+                    </p>
+                </div>
+                <div>
+                                            <button type="button" class="si-btn si-btn--md si-btn--primary" data-si-modal-open="#totp-setup-modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zm3 12v.01M14 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zM7 7v.01M4 15a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zm13-8v.01M14 14h3m3 0v.01M14 14v3m0 3h3m0-3h3m0 0v3"></path></svg>
+                            Set Up
+                        </button>
+                                    </div>
+            </div>
+        </div>
+</section>
+
+                            
+<section class="rounded-lg border border-line-light bg-surface shadow-sm">
+    <header class="flex items-start gap-3 border-b border-line-light px-5 py-4">
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-lighter text-primary-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1-4.069 0l-.301-.301l-6.558 6.558a2 2 0 0 1-1.239.578L5.172 21H4a1 1 0 0 1-.993-.883L3 20v-1.172a2 2 0 0 1 .467-1.284l.119-.13L4 17h2v-2h2v-2l2.144-2.144l-.301-.301a2.877 2.877 0 0 1 0-4.069l2.643-2.643a2.877 2.877 0 0 1 4.069 0M15 9h.01"></path></svg>
+            </span>
+                <div class="min-w-0">
+            <h2 class="text-lg font-semibold text-fg">Backup Codes</h2>
+            <p class="text-sm text-fg-muted">Use these codes when you lose access to your authentication device</p>        </div>
+    </header>
+    <div class="p-5">
+<div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-success-light text-success-dark">
+    <span class="size-1.5 rounded-full bg-success" aria-hidden="true"></span>
+    8 codes available</span>
+                        <p class="mt-2 flex items-center gap-1.5 text-sm text-fg-muted">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 text-warning-dark" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m-1.637-9.409L2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0M12 16h.01"></path></svg>
+                            Store these safely - each can only be used once
+                        </p>
                     </div>
-
-                                        <div class="qr-code-container">
-                        <div class="text-center">
-                            <img src="data:image/png;base64,NORMALIZED_QR_CODE" alt="QR Code" class="qr-code-image">
-                            <p class="text-muted mt-3 mb-0">
-                                Scan this QR code with your authenticator app
-                            </p>
-                        </div>
-
-                                                <details class="manual-entry-details mt-4">
-                            <summary>Can't scan? Enter manually</summary>
-                            <div class="manual-entry-content">
-                                <p class="text-muted small mb-2">Enter this code in your authenticator app:</p>
-                                <code class="manual-entry-code">01JBYEQCR7DJ2YW4EXP6FYJZCR01JBYEQCR7DJ2YW4EXP6FYJZCR</code>
-                            </div>
-                        </details>
-                    </div>
-
-                                        <div class="verification-form-container">
-                        <form name="two_factor_verify" method="post" data-controller="solidworx--platform--loading" data-action="submit-&gt;solidworx--platform--loading#onSubmit" data-model="on(change)|*" class="verification-form">
-                            <div class="mb-4">
-                                <label for="two_factor_verify_code" class="form-label">
-                                    Enter the 6-digit code from your app
-                                </label>
-                                <input type="text" id="two_factor_verify_code" name="two_factor_verify[code]" data-required="required" maxlength="6" inputmode="numeric" autocomplete="one-time-code" autofocus="autofocus" pattern="[0-9]*" class="form-control form-control-lg text-center verification-code-input form-control" placeholder="000000">
-                                
-                            </div>
-                            <input type="hidden" id="two_factor_verify_secret" name="two_factor_verify[secret]" value="01JBYEQCR7DJ2YW4EXP6FYJZCR01JBYEQCR7DJ2YW4EXP6FYJZCR">
-                        <input type="hidden" id="two_factor_verify__token" name="two_factor_verify[_token]" data-controller="csrf-protection">
-</form>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" class="si-btn si-btn--md si-btn--ghost" data-si-modal-open="#backup-codes-modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0-4 0"></path><path d="M21 12q-3.6 6-9 6t-9-6q3.6-6 9-6t9 6"></path></g></svg>
+                            View Codes
+                        </button>
+                        <button type="button" class="si-btn si-btn--md si-btn--outline" data-action="live#action:prevent" data-live-action-param="downloadBackupCodes">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5l5-5m-5-7v12"></path></svg>
+                            Download
+                        </button>
                     </div>
                 </div>
-                            </div>
+            </div>
+</section>
+        
+                    </div>
 
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
+                
+        <dialog class="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] flex-col overflow-hidden rounded-xl bg-surface p-0 text-fg shadow-lg backdrop:bg-ink-900/55 open:flex max-w-3xl" id="totp-setup-modal" aria-labelledby="totp-setup-modal-title" data-controller="si-modal" data-si-modal-show-value="false" data-si-modal-static-value="false">
+    
+            <div class="flex shrink-0 items-center justify-between gap-3 border-b border-line-light px-5 py-4">
+                                <h2 id="totp-setup-modal-title" class="text-lg font-semibold text-fg">Set Up Authenticator App</h2>
+                                            <button type="button" class="-mr-1 inline-flex size-8 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-surface-hover hover:text-fg" data-si-modal-close aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
+                        </button>
+                                        </div>
+
+        <div class="min-h-0 flex-1 overflow-y-auto p-5">
+            <div class="grid gap-6 md:grid-cols-2">
+                <div class="text-center">
+                    <ol class="mb-4 flex items-center justify-center gap-4 text-sm">
+                        <li class="flex items-center gap-2 font-semibold text-primary-dark">
+                            <span class="flex size-6 items-center justify-center rounded-full bg-primary text-xs text-white">1</span>
+                            Scan QR Code
+                        </li>
+                        <li class="flex items-center gap-2 text-fg-muted">
+                            <span class="flex size-6 items-center justify-center rounded-full bg-ink-100 text-xs">2</span>
+                            Verify Code
+                        </li>
+                    </ol>
+
+                    <img src="data:image/png;base64,NORMALIZED_QR_CODE" alt="QR Code" class="mx-auto size-48 rounded-md border border-line bg-white p-2">
+                    <p class="mt-3 text-fg-muted">Scan this QR code with your authenticator app</p>
+
+                    <details class="mt-4 text-left">
+                        <summary class="cursor-pointer text-sm font-medium text-primary hover:underline">Can't scan? Enter manually</summary>
+                        <div class="mt-2 rounded-md bg-canvas p-3">
+                            <p class="mb-2 text-sm text-fg-muted">Enter this code in your authenticator app:</p>
+                            <code class="break-all font-mono text-sm text-fg">01JBYEQCR7DJ2YW4EXP6FYJZCR01JBYEQCR7DJ2YW4EXP6FYJZCR</code>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="md:pt-10">
+                    <form name="two_factor_verify" method="post" data-controller="solidworx--platform--loading" data-action="submit-&gt;solidworx--platform--loading#onSubmit" data-model="on(change)|*">
+                        <label for="two_factor_verify_code" class="si-label">Enter the 6-digit code from your app</label>
+                        <input type="text" id="two_factor_verify_code" name="two_factor_verify[code]" data-required="required" maxlength="6" inputmode="numeric" autocomplete="one-time-code" autofocus="autofocus" pattern="[0-9]*" class="si-control h-12 text-center text-xl tracking-widest si-control" placeholder="000000">
+                        
+                        <input type="hidden" id="two_factor_verify_secret" name="two_factor_verify[secret]" value="01JBYEQCR7DJ2YW4EXP6FYJZCR01JBYEQCR7DJ2YW4EXP6FYJZCR">
+                    <input type="hidden" id="two_factor_verify__token" name="two_factor_verify[_token]" data-controller="csrf-protection">
+</form>
+                </div>
+            </div>
+
+                    </div>
+
+                    <div class="flex shrink-0 items-center justify-end gap-2 border-t border-line-light px-5 py-3">
+                                <button type="button" class="si-btn si-btn--md si-btn--ghost" data-si-modal-close>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
                     Cancel
                 </button>
-                <button type="button" class="btn btn-primary" data-action="live#action:prevent" data-live-action-param="enableTOTPAuth">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12l5 5L20 7"></path></svg>
+                <button type="button" class="si-btn si-btn--md si-btn--primary" data-action="live#action:prevent" data-live-action-param="enableTOTPAuth">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12l5 5L20 7"></path></svg>
                     Verify &amp; Enable
                 </button>
-                                </div>
-                                    </div>
-    </div>
+                        </div>
+            </dialog>
+    
+        <dialog class="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] flex-col overflow-hidden rounded-xl bg-surface p-0 text-fg shadow-lg backdrop:bg-ink-900/55 open:flex max-w-lg" id="backup-codes-modal" aria-labelledby="backup-codes-modal-title" data-controller="si-modal" data-si-modal-show-value="false" data-si-modal-static-value="false">
+    
+            <div class="flex shrink-0 items-center justify-between gap-3 border-b border-line-light px-5 py-4">
+                                <h2 id="backup-codes-modal-title" class="text-lg font-semibold text-fg">Backup Codes</h2>
+                                            <button type="button" class="-mr-1 inline-flex size-8 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-surface-hover hover:text-fg" data-si-modal-close aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
+                        </button>
+                                        </div>
+
+        <div class="min-h-0 flex-1 overflow-y-auto p-5">
+            <div role="status" class="flex items-start gap-3 rounded-md border px-4 py-3 text-sm border-warning/40 bg-warning-light text-warning-dark mb-4">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="mt-0.5 size-5 shrink-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m-1.637-9.409L2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0M12 16h.01"></path></svg>
+    <div>
+<strong>Important:</strong>
+            Save these codes in a secure place. Each code can only be used once.
+        </div>
 </div>
-    
-                
 
-
-    
-
-<div class="modal fade" tabindex="-1" aria-hidden="true" aria-labelledby="backup-codes-modal-title" id="backup-codes-modal" data-controller="solidworx--platform--modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            
-                                                <div class="modal-header">
-                                                            <h5 class="modal-title">Backup Codes</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            
-                                            </div>
-                
-                <div class="modal-body">
-                                <div class="backup-codes-modal-content">
-                                <div class="alert alert-warning d-flex align-items-start gap-2 mb-4" role="alert">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="20" height="20" class="flex-shrink-0 mt-1" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m-1.637-9.409L2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0M12 16h.01"></path></svg>
-                    <div>
-                        <strong>Important:</strong>
-                        Save these codes in a secure place. Each code can only be used once.
+        <div class="grid grid-cols-2 gap-2">
+                            <div class="rounded-md bg-canvas px-3 py-2 text-center">
+                    <code class="font-mono text-base text-fg">CODE1-ABC123</code>
+                </div>
+                            <div class="rounded-md bg-canvas px-3 py-2 text-center">
+                    <code class="font-mono text-base text-fg">CODE2-DEF456</code>
+                </div>
+                            <div class="rounded-md bg-canvas px-3 py-2 text-center">
+                    <code class="font-mono text-base text-fg">CODE3-GHI789</code>
+                </div>
+                            <div class="rounded-md bg-canvas px-3 py-2 text-center">
+                    <code class="font-mono text-base text-fg">CODE4-JKL012</code>
+                </div>
+                            <div class="rounded-md bg-canvas px-3 py-2 text-center">
+                    <code class="font-mono text-base text-fg">CODE5-MNO345</code>
+                </div>
+                            <div class="rounded-md bg-canvas px-3 py-2 text-center">
+                    <code class="font-mono text-base text-fg">CODE6-PQR678</code>
+                </div>
+                            <div class="rounded-md bg-canvas px-3 py-2 text-center">
+                    <code class="font-mono text-base text-fg">CODE7-STU901</code>
+                </div>
+                            <div class="rounded-md bg-canvas px-3 py-2 text-center">
+                    <code class="font-mono text-base text-fg">CODE8-VWX234</code>
+                </div>
                     </div>
+
+        <button type="button" class="si-btn si-btn--md si-btn--outline mt-4 w-full" data-action="live#action:prevent" data-live-action-param="downloadBackupCodes">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5l5-5m-5-7v12"></path></svg>
+            Download as Text File
+        </button>
+
                 </div>
 
-                                <div class="backup-codes-grid">
-                                            <div class="backup-code-item">
-                            <code>CODE1-ABC123</code>
-                        </div>
-                                            <div class="backup-code-item">
-                            <code>CODE2-DEF456</code>
-                        </div>
-                                            <div class="backup-code-item">
-                            <code>CODE3-GHI789</code>
-                        </div>
-                                            <div class="backup-code-item">
-                            <code>CODE4-JKL012</code>
-                        </div>
-                                            <div class="backup-code-item">
-                            <code>CODE5-MNO345</code>
-                        </div>
-                                            <div class="backup-code-item">
-                            <code>CODE6-PQR678</code>
-                        </div>
-                                            <div class="backup-code-item">
-                            <code>CODE7-STU901</code>
-                        </div>
-                                            <div class="backup-code-item">
-                            <code>CODE8-VWX234</code>
-                        </div>
-                                    </div>
-
-                                <button type="button" class="btn btn-outline-primary w-100 mt-4" data-action="live#action:prevent" data-live-action-param="downloadBackupCodes">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5l5-5m-5-7v12"></path></svg>
-                    Download as Text File
-                </button>
-            </div>
-                        </div>
-
-                                    <div class="modal-footer">
-                                    <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">
-                Close
-            </button>
-            <button type="button" class="btn btn-warning" data-action="live#action:prevent" data-live-action-param="regenerateBackupCodes">
-                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4m-4 4a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path></svg>
+                    <div class="flex shrink-0 items-center justify-end gap-2 border-t border-line-light px-5 py-3">
+                            <button type="button" class="si-btn si-btn--md si-btn--ghost" data-si-modal-close>Close</button>
+            <button type="button" class="si-btn si-btn--md si-btn--secondary" data-action="live#action:prevent" data-live-action-param="regenerateBackupCodes">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4m-4 4a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path></svg>
                 Regenerate Codes
             </button>
-                            </div>
-                                    </div>
-    </div>
-</div>
+                    </div>
+            </dialog>
 </div>
 </body></html>

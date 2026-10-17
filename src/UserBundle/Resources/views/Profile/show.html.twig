@@ -11,151 +11,100 @@
 
 {% extends "@SolidInvoiceUser/Layout/profile.html.twig" %}
 
-{% block title %}{{ ux_icon('tabler:user', {width: 24, height: 24, class: 'me-2'}) }}{{ "profile.show.title"|trans({"%username%" : app.user.userIdentifier}) }}{% endblock title %}
+{% block title %}{{ "profile.show.title"|trans({"%username%" : app.user.userIdentifier}) }}{% endblock title %}
 
 {% block profile_content %}
-    {# Profile Header with Avatar #}
-    <div class="profile-header">
-        <div class="profile-avatar">
-            {% set initials = (app.user.firstName|slice(0, 1) ~ app.user.lastName|slice(0, 1))|upper %}
-            {{ initials }}
-        </div>
-        <div class="profile-header-info">
-            <h1 class="profile-name">{{ app.user.firstName }} {{ app.user.lastName }}</h1>
-            <p class="profile-email">{{ app.user.email }}</p>
+    {# Header: avatar, name, e-mail #}
+    <div class="flex items-center gap-4 rounded-lg border border-line-light bg-surface p-5 shadow-sm">
+        {% set initials = (app.user.firstName|slice(0, 1) ~ app.user.lastName|slice(0, 1))|upper %}
+        <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-primary-light text-xl font-semibold text-primary-dark">{{ initials }}</span>
+        <div class="min-w-0">
+            <h2 class="truncate text-xl font-semibold text-fg">{{ app.user.firstName }} {{ app.user.lastName }}</h2>
+            <p class="truncate text-fg-muted">{{ app.user.email }}</p>
         </div>
     </div>
 
-    {# Personal Information Section #}
-    <div class="profile-section">
-        <div class="profile-section-header">
-            <div class="section-icon">
-                {{ ux_icon('tabler:user', {width: 20, height: 20}) }}
+    {# Personal information #}
+    <twig:Si:Card title="{{ 'profile.show.personal.title'|trans }}" subtitle="{{ 'profile.show.personal.description'|trans }}" icon="tabler:user" iconColor="primary">
+        <dl class="grid gap-x-6 gap-y-4 p-5 sm:grid-cols-2">
+            <div>
+                <dt class="text-sm text-fg-muted">{{ 'profile.show.first_name'|trans }}</dt>
+                <dd class="mt-0.5 font-medium text-fg">{{ app.user.firstName }}</dd>
             </div>
-            <div class="profile-section-title">
-                <h3 class="section-title">{{ 'profile.show.personal.title'|trans }}</h3>
-                <p class="section-description">{{ 'profile.show.personal.description'|trans }}</p>
+            <div>
+                <dt class="text-sm text-fg-muted">{{ 'profile.show.last_name'|trans }}</dt>
+                <dd class="mt-0.5 font-medium text-fg">{{ app.user.lastName }}</dd>
             </div>
-        </div>
+            <div class="sm:col-span-2">
+                <dt class="text-sm text-fg-muted">{{ 'profile.show.email'|trans }}</dt>
+                <dd class="mt-0.5 font-medium text-fg">{{ app.user.email }}</dd>
+            </div>
+            {% if app.user.mobile %}
+                <div class="sm:col-span-2">
+                    <dt class="text-sm text-fg-muted">{{ 'profile.show.mobile'|trans }}</dt>
+                    <dd class="mt-0.5 font-medium text-fg">{{ app.user.mobile }}</dd>
+                </div>
+            {% endif %}
+        </dl>
 
-        <div class="profile-section-body">
-            <div class="profile-detail-grid">
-                <div class="detail-item">
-                    <span class="detail-label">{{ 'profile.show.first_name'|trans }}</span>
-                    <span class="detail-value">{{ app.user.firstName }}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">{{ 'profile.show.last_name'|trans }}</span>
-                    <span class="detail-value">{{ app.user.lastName }}</span>
-                </div>
-                <div class="detail-item detail-item-wide">
-                    <span class="detail-label">{{ 'profile.show.email'|trans }}</span>
-                    <span class="detail-value">{{ app.user.email }}</span>
-                </div>
-                {% if app.user.mobile %}
-                    <div class="detail-item detail-item-wide">
-                        <span class="detail-label">{{ 'profile.show.mobile'|trans }}</span>
-                        <span class="detail-value">{{ app.user.mobile }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="profile-section-footer">
-            <a href="{{ path('_edit_profile') }}" class="btn btn-primary">
-                {{ ux_icon('tabler:pencil', {width: 18, height: 18}) }}
+        <twig:block name="footer">
+            <twig:Si:Button href="{{ path('_edit_profile') }}">
+                {{ ux_icon('tabler:pencil', {class: 'size-4', 'aria-hidden': 'true'}) }}
                 {{ 'profile.show.update_profile'|trans }}
-            </a>
+            </twig:Si:Button>
+        </twig:block>
+    </twig:Si:Card>
+
+    {# Security #}
+    <twig:Si:Card title="{{ 'profile.show.security.title'|trans }}" subtitle="{{ 'profile.show.security.description'|trans }}" icon="tabler:shield" iconColor="primary">
+        <div class="divide-y divide-line-light">
+            {# Email verification #}
+            {% if is_email_verification_gated() %}
+                <twig:Si:SettingRow icon="tabler:mail-exclamation" iconColor="warning" title="{{ 'email_verification.profile.title'|trans }}" description="{{ 'email_verification.profile.description'|trans }}">
+                    {% include '@SolidInvoiceUser/EmailVerification/_resend_form.html.twig' %}
+                </twig:Si:SettingRow>
+            {% endif %}
+
+            {# Two-factor authentication #}
+            <twig:Si:SettingRow
+                :icon="app.user.is2FaEnabled ? 'tabler:shield-check' : 'tabler:shield-x'"
+                :iconColor="app.user.is2FaEnabled ? 'success' : 'warning'"
+                title="{{ 'security.two_factor.title'|trans }}"
+                description="{{ app.user.is2FaEnabled ? 'profile.show.security.2fa_enabled'|trans : 'security.two_factor.subtitle'|trans }}"
+            >
+                <twig:Si:Button variant="outline" size="sm" href="{{ path('_2fa_list') }}">
+                    {{ app.user.is2FaEnabled ? 'profile.show.security.manage'|trans : 'profile.show.security.enable'|trans }}
+                </twig:Si:Button>
+            </twig:Si:SettingRow>
+
+            {% toggle 'google_oauth_login' %}
+                {# Google account linking #}
+                <twig:Si:SettingRow
+                    :icon="app.user.googleId is not empty ? 'tabler:brand-google' : 'tabler:unlink'"
+                    :iconColor="app.user.googleId is not empty ? 'success' : 'warning'"
+                    title="{{ 'profile.show.security.google.title'|trans }}"
+                    description="{{ app.user.googleId is not empty ? 'profile.show.security.google.linked'|trans : 'profile.show.security.google.link'|trans }}"
+                >
+                    {% if app.user.googleId is empty %}
+                        <twig:Si:Button variant="outline" size="sm" href="{{ path('_oauth_connect', {'service': 'google'}) }}">
+                            {{ ux_icon('tabler:brand-google', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                            {{ 'profile.show.security.google.sign_in'|trans }}
+                        </twig:Si:Button>
+                    {% else %}
+                        <twig:Si:Badge tone="success">{{ 'profile.show.security.google.badge'|trans }}</twig:Si:Badge>
+                    {% endif %}
+                </twig:Si:SettingRow>
+            {% endtoggle %}
+
+            {# Password #}
+            <twig:Si:SettingRow
+                icon="tabler:lock"
+                iconColor="success"
+                title="{{ 'profile.show.security.password.title'|trans }}"
+                description="{{ 'profile.show.security.password.description'|trans }}"
+            >
+                <twig:Si:Button variant="outline" size="sm" href="{{ path('_change_password') }}">{{ 'profile.nav.change_password'|trans }}</twig:Si:Button>
+            </twig:Si:SettingRow>
         </div>
-    </div>
-
-    {# Security Section #}
-    <div class="profile-section">
-        <div class="profile-section-header">
-            <div class="section-icon section-icon--security">
-                {{ ux_icon('tabler:shield', {width: 20, height: 20}) }}
-            </div>
-            <div class="profile-section-title">
-                <h3 class="section-title">{{ 'profile.show.security.title'|trans }}</h3>
-                <p class="section-description">{{ 'profile.show.security.description'|trans }}</p>
-            </div>
-        </div>
-
-        <div class="profile-section-body">
-            <div class="security-status">
-                {# Two-Factor Authentication #}
-                <div class="security-item">
-                    <div class="security-item-info">
-                        <div class="security-item-icon {{ app.user.is2FaEnabled ? 'security-item-icon-success' : 'security-item-icon-warning' }}">
-                            {{ ux_icon(app.user.is2FaEnabled ? 'tabler:shield-check' : 'tabler:shield-x', {width: 20, height: 20}) }}
-                        </div>
-                        <div class="security-item-content">
-                            <h4 class="security-item-title">{{ 'security.two_factor.title'|trans }}</h4>
-                            <p class="security-item-description">
-                                {% if app.user.is2FaEnabled %}
-                                    {{ 'profile.show.security.2fa_enabled'|trans }}
-                                {% else %}
-                                    {{ 'security.two_factor.subtitle'|trans }}
-                                {% endif %}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="security-item-action">
-                        <a href="{{ path('_2fa_list') }}" class="btn btn-sm btn-outline-primary">
-                            {{ app.user.is2FaEnabled ? 'profile.show.security.manage'|trans : 'profile.show.security.enable'|trans }}
-                        </a>
-                    </div>
-                </div>
-
-                {% toggle 'google_oauth_login' %}
-                    {# Google Account Linking #}
-                    <div class="security-item">
-                        <div class="security-item-info">
-                            <div class="security-item-icon {{ app.user.googleId is not empty ? 'security-item-icon-success' : 'security-item-icon-warning' }}">
-                                {{ ux_icon(app.user.googleId is not empty ? 'tabler:brand-google' : 'tabler:unlink', {width: 20, height: 20}) }}
-                            </div>
-                            <div class="security-item-content">
-                                <h4 class="security-item-title">{{ 'profile.show.security.google.title'|trans }}</h4>
-                                <p class="security-item-description">
-                                    {% if app.user.googleId is not empty %}
-                                        {{ 'profile.show.security.google.linked'|trans }}
-                                    {% else %}
-                                        {{ 'profile.show.security.google.link'|trans }}
-                                    {% endif %}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="security-item-action">
-                            {% if app.user.googleId is empty %}
-                                <a href="{{ path('_oauth_connect', {'service': 'google'}) }}" class="btn btn-sm btn-outline-primary google-signin-btn">
-                                    {{ ux_icon('tabler:brand-google', {width: 16, height: 16}) }}
-                                    {{ 'profile.show.security.google.sign_in'|trans }}
-                                </a>
-                            {% else %}
-                                <span class="badge bg-success-lt">{{ 'profile.show.security.google.badge'|trans }}</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endtoggle %}
-
-                {# Password #}
-                <div class="security-item">
-                    <div class="security-item-info">
-                        <div class="security-item-icon security-item-icon-success">
-                            {{ ux_icon('tabler:lock', {width: 20, height: 20}) }}
-                        </div>
-                        <div class="security-item-content">
-                            <h4 class="security-item-title">{{ 'profile.show.security.password.title'|trans }}</h4>
-                            <p class="security-item-description">{{ 'profile.show.security.password.description'|trans }}</p>
-                        </div>
-                    </div>
-                    <div class="security-item-action">
-                        <a href="{{ path('_change_password') }}" class="btn btn-sm btn-outline-primary">
-                            {{ 'profile.nav.change_password'|trans }}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </twig:Si:Card>
 {% endblock profile_content %}

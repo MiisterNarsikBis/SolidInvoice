@@ -1,0 +1,66 @@
+{#
+# This file is part of SolidInvoice package.
+#
+# (c) Pierre du Plessis <open-source@solidworx.co>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+#}
+
+{#
+    A KnpMenu template for the settings navigation column (see templates/components/Si/SettingsNav):
+    a flat list of pages, the current one marked with an accent bar and a tint. Nesting is not
+    supported: children are ignored rather than rendered wrongly.
+#}
+{% extends 'knp_menu.html.twig' %}
+
+{% block list %}
+    {% if item.level == 0 and item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+        <ul class="py-1">
+            {{ block('children') }}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block item %}
+    {% if item.displayed %}
+        <li>
+            {% if item.uri is not empty %}
+                {{ block('linkElement') }}
+            {% else %}
+                {{ block('spanElement') }}
+            {% endif %}
+        </li>
+    {% endif %}
+{% endblock %}
+
+{% block linkElement %}
+    {%- set current = matcher.isCurrent(item) or matcher.isAncestor(item, options.matchingDepth) -%}
+    <a
+        href="{{ item.uri }}"
+        class="flex items-center gap-3 border-l-[3px] px-4 py-2.5 text-base transition-colors {{ current ? 'border-primary bg-primary-lighter font-semibold text-primary-dark' : 'border-transparent text-fg-secondary hover:bg-surface-hover hover:text-fg' }}"
+        {% if matcher.isCurrent(item) %}aria-current="page"{% endif %}
+    >
+        {% if item.extras.icon is defined %}
+            {{ ux_icon('tabler:' ~ item.extras.icon, {class: 'size-[1.125rem] shrink-0 ' ~ (current ? 'text-primary-dark' : 'text-fg-muted'), 'aria-hidden': 'true'}) }}
+        {% endif %}
+        <span>{{ block('label') }}</span>
+    </a>
+{% endblock %}
+
+{% block spanElement %}
+    <span class="flex items-center gap-3 border-l-[3px] border-transparent px-4 py-2.5 text-base text-fg-muted">
+        {% if item.extras.icon is defined %}
+            {{ ux_icon('tabler:' ~ item.extras.icon, {class: 'size-[1.125rem] shrink-0', 'aria-hidden': 'true'}) }}
+        {% endif %}
+        <span>{{ block('label') }}</span>
+    </span>
+{% endblock %}
+
+{% block label %}
+    {%- if options.allow_safe_labels and item.getExtra('safe_label', false) -%}
+        {{ item.label|trans|raw }}
+    {%- else -%}
+        {{ item.label|trans }}
+    {%- endif -%}
+{% endblock %}

@@ -191,8 +191,8 @@ final readonly class RevenueChartWidget implements WidgetInterface
     private function buildDatasets(array $revenueData, array $currencies, CarbonImmutable $now): array
     {
         $colors = [
-            ['border' => 'rgb(46, 150, 58)', 'background' => 'rgba(46, 150, 58, 0.1)'],
-            ['border' => 'rgb(59, 130, 246)', 'background' => 'rgba(59, 130, 246, 0.1)'],
+            ['border' => 'rgb(37, 99, 235)', 'background' => 'rgba(37, 99, 235, 0.1)'],
+            ['border' => 'rgb(234, 88, 12)', 'background' => 'rgba(234, 88, 12, 0.1)'],
             ['border' => 'rgb(245, 158, 11)', 'background' => 'rgba(245, 158, 11, 0.1)'],
             ['border' => 'rgb(139, 92, 246)', 'background' => 'rgba(139, 92, 246, 0.1)'],
         ];

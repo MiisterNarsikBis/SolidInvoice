@@ -1,0 +1,14 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{# The "resend verification email" button: a POST form carrying its CSRF token, as the endpoint accepts nothing else. #}
+<form method="post" action="{{ path('_solidworx_platform_verify_email_resend') }}" class="inline">
+    <input type="hidden" name="_token" value="{{ csrf_token('resend_verification_email') }}">
+    <twig:Si:Button type="submit" variant="outline" size="sm">{{ 'email_verification.resend'|trans }}</twig:Si:Button>
+</form>

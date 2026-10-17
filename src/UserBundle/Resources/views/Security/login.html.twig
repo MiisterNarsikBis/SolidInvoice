@@ -7,58 +7,78 @@
 # with this source code in the file LICENSE.
 #}
 
-{% extends '@Ui/Security/login.html.twig' %}
+{#
+    The login screen, on the Tailwind auth layout. It does not extend Platform's Tabler-based
+    `@Ui/Security/login.html.twig`. `error`, `last_username` and `options` are supplied by
+    Platform's login controller; flash messages (for example "your password has been changed")
+    are rendered by the layout.
+#}
+{% extends '@SolidInvoiceCore/Layout/auth.html.twig' %}
 
-{% block page_title %}{{ app_name }} - {{ "security.login.login"|trans }}{% endblock page_title %}
+{% block page_title %}{{ 'security.login.login'|trans }}{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
+{% block contents %}
+    <h1 class="mb-6 text-center text-xl font-semibold text-fg">{{ 'Login to your account'|trans }}</h1>
 
-    {{ encore_entry_link_tags('app') }}
-    {{ encore_entry_link_tags('login') }}
-{% endblock stylesheets %}
+    {% if error %}
+        <twig:Si:Alert type="danger" class="mb-5">{{ error.messageKey|trans(error.messageData, 'security') }}</twig:Si:Alert>
+    {% endif %}
 
-{% block social_login %}
+    <form action="{{ options.check_path starts with '/' ? options.check_path : url(options.check_path) }}" method="post" class="space-y-5">
+        <twig:Si:Field
+            label="{{ 'Email address'|trans }}"
+            name="{{ options.username_parameter }}"
+            type="email"
+            icon="tabler:mail"
+            placeholder="your@email.com"
+            autocomplete="username"
+            value="{{ last_username }}"
+            required
+            autofocus
+        />
+
+        <twig:Si:PasswordField
+            label="{{ 'Password'|trans }}"
+            toggleLabel="{{ 'Show password'|trans }}"
+            name="{{ options.password_parameter }}"
+            placeholder="{{ 'Your password'|trans }}"
+            autocomplete="current-password"
+            required
+        />
+
+        {% if options.always_remember_me is same as(false) and options.remember_me_parameter is not empty %}
+            <label class="flex items-center gap-2.5 text-sm text-fg-secondary">
+                <input type="checkbox" name="{{ options.remember_me_parameter }}" class="si-check">
+                {{ 'Remember me on this device'|trans }}
+            </label>
+        {% endif %}
+
+        {% if options.enable_csrf %}
+            <input type="hidden" {{ stimulus_controller('csrf-protection') }} name="{{ options.csrf_parameter }}" value="{{ csrf_token(options.csrf_token_id) }}">
+        {% endif %}
+
+        <twig:Si:Button type="submit" size="lg" class="w-full">{{ 'Sign in'|trans }}</twig:Si:Button>
+    </form>
+
     {% toggle 'google_oauth_login' %}
-        <div class="hr-text">{{ 'security.login.or'|trans }}</div>
-
-        <div class="card-body">
-            <div class="row">
-                <div class="col">
-                    <a href="{{ path('_oauth_connect', {'service': 'google' }) }}" class="btn btn-outline-secondary w-100">
-                        {{ ux_icon('tabler:brand-google', {width: 24, height: 24}) }}
-                        {{ 'security.login.login_with_google'|trans }}
-                    </a>
-                </div>
-            </div>
+        <div class="my-6 flex items-center gap-3 text-sm text-fg-muted">
+            <span class="h-px flex-1 bg-line"></span>
+            {{ 'security.login.or'|trans }}
+            <span class="h-px flex-1 bg-line"></span>
         </div>
+
+        <twig:Si:Button variant="outline" href="{{ path('_oauth_connect', {'service': 'google'}) }}" class="w-full">
+            {{ ux_icon('tabler:brand-google', {class: 'size-5', 'aria-hidden': 'true'}) }}
+            {{ 'security.login.login_with_google'|trans }}
+        </twig:Si:Button>
     {% endtoggle %}
-{% endblock social_login %}
+{% endblock contents %}
 
-{% block brand %}
-    <span class="text-white h1">
-        {{ app_logo(showDefault: true, showOnlyAppIcon: true) }} {{ app_name }}
-    </span>
-
-{% endblock brand %}
-
-{% block content %}
-
-    {{ parent() }}
-
+{% block below_card %}
     {% toggle 'allow_registration' %}
-        <div class="text-center text-secondary mt-3 bg-white p-2">
+        <p class="mt-6 rounded-md bg-surface/95 px-4 py-2 text-sm text-fg-secondary shadow-sm">
             {{ 'security.login.no_account'|trans }}
-            <a href="{{ path('_register') }}" tabindex="-1">
-                {{ 'security.login.register_now'|trans }}
-            </a>
-        </div>
+            <a href="{{ path('_register') }}" class="font-medium text-primary hover:text-primary-dark hover:underline">{{ 'security.login.register_now'|trans }}</a>
+        </p>
     {% endtoggle %}
-
-    <a class="text-decoration-none position-absolute bottom-0 end-0 p-2 bg-dark text-white rounded-start" style="font-size: 12px;" href="https://unsplash.com/@julian_zett?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="external noopener noreferrer" title="Download free do whatever you want high-resolution photos from Julian Zett">
-        <span class="d-inline-block p-1">
-            <svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-1px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M20.8 18.1c0 2.7-2.2 4.8-4.8 4.8s-4.8-2.1-4.8-4.8c0-2.7 2.2-4.8 4.8-4.8 2.7.1 4.8 2.2 4.8 4.8zm11.2-7.4v14.9c0 2.3-1.9 4.3-4.3 4.3h-23.4c-2.4 0-4.3-1.9-4.3-4.3v-15c0-2.3 1.9-4.3 4.3-4.3h3.7l.8-2.3c.4-1.1 1.7-2 2.9-2h8.6c1.2 0 2.5.9 2.9 2l.8 2.4h3.7c2.4 0 4.3 1.9 4.3 4.3zm-8.6 7.5c0-4.1-3.3-7.5-7.5-7.5-4.1 0-7.5 3.4-7.5 7.5s3.3 7.5 7.5 7.5c4.2-.1 7.5-3.4 7.5-7.5z" /></svg>
-        </span>
-        <span class="d-inline-block p-1">Julian Zett</span>
-    </a>
-{% endblock content %}
+{% endblock below_card %}

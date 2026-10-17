@@ -7,237 +7,126 @@
  # with this source code in the file LICENSE.
  #}
 
-<div {{ attributes.defaults({class: 'form-page'}) }}>
+{# The add / edit client form (a Live Component). The page heading belongs to the page. #}
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
+
+<div {{ attributes }}>
     {{ form_start(form, {
         attr: {
             'data-action': 'live#action:prevent',
             'data-live-action-param': 'save',
-            'class': 'client-form'
+            'class': 'client-form max-w-3xl space-y-5'
         }
     }) }}
 
     {{ form_errors(form) }}
 
-    <div class="form-page-container form-page-container--medium">
-        {# Page Header #}
-        <div class="form-page-header">
-            <div class="form-page-header-content">
-                <div class="form-page-icon">
-                    {{ ux_icon('tabler:building-store', {width: 28, height: 28}) }}
-                </div>
-                <div>
-                    {% if client is not empty %}
-                        <h1 class="form-page-title">{{ 'edit_client'|trans }} - {{ client }}</h1>
-                    {% else %}
-                        <h1 class="form-page-title">{{ 'add_client'|trans }}</h1>
-                        <p class="form-page-subtitle">{{ 'client.form.subtitle'|trans }}</p>
-                    {% endif %}
-                </div>
+    {% if client is empty %}
+        <p class="-mt-2 text-fg-muted">{{ 'client.form.subtitle'|trans }}</p>
+    {% endif %}
+
+    {# Business details #}
+    <twig:Si:FormSection id="client-info" title="{{ 'client.info'|trans }}" description="{{ 'client.form.info_description'|trans }}" icon="tabler:building">
+        <div class="grid gap-x-4 sm:grid-cols-2">
+            <div class="sm:col-span-2">
+                {{ form_row(form.name, {attr: {placeholder: 'client.form.name.placeholder'|trans}}) }}
+            </div>
+
+            <div>
+                {{ form_row(form.website, {attr: {placeholder: 'https://example.com'}}) }}
+            </div>
+
+            <div>
+                {{ form_row(form.currencyCode) }}
+                {%- if form.currencyCode.vars.feature_gated_active ?? false %}
+                    <p class="feature-gated-hint -mt-2 mb-4 text-sm text-fg-muted">
+                        {%- if form.currencyCode.vars.feature_gated_plan ?? null %}
+                            {{ 'client.form.feature_gated.with_plan'|trans({'%plan%': form.currencyCode.vars.feature_gated_plan}) }}
+                        {%- else %}
+                            {{ 'client.form.feature_gated.generic'|trans }}
+                        {%- endif %}
+                        <a href="{{ path('saas_subscription_plans') }}" class="ml-1 text-primary hover:underline">{{ 'client.form.feature_gated.upgrade'|trans }}</a>
+                    </p>
+                {%- endif %}
+            </div>
+
+            <div>
+                {{ form_row(form.paymentTerms) }}
             </div>
         </div>
+    </twig:Si:FormSection>
 
-        {# Main Form Content - Single Column Flow #}
-        <div class="form-page-sections">
-
-            {# Section 1: Business Details #}
-            <section class="form-page-section" id="client-info">
-                <div class="section-header">
-                    <div class="section-icon">
-                        {{ ux_icon('tabler:building', {width: 20, height: 20}) }}
-                    </div>
-                    <div class="section-header-text">
-                        <h2 class="section-title">{{ 'client.info'|trans }}</h2>
-                        <p class="section-description">{{ 'client.form.info_description'|trans }}</p>
-                    </div>
-                </div>
-
-                <div class="section-content">
-                    <div class="form-grid">
-                        <div class="form-field form-field-wide">
-                            {{ form_row(form.name, {
-                                attr: {
-                                    placeholder: 'client.form.name.placeholder'|trans
-                                }
-                            }) }}
-                        </div>
-
-                        <div class="form-field">
-                            {{ form_row(form.website, {
-                                attr: {
-                                    placeholder: 'https://example.com'
-                                }
-                            }) }}
-                        </div>
-
-                        <div class="form-field">
-                            {{ form_row(form.currencyCode) }}
-                            {%- if form.currencyCode.vars.feature_gated_active ?? false %}
-                                <small class="form-hint text-muted feature-gated-hint">
-                                    {%- if form.currencyCode.vars.feature_gated_plan ?? null %}
-                                        {{ 'client.form.feature_gated.with_plan'|trans({'%plan%': form.currencyCode.vars.feature_gated_plan}) }}
-                                    {%- else %}
-                                        {{ 'client.form.feature_gated.generic'|trans }}
-                                    {%- endif %}
-                                    <a href="{{ path('saas_subscription_plans') }}" class="ms-1">{{ 'client.form.feature_gated.upgrade'|trans }}</a>
-                                </small>
-                            {%- endif %}
-                        </div>
-
-                        <div class="form-field">
-                            {{ form_row(form.paymentTerms) }}
-                        </div>
-
-                    </div>
-                </div>
-            </section>
-
-            {# Section 2: Contacts #}
-            <section class="form-page-section" id="client-contacts-collection">
-                <div class="section-header">
-                    <div class="section-icon section-icon-required">
-                        {{ ux_icon('tabler:users', {width: 20, height: 20}) }}
-                    </div>
-                    <div class="section-header-text">
-                        <h2 class="section-title">
-                            {{ 'client.contact.info'|trans }}
-                            <span class="badge bg-primary-lt ms-1">{{ 'required'|trans }}</span>
-                        </h2>
-                        <p class="section-description">{{ 'client.form.contact_description'|trans }}</p>
-                    </div>
-                </div>
-
-                <div class="section-content">
-                    <div class="contacts-list">
-                        {% for contact in form.contacts %}
-                            {{ form_row(contact) }}
-                        {% else %}
-                            <div class="empty-contacts-hint">
-                                <p class="text-muted mb-0">{{ 'client.contact.empty_hint'|trans }}</p>
-                            </div>
-                        {% endfor %}
-                    </div>
-
-                    {{ form_errors(form.contacts) }}
-
-                    <div class="add-item-action">
-                        {{ form_widget(form.contacts.vars.button_add, {
-                            label: 'client.contact.add'|trans,
-                            attr: {
-                                class: 'btn btn-outline-primary add-item-btn'
-                            }
-                        }) }}
-                    </div>
-                </div>
-            </section>
-
-            {# Section: Tax Identifiers (Optional) #}
-            <section class="form-page-section client-form-section-optional" id="client-tax-identifiers-collection">
-                <div class="section-header">
-                    <div class="section-icon">
-                        {{ ux_icon('tabler:receipt-tax', {width: 20, height: 20}) }}
-                    </div>
-                    <div class="section-header-text">
-                        <h2 class="section-title">
-                            {{ 'client.tax_identifiers.info'|trans }}
-                            <span class="badge bg-secondary-lt ms-1">{{ 'optional'|trans }}</span>
-                        </h2>
-                        <p class="section-description">{{ 'client.form.tax_identifiers_description'|trans }}</p>
-                    </div>
-                </div>
-
-                <div class="section-content">
-                    <div class="tax-identifiers-list">
-                        {% for taxIdentifier in form.taxIdentifiers %}
-                            {{ form_row(taxIdentifier) }}
-                        {% endfor %}
-                    </div>
-
-                    {{ form_errors(form.taxIdentifiers) }}
-
-                    <div class="add-item-action">
-                        {{ form_widget(form.taxIdentifiers.vars.button_add, {
-                            label: 'client.tax_identifiers.add'|trans,
-                            attr: {
-                                class: 'btn btn-outline-primary add-item-btn'
-                            }
-                        }) }}
-                    </div>
-                </div>
-            </section>
-
-            {# Section 3: Addresses (Optional) #}
-            <section class="form-page-section client-form-section-optional" id="client-address-collection">
-                <div class="section-header">
-                    <div class="section-icon">
-                        {{ ux_icon('tabler:map-pin', {width: 20, height: 20}) }}
-                    </div>
-                    <div class="section-header-text">
-                        <h2 class="section-title">
-                            {{ 'client.address.info'|trans }}
-                            <span class="badge bg-secondary-lt ms-1">{{ 'optional'|trans }}</span>
-                        </h2>
-                        <p class="section-description">{{ 'client.form.address_description'|trans }}</p>
-                    </div>
-                </div>
-
-                <div class="section-content">
-                    <div class="addresses-list">
-                        {% for address in form.addresses %}
-                            {{ form_row(address) }}
-                        {% else %}
-                            <div class="empty-addresses-hint">
-                                <p class="text-muted mb-0">{{ 'client.address.empty_hint'|trans }}</p>
-                            </div>
-                        {% endfor %}
-                    </div>
-
-                    {{ form_errors(form.addresses) }}
-
-                    <div class="add-item-action">
-                        {{ form_widget(form.addresses.vars.button_add, {
-                            label: 'client.address.add'|trans,
-                            attr: {
-                                class: 'btn btn-outline-primary add-item-btn'
-                            }
-                        }) }}
-                    </div>
-                </div>
-            </section>
-            {# Section 4: Custom Fields (Optional) #}
-            {% if form.customFields is defined and form.customFields|length > 0 %}
-            <section class="form-page-section client-form-section-optional" id="client-custom-fields">
-                <div class="section-header">
-                    <div class="section-icon">
-                        {{ ux_icon('tabler:forms', {width: 20, height: 20}) }}
-                    </div>
-                    <div class="section-header-text">
-                        <h2 class="section-title">{{ 'client.custom_fields'|trans }}</h2>
-                    </div>
-                </div>
-
-                <div class="section-content">
-                    {{ form_widget(form.customFields) }}
-                </div>
-            </section>
-            {% endif %}
+    {# Contacts #}
+    <twig:Si:FormSection id="client-contacts-collection" title="{{ 'client.contact.info'|trans }}" description="{{ 'client.form.contact_description'|trans }}" icon="tabler:users">
+        <div class="contacts-list">
+            {% for contact in form.contacts %}
+                {{ form_row(contact) }}
+            {% else %}
+                <p class="mb-4 text-fg-muted">{{ 'client.contact.empty_hint'|trans }}</p>
+            {% endfor %}
         </div>
 
-        {{ form_rest(form) }}
+        {{ form_errors(form.contacts) }}
 
-        {# Sticky Footer with Actions #}
-        <div class="form-page-actions">
-            <div class="form-page-actions-inner form-page-actions-inner--medium">
-                <button type="button" class="btn btn-ghost" onclick="history.back()">
-                    {{ ux_icon('tabler:arrow-left', {width: 18, height: 18}) }}
-                    {{ 'client.cancel'|trans }}
-                </button>
-                <button type="submit" class="btn btn-primary btn-save">
-                    {{ ux_icon('tabler:device-floppy', {width: 18, height: 18}) }}
-                    {{ 'client.save'|trans }}
-                </button>
-            </div>
+        {{ form_widget(form.contacts.vars.button_add, {
+            label: 'client.contact.add'|trans,
+            attr: {class: 'si-btn si-btn--outline si-btn--md'}
+        }) }}
+    </twig:Si:FormSection>
+
+    {# Tax identifiers (optional) #}
+    <twig:Si:FormSection id="client-tax-identifiers-collection" title="{{ 'client.tax_identifiers.info'|trans }}" description="{{ 'client.form.tax_identifiers_description'|trans }}" icon="tabler:receipt-tax">
+        <div class="tax-identifiers-list">
+            {% for taxIdentifier in form.taxIdentifiers %}
+                {{ form_row(taxIdentifier) }}
+            {% endfor %}
         </div>
-    </div>
+
+        {{ form_errors(form.taxIdentifiers) }}
+
+        {{ form_widget(form.taxIdentifiers.vars.button_add, {
+            label: 'client.tax_identifiers.add'|trans,
+            attr: {class: 'si-btn si-btn--outline si-btn--md'}
+        }) }}
+    </twig:Si:FormSection>
+
+    {# Addresses (optional) #}
+    <twig:Si:FormSection id="client-address-collection" title="{{ 'client.address.info'|trans }}" description="{{ 'client.form.address_description'|trans }}" icon="tabler:map-pin">
+        <div class="addresses-list">
+            {% for address in form.addresses %}
+                {{ form_row(address) }}
+            {% else %}
+                <p class="mb-4 text-fg-muted">{{ 'client.address.empty_hint'|trans }}</p>
+            {% endfor %}
+        </div>
+
+        {{ form_errors(form.addresses) }}
+
+        {{ form_widget(form.addresses.vars.button_add, {
+            label: 'client.address.add'|trans,
+            attr: {class: 'si-btn si-btn--outline si-btn--md'}
+        }) }}
+    </twig:Si:FormSection>
+
+    {# Custom fields (optional) #}
+    {% if form.customFields is defined and form.customFields|length > 0 %}
+        <twig:Si:FormSection id="client-custom-fields" title="{{ 'client.custom_fields'|trans }}" icon="tabler:forms">
+            {{ form_widget(form.customFields) }}
+        </twig:Si:FormSection>
+    {% endif %}
+
+    {{ form_rest(form) }}
+
+    <twig:Si:FormActions>
+        <twig:Si:Button type="button" variant="ghost" onclick="history.back()">
+            {{ ux_icon('tabler:arrow-left', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+            {{ 'client.cancel'|trans }}
+        </twig:Si:Button>
+        <twig:Si:Button type="submit">
+            {{ ux_icon('tabler:device-floppy', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+            {{ 'client.save'|trans }}
+        </twig:Si:Button>
+    </twig:Si:FormActions>
 
     {{ form_end(form) }}
 </div>

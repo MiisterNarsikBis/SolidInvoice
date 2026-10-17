@@ -1,0 +1,63 @@
+{#
+# This file is part of SolidInvoice package.
+#
+# (c) Pierre du Plessis <open-source@solidworx.co>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+#}
+
+{#
+    The Tailwind layout for single-purpose pages that need no navigation: create a company, pick
+    a company, the install wizard's steps, subscription states, a password-reset request. It
+    replaces `default_no_nav.html.twig` (Platform's "condensed" Tabler layout).
+
+    A brand header, a centred column and a footer. `container_class` sets the column width
+    (default `max-w-3xl`); a page that wants a wider canvas, such as pricing, overrides it:
+
+        {% block container_class %}max-w-6xl{% endblock %}
+
+    Blocks (same names as the Tabler layout where they existed): page_title, page_title_actions,
+    content, page_heading (the <h1>; override with nothing to draw your own), flashes, footer.
+#}
+{% extends '@SolidInvoiceCore/Layout/document.html.twig' %}
+
+{% block body %}
+    <div class="flex min-h-screen flex-col">
+        <header class="flex items-center justify-center gap-3 px-4 py-8">
+            {% block brand %}
+                <a href="{{ path('_dashboard') }}" class="flex items-center gap-3 text-xl font-semibold text-fg">
+                    {{ app_logo(48, showDefault: true, showOnlyAppIcon: true) }}
+                    <span>{{ app_name }}</span>
+                </a>
+            {% endblock brand %}
+        </header>
+
+        <main class="mx-auto w-full flex-1 px-4 pb-10 {% block container_class %}max-w-3xl{% endblock %}">
+            {# The <h1>. A page that draws its own heading overrides this block with nothing. #}
+            {% block page_heading %}
+                {% set page_title = block('page_title') is defined ? block('page_title') : '' %}
+                {% if page_title|trim is not empty %}
+                    <h1 class="mb-5 text-center text-2xl font-semibold tracking-tight text-fg">{{ page_title|raw }}</h1>
+                {% endif %}
+            {% endblock page_heading %}
+
+            {% block flashes %}
+                {% set flash_types = {error: 'danger', danger: 'danger', warning: 'warning', success: 'success', notice: 'info', info: 'info'} %}
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <twig:Si:Alert type="{{ flash_types[label]|default('info') }}" data-flash="{{ label }}" class="mb-4">{{ message|trans }}</twig:Si:Alert>
+                    {% endfor %}
+                {% endfor %}
+            {% endblock flashes %}
+
+            {% block content %}{% endblock content %}
+        </main>
+
+        {% block footer %}
+            <footer class="px-4 pb-8 text-center text-sm text-fg-muted">
+                {{ 'powered_by'|trans }} <a href="https://solidinvoice.co" class="text-fg-secondary hover:text-primary hover:underline">{{ constant('SolidInvoice\\CoreBundle\\SolidInvoiceCoreBundle::APP_NAME') }}</a>{% if app_version %} - {{ app_version }}{% endif %}
+            </footer>
+        {% endblock footer %}
+    </div>
+{% endblock body %}

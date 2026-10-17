@@ -19,8 +19,12 @@ that `src/MoneyBundle/Currency/CurrencyScale.php` exists to prevent. See `AGENTS
 These are tool-specific and carry content of their own. They do not restate conventions;
 where they touch one, they link to `AGENTS.md`.
 
-- [`.claude/skills/design-system.md`](.claude/skills/design-system.md) — design tokens,
-  button/form/page patterns, accessibility checklist. More detail than `AGENTS.md` §7.
+- [`.claude/skills/design-system.md`](.claude/skills/design-system.md) — the Tailwind UI patterns,
+  tokens, component list and accessibility checklist. More detail
+  than `AGENTS.md` §7/§11.
+- [`DESIGN.md`](DESIGN.md) — the visual identity ("Ledger"): colour, typography, shape,
+  contrast ratios and do/don't rules. [`PRODUCT.md`](PRODUCT.md) — users, positioning and
+  design principles.
 - [`.claude/skills/solidinvoice-feature-docs/SKILL.md`](.claude/skills/solidinvoice-feature-docs/SKILL.md)
   — writing end-user documentation for the Docusaurus site.
 - [`docs/CLAUDE.md`](docs/CLAUDE.md) — Docusaurus conventions for everything under `docs/`.

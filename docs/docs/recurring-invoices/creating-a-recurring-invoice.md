@@ -10,7 +10,7 @@ A recurring invoice is a saved template tied to one client. SolidInvoice generat
 
 ## Open the create form
 
-From the sidebar, click `Recurring Invoices` → `Create Recurring Invoice`, or click the green `+ Create Recurring Invoice` button at the top right of the recurring invoices list.
+From the sidebar, click `Recurring Invoices` → `Create Recurring Invoice`, or click the blue `+ Create Recurring Invoice` button at the top right of the recurring invoices list.
 
 ![The Recurring Invoices list page with the Create Recurring Invoice button](/img/recurring-invoices/recurring-invoices-list-page.png)
 
@@ -42,7 +42,7 @@ The `Recurring Schedule` section is where you say *when* invoices get generated.
 
 ## Save
 
-Two save options are available from the green button at the bottom of the form:
+Two save options are available from the blue primary button at the bottom of the form:
 
 - **`Save as Draft`** — saves the template without generating any invoices. Useful if you want to review or edit the schedule before activating it.
 - **`Save and Enable`** — open the dropdown next to `Save as Draft` and choose this to save the template and immediately activate it. The first invoice is generated the next time the scheduler runs after the start date is reached.

@@ -8,37 +8,38 @@
  #}
 
 
-<div class="selected-client-card">
-    <div class="selected-client-header">
-        <span class="selected-client-name">
-            {{ ux_icon('tabler:building', {width: 20, height: 20}) }}
+{# The client picked on a new invoice / quote: its name, a way to change it and the contacts to send to. #}
+<div class="rounded-lg border border-line bg-canvas p-4">
+    <div class="mb-3 flex items-center justify-between gap-3">
+        <span class="flex items-center gap-2 font-semibold text-fg">
+            {{ ux_icon('tabler:building', {class: 'size-5 text-primary', 'aria-hidden': 'true'}) }}
             {{ client.name }}
         </span>
-        <a href="#" class="selected-client-change" data-action="live#action:prevent" data-live-action-param="clearClient">
+        <a href="#" class="text-sm text-primary hover:underline" data-action="live#action:prevent" data-live-action-param="clearClient">
             {{ 'change'|trans }}
         </a>
     </div>
 
     {% if type is defined %}
-        <p class="text-muted mb-3">{{ 'client.contacts.info.list'|trans({'%type%': type}) }}</p>
+        <p class="mb-3 text-fg-muted">{{ 'client.contacts.info.list'|trans({'%type%': type}) }}</p>
     {% endif %}
 
     {% if form.users is defined %}
-        <div class="selected-client-contacts">
-            <div class="contacts-label" id="contacts-label">
-                {{ ux_icon('tabler:mail', {width: 16, height: 16}) }}
+        <div>
+            <div class="mb-2 flex items-center gap-1.5 text-sm font-medium text-fg-secondary" id="contacts-label">
+                {{ ux_icon('tabler:mail', {class: 'size-4', 'aria-hidden': 'true'}) }}
                 {{ quote is defined ? 'quote.send_to'|trans : 'invoice.send_to'|trans }}
             </div>
 
             {{ form_errors(form.users) }}
 
-            <div class="contacts-list" role="group" aria-labelledby="contacts-label">
+            <div class="contacts-list space-y-1.5" role="group" aria-labelledby="contacts-label">
                 {% for user in form.users %}
-                    <label class="contact-checkbox">
+                    <label class="contact-checkbox flex cursor-pointer items-center gap-2 text-fg-secondary">
                         {{ form_widget(user, {'label': false}) }}
-                        <span class="contact-name">{{ user.vars.label }}</span>
+                        <span class="contact-name text-fg">{{ user.vars.label }}</span>
                         {% if user.vars.data.email is defined %}
-                            <span class="contact-email">({{ user.vars.data.email }})</span>
+                            <span class="contact-email text-sm text-fg-muted">({{ user.vars.data.email }})</span>
                         {% endif %}
                     </label>
                 {% endfor %}

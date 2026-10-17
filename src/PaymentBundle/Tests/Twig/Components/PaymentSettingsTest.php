@@ -145,14 +145,14 @@ final class PaymentSettingsTest extends LiveComponentTest
 
         // Initially showDeleteConfirmation should be false
         $rendered = $component->render()->toString();
-        self::assertStringNotContainsString('delete-confirmation-modal', $rendered);
+        self::assertStringNotContainsString('data-delete-confirmation', $rendered);
 
         // Call showDeleteConfirmation action
         $component = $component->call('showDeleteConfirmation');
 
         // After calling showDeleteConfirmation, the modal should appear
         $rendered = $component->render()->toString();
-        self::assertStringContainsString('delete-confirmation-modal', $rendered);
+        self::assertStringContainsString('data-delete-confirmation', $rendered);
     }
 
     public function testCancelDelete(): void
@@ -167,14 +167,14 @@ final class PaymentSettingsTest extends LiveComponentTest
         $component = $component->call('showDeleteConfirmation');
 
         $rendered = $component->render()->toString();
-        self::assertStringContainsString('delete-confirmation-modal', $rendered);
+        self::assertStringContainsString('data-delete-confirmation', $rendered);
 
         // Now cancel the delete
         $component = $component->call('cancelDelete');
 
         // After calling cancelDelete, modal should be hidden
         $rendered = $component->render()->toString();
-        self::assertStringNotContainsString('delete-confirmation-modal', $rendered);
+        self::assertStringNotContainsString('data-delete-confirmation', $rendered);
     }
 
     public function testPasswordPreservation(): void

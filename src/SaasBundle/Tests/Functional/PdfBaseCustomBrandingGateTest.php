@@ -94,7 +94,7 @@ final class PdfBaseCustomBrandingGateTest extends KernelTestCase
 
         $output = $twig->render('@SolidInvoiceInvoice/external_invoice_view.html.twig', ['invoice' => $this->createFixtureInvoice()]);
 
-        self::assertStringContainsString('ext-doc-footer', $output);
+        self::assertStringContainsString('data-powered-by', $output);
     }
 
     public function testUngatedPlanRespectsHidePoweredBySetting(): void

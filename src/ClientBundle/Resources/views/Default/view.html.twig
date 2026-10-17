@@ -9,234 +9,148 @@
 
 {% set currency = client.currency %}
 
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
 
-{% block page_title %}
-    {{ client.name }}
-{% endblock page_title %}
+{% block page_title %}{{ client.name }}{% endblock page_title %}
+
+{% block page_title_actions %}
+    <twig:Si:Button variant="outline" href="{{ path('_quotes_create', {'client': client.id}) }}">
+        {{ ux_icon('tabler:file-text', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+        {{ 'client.view.actions.create_quote'|trans }}
+    </twig:Si:Button>
+    <twig:Si:Button href="{{ path('_invoices_create', {'client': client.id}) }}">
+        {{ ux_icon('tabler:file-invoice', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+        {{ 'client.view.actions.create_invoice'|trans }}
+    </twig:Si:Button>
+    <twig:Si:Dropdown label="{{ 'client.view.more_actions'|trans }}" triggerClass="si-btn si-btn--outline si-btn--md">
+        <twig:block name="trigger">{{ ux_icon('tabler:dots-vertical', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}</twig:block>
+        <twig:Si:MenuItem href="{{ path('_clients_edit', {'id': client.id}) }}" icon="tabler:pencil">{{ 'client.view.actions.edit'|trans }}</twig:Si:MenuItem>
+        <div class="my-1 h-px bg-line-light" role="separator"></div>
+        <a class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-base text-danger-dark transition-colors hover:bg-danger-light" href="#" role="menuitem" data-si-modal-open="#delete-client-modal">
+            {{ ux_icon('tabler:trash', {class: 'size-4 shrink-0', 'aria-hidden': 'true'}) }}
+            {{ 'client.view.actions.delete'|trans }}
+        </a>
+    </twig:Si:Dropdown>
+{% endblock page_title_actions %}
 
 {% block content %}
-    {# ========================================================================
-       HERO SECTION
-       ======================================================================== #}
-    <div class="client-hero">
-        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
-            <div>
-                <div class="d-flex align-items-center gap-3 mb-2">
-                    <h1 class="client-hero-title">{{ client.name }}</h1>
-                    {{ client_label(client.status) }}
-                </div>
-                <div class="client-hero-meta">
-                    {% if client.website %}
-                        {% set website_url = client.website starts with 'http://' or client.website starts with 'https://' ? client.website : 'https://' ~ client.website %}
-                        <a href="{{ website_url }}" class="client-hero-meta-item" rel="external noreferrer noopener" target="_blank">
-                            {{ ux_icon('tabler:world', {width: 16, height: 16}) }}
-                            <span>{{ client.website }}</span>
-                            {{ ux_icon('tabler:external-link', {width: 14, height: 14}) }}
-                        </a>
-                    {% endif %}
-                    {% if client.currencyCode %}
-                        <span class="client-hero-meta-item">
-                            {{ ux_icon('tabler:currency-dollar', {width: 16, height: 16}) }}
-                            <span>{{ client.currencyCode }}</span>
-                        </span>
-                    {% endif %}
-                    {% for identifier in tax_identifiers(client) %}
-                        <span class="client-hero-meta-item">
-                            {{ ux_icon('tabler:receipt-tax', {width: 16, height: 16}) }}
-                            <span>{{ identifier.label }}: {{ identifier.value }}</span>
-                        </span>
-                    {% endfor %}
-                </div>
-            </div>
+    {# Status and the key facts of the client #}
+    <div class="-mt-2 mb-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-fg-secondary">
+        {{ client_label(client.status) }}
+        {% if client.website %}
+            {% set website_url = client.website starts with 'http://' or client.website starts with 'https://' ? client.website : 'https://' ~ client.website %}
+            <a href="{{ website_url }}" class="inline-flex items-center gap-1.5 hover:text-primary hover:underline" rel="external noreferrer noopener" target="_blank">
+                {{ ux_icon('tabler:world', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                <span>{{ client.website }}</span>
+                {{ ux_icon('tabler:external-link', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+            </a>
+        {% endif %}
+        {% if client.currencyCode %}
+            <span class="inline-flex items-center gap-1.5">
+                {{ ux_icon('tabler:currency-dollar', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                <span>{{ client.currencyCode }}</span>
+            </span>
+        {% endif %}
+        {% for identifier in tax_identifiers(client) %}
+            <span class="inline-flex items-center gap-1.5">
+                {{ ux_icon('tabler:receipt-tax', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                <span>{{ identifier.label }}: {{ identifier.value }}</span>
+            </span>
+        {% endfor %}
+    </div>
 
-            {# Quick Actions #}
-            <div class="d-flex flex-wrap gap-2">
-                <a href="{{ path('_quotes_create', {'client': client.id}) }}" class="btn btn-outline-primary">
-                    {{ ux_icon('tabler:file-text', {width: 18, height: 18}) }}
-                    {{ 'client.view.actions.create_quote'|trans }}
-                </a>
-                <a href="{{ path('_invoices_create', {'client': client.id}) }}" class="btn btn-primary">
-                    {{ ux_icon('tabler:file-invoice', {width: 18, height: 18}) }}
-                    {{ 'client.view.actions.create_invoice'|trans }}
-                </a>
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'client.view.more_actions'|trans }}">
-                        {{ ux_icon('tabler:dots-vertical', {width: 18, height: 18}) }}
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item d-flex align-items-center gap-2" href="{{ path('_clients_edit', {'id': client.id}) }}">
-                            {{ ux_icon('tabler:pencil', {width: 16, height: 16}) }}
-                            {{ 'client.view.actions.edit'|trans }}
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item text-danger d-flex align-items-center gap-2" href="#" data-bs-toggle="modal" data-bs-target="#delete-client-modal">
-                            {{ ux_icon('tabler:trash', {width: 16, height: 16}) }}
-                            {{ 'client.view.actions.delete'|trans }}
-                        </a>
-                    </div>
-                </div>
+    {# Metrics #}
+    <div class="mb-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-lg border border-line-light bg-surface p-4 shadow-sm">
+            <div class="text-sm text-fg-secondary">{{ 'client.stats.income'|trans }}</div>
+            <div class="tabular mt-1 text-2xl font-semibold text-success-dark">{{ total_income(client)|formatCurrency(client.currency) }}</div>
+        </div>
+
+        <div class="rounded-lg border border-line-light bg-surface p-4 shadow-sm">
+            <div class="text-sm text-fg-secondary">{{ 'client.stats.outstanding'|trans }}</div>
+            <div class="tabular mt-1 text-2xl font-semibold text-warning-dark">{{ total_outstanding(client)|formatCurrency(client.currency) }}</div>
+        </div>
+
+        <div class="rounded-lg border border-line-light bg-surface p-4 shadow-sm">
+            <div class="text-sm text-fg-secondary">{{ 'client.stats.invoices'|trans }}</div>
+            <div class="tabular mt-1 text-2xl font-semibold text-fg">{{ client.invoices|length }}</div>
+            <div class="mt-2 flex flex-wrap gap-2">
+                <twig:Si:Badge tone="success" title="{{ 'client.stats.tooltip.total_paid'|trans }}">{{ total_invoices_paid }} {{ 'paid'|trans }}</twig:Si:Badge>
+                <twig:Si:Badge tone="warning" title="{{ 'client.stats.tooltip.total_outstanding'|trans }}">{{ total_invoices_pending }} {{ 'pending'|trans }}</twig:Si:Badge>
             </div>
+        </div>
+
+        <div class="rounded-lg border border-line-light bg-surface p-4 shadow-sm">
+            <div class="text-sm text-fg-secondary">{{ 'client.stats.quotes'|trans }}</div>
+            <div class="tabular mt-1 text-2xl font-semibold text-fg">{{ client.quotes|length }}</div>
         </div>
     </div>
 
-    {# ========================================================================
-       METRICS ROW
-       ======================================================================== #}
-    <div class="row row-cards mb-4">
-        {# Total Income #}
-        <div class="col-sm-6 col-lg-3">
-            <twig:Ui:Card>
-                <div class="client-stat-label">{{ 'client.stats.income'|trans }}</div>
-                <div class="client-stat-value client-stat-value--success">
-                    {{ total_income(client)|formatCurrency(client.currency) }}
-                </div>
-            </twig:Ui:Card>
-        </div>
-
-        {# Outstanding #}
-        <div class="col-sm-6 col-lg-3">
-            <twig:Ui:Card>
-                <div class="client-stat-label">{{ 'client.stats.outstanding'|trans }}</div>
-                <div class="client-stat-value client-stat-value--warning">
-                    {{ total_outstanding(client)|formatCurrency(client.currency) }}
-                </div>
-            </twig:Ui:Card>
-        </div>
-
-        {# Invoices Count #}
-        <div class="col-sm-6 col-lg-3">
-            <twig:Ui:Card>
-                <div class="client-stat-label">{{ 'client.stats.invoices'|trans }}</div>
-                <div class="client-stat-value">{{ client.invoices|length }}</div>
-                <div class="client-stat-badges">
-                    <span class="badge bg-success-lt" title="{{ 'client.stats.tooltip.total_paid'|trans }}">
-                        {{ total_invoices_paid }} {{ 'paid'|trans }}
-                    </span>
-                    <span class="badge bg-warning-lt" title="{{ 'client.stats.tooltip.total_outstanding'|trans }}">
-                        {{ total_invoices_pending }} {{ 'pending'|trans }}
-                    </span>
-                </div>
-            </twig:Ui:Card>
-        </div>
-
-        {# Quotes Count #}
-        <div class="col-sm-6 col-lg-3">
-            <twig:Ui:Card>
-                <div class="client-stat-label">{{ 'client.stats.quotes'|trans }}</div>
-                <div class="client-stat-value">{{ client.quotes|length }}</div>
-            </twig:Ui:Card>
+    {# Credit #}
+    <div class="mb-5 flex items-center gap-4 rounded-lg border border-line-light bg-surface p-4 shadow-sm">
+        <span class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-info-light text-info-dark">
+            {{ ux_icon('tabler:wallet', {class: 'size-6', 'aria-hidden': 'true'}) }}
+        </span>
+        <div class="min-w-0 flex-1">
+            <div class="text-sm text-fg-secondary">{{ 'client.stats.credit'|trans }}</div>
+            <twig:ClientCredit :client="client" />
         </div>
     </div>
 
-    {# ========================================================================
-       CLIENT CREDIT SECTION
-       ======================================================================== #}
-    <div class="client-credit-card">
-        <twig:Ui:Card>
-            <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="client-credit-icon">
-                        {{ ux_icon('tabler:wallet', {width: 24, height: 24}) }}
-                    </div>
-                    <div>
-                        <div class="client-credit-label">{{ 'client.stats.credit'|trans }}</div>
-                        <twig:ClientCredit :client="client" />
-                    </div>
-                </div>
-            </div>
-        </twig:Ui:Card>
-    </div>
-
-    {# ========================================================================
-       TABS SECTION
-       ======================================================================== #}
-    <div class="client-tabs-card card">
-        <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#client-info" type="button" role="tab" aria-controls="client-info" aria-selected="true">
-                        {{ ux_icon('tabler:info-circle', {width: 16, height: 16}) }}
-                        <span>{{ 'client.view.tabs.info'|trans }}</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="quotes-tab" data-bs-toggle="tab" data-bs-target="#quotes" type="button" role="tab" aria-controls="quotes" aria-selected="false">
-                        {{ ux_icon('tabler:file-text', {width: 16, height: 16}) }}
-                        <span>{{ 'client.view.tabs.quotes'|trans }}</span>
-                        <span class="badge bg-secondary-lt">{{ client.quotes|length }}</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="invoices-tab" data-bs-toggle="tab" data-bs-target="#invoices" type="button" role="tab" aria-controls="invoices" aria-selected="false">
-                        {{ ux_icon('tabler:file-invoice', {width: 16, height: 16}) }}
-                        <span>{{ 'client.view.tabs.invoices'|trans }}</span>
-                        <span class="badge bg-secondary-lt">{{ client.invoices|length }}</span>
-                    </button>
-                </li>
+    {# Tabs #}
+    <twig:Si:Card>
+        <twig:Si:Tabs tabsClass="px-2">
+            <twig:block name="tabs">
+                <twig:Si:Tab target="client-info" :active="true" icon="tabler:info-circle">{{ 'client.view.tabs.info'|trans }}</twig:Si:Tab>
+                <twig:Si:Tab target="quotes" icon="tabler:file-text" :count="client.quotes|length">{{ 'client.view.tabs.quotes'|trans }}</twig:Si:Tab>
+                <twig:Si:Tab target="invoices" icon="tabler:file-invoice" :count="client.invoices|length">{{ 'client.view.tabs.invoices'|trans }}</twig:Si:Tab>
                 {% if payments|length > 0 %}
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="payments-tab" data-bs-toggle="tab" data-bs-target="#payments" type="button" role="tab" aria-controls="payments" aria-selected="false">
-                            {{ ux_icon('tabler:credit-card', {width: 16, height: 16}) }}
-                            <span>{{ 'client.view.tabs.payments'|trans }}</span>
-                            <span class="badge bg-secondary-lt">{{ payments|length }}</span>
-                        </button>
-                    </li>
+                    <twig:Si:Tab target="payments" icon="tabler:credit-card" :count="payments|length">{{ 'client.view.tabs.payments'|trans }}</twig:Si:Tab>
                 {% endif %}
-            </ul>
-        </div>
+            </twig:block>
 
-        <div class="card-body">
-            <div class="tab-content">
-                {# Info Tab #}
-                <div class="tab-pane fade show active" id="client-info" role="tabpanel" aria-labelledby="info-tab">
+            <div class="p-5">
+                <twig:Si:TabPanel id="client-info" :active="true">
                     <twig:CustomFieldsList :target="enum('SolidInvoice\\CoreBundle\\Enum\\CustomFieldTarget').CLIENT" :recordId="client.id" />
                     <twig:ContactCollection :client="client" count="{{ client.contacts|length }}" />
                     <twig:AddressCollection :client="client" count="{{ client.addresses|length }}" />
-                </div>
+                </twig:Si:TabPanel>
 
-                {# Quotes Tab #}
-                <div class="tab-pane fade" id="quotes" role="tabpanel" aria-labelledby="quotes-tab">
+                <twig:Si:TabPanel id="quotes">
                     {% include "@SolidInvoiceClient/quote_list.html.twig" %}
-                </div>
+                </twig:Si:TabPanel>
 
-                {# Invoices Tab #}
-                <div class="tab-pane fade" id="invoices" role="tabpanel" aria-labelledby="invoices-tab">
+                <twig:Si:TabPanel id="invoices">
                     {% include "@SolidInvoiceClient/invoice_list.html.twig" %}
-                </div>
+                </twig:Si:TabPanel>
 
-                {# Payments Tab #}
                 {% if payments|length > 0 %}
-                    <div class="tab-pane fade" id="payments" role="tabpanel" aria-labelledby="payments-tab">
+                    <twig:Si:TabPanel id="payments">
                         {% include "@SolidInvoicePayment/Payment/list.html.twig" with {"data": {'client': client.id}} only %}
-                    </div>
+                    </twig:Si:TabPanel>
                 {% endif %}
             </div>
-        </div>
-    </div>
+        </twig:Si:Tabs>
+    </twig:Si:Card>
 
-    {# ========================================================================
-       DELETE CLIENT MODAL
-       ======================================================================== #}
-    <twig:Ui:Modal id="delete-client-modal" title="{{ 'action.confirm'|trans }}" status="danger" :centered="true">
-        <div class="text-center py-3">
-            <div class="mb-3">
-                {{ ux_icon('tabler:alert-triangle', {width: 48, height: 48, class: 'text-danger'}) }}
-            </div>
-            <h3>{{ 'client.delete.confirm.title'|trans({'%name%': client.name}) }}</h3>
-            <p class="text-muted">{{ 'client.delete.confirm.message'|trans }}</p>
+    {# Delete client #}
+    <twig:Si:Modal id="delete-client-modal" title="{{ 'action.confirm'|trans }}" status="danger" size="sm">
+        <div class="py-3 text-center">
+            {{ ux_icon('tabler:alert-triangle', {class: 'mx-auto mb-3 size-12 text-danger', 'aria-hidden': 'true'}) }}
+            <h3 class="mb-1 text-lg font-semibold text-fg">{{ 'client.delete.confirm.title'|trans({'%name%': client.name}) }}</h3>
+            <p class="text-fg-muted">{{ 'client.delete.confirm.message'|trans }}</p>
         </div>
 
         <twig:block name="footer">
-            <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">{{ 'action.cancel'|trans }}</button>
-            <form method="post" action="{{ path('_clients_delete', {'id': client.id}) }}" class="d-inline">
+            <twig:Si:Button type="button" variant="ghost" data-si-modal-close>{{ 'action.cancel'|trans }}</twig:Si:Button>
+            <form method="post" action="{{ path('_clients_delete', {'id': client.id}) }}" class="inline">
                 <input type="hidden" name="_method" value="DELETE">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ client.id) }}">
-                <button type="submit" class="btn btn-danger">
-                    {{ ux_icon('tabler:trash', {width: 16, height: 16}) }}
+                <twig:Si:Button type="submit" variant="danger">
+                    {{ ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'}) }}
                     {{ 'client.view.actions.delete'|trans }}
-                </button>
+                </twig:Si:Button>
             </form>
         </twig:block>
-    </twig:Ui:Modal>
+    </twig:Si:Modal>
 {% endblock content %}

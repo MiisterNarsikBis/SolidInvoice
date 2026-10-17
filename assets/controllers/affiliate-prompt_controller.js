@@ -1,12 +1,13 @@
 /* global document, fetch, URLSearchParams */
 import { Controller } from '@hotwired/stimulus';
-import { Toast } from '@tabler/core';
 
 /*
  * The one-off affiliate prompt in the corner of the dashboard.
  *
- * However it closes — the close button, "Not now", Escape or the join button — the dismissal is
- * saved in the background, so it never comes back and the page never reloads.
+ * It is rendered hidden and shown on connect, so there is no flash of an unstyled panel and
+ * no dependency on Bootstrap's Toast. However it closes — the close button, "Not now", Escape
+ * or the join button — the dismissal is saved in the background, so it never comes back and
+ * the page never reloads.
  */
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
@@ -15,35 +16,30 @@ export default class extends Controller {
         token: String,
     };
 
-    #toast = null;
     #dismissed = false;
 
     connect() {
-        // Never compete with a modal that is already open; the prompt waits for the next visit.
-        if (document.querySelector('.modal.show')) {
+        // Never compete with a dialog that is already open; the prompt waits for the next visit.
+        if (document.querySelector('dialog[open]')) {
             return;
         }
 
-        this.#toast = Toast.getOrCreateInstance(this.element, { autohide: false });
-        this.element.addEventListener('hidden.bs.toast', this.#dismiss);
+        this.element.hidden = false;
         document.addEventListener('keydown', this.#closeOnEscape);
-        this.#toast.show();
     }
 
     disconnect() {
-        this.element.removeEventListener('hidden.bs.toast', this.#dismiss);
         document.removeEventListener('keydown', this.#closeOnEscape);
-        this.#toast?.dispose();
-        this.#toast = null;
     }
 
     close() {
-        this.#toast?.hide();
+        this.element.hidden = true;
+        this.#dismiss();
     }
 
     #closeOnEscape = (event) => {
-        // An Escape meant for a modal opened on top must not dismiss the prompt for good.
-        if (event.key === 'Escape' && !document.querySelector('.modal.show')) {
+        // An Escape meant for a dialog opened on top must not dismiss the prompt for good.
+        if (event.key === 'Escape' && !this.element.hidden && !document.querySelector('dialog[open]')) {
             this.close();
         }
     };

@@ -9,6 +9,7 @@
 
 {% set editInvoiceId = false %}
 {% set isEdit = true %}
+
 {% extends "@SolidInvoiceInvoice/Default/create.html.twig" %}
 
-{% block page_title %}{{ "invoice.action.edit"|trans }}{% endblock %}
+{% block page_title %}{{ (recurring ? 'invoice.recurring.edit.title' : 'invoice.edit.title')|trans }}{% endblock %}

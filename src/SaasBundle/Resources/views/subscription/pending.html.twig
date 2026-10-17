@@ -7,78 +7,63 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends '@SolidInvoiceCore/Layout/default_no_nav.html.twig' %}
+{% extends '@SolidInvoiceCore/Layout/focus.html.twig' %}
+
+{% block page_title %}{{ 'saas.pending.title'|trans }}{% endblock %}
+
+{% block page_heading %}{% endblock %}
+
+{% block container_class %}max-w-6xl{% endblock %}
 
 {% block content %}
     {% set availableCompanies = app.user.companies|filter(v => v.id != company_id()) %}
+    {% set paidTrial = toggle('saas_paid_trial') %}
 
-    <div class="subscription-page subscription-pricing-page subscription-pending-page">
-        <div class="subscription-container">
-            {# Hero #}
-            <div class="subscription-icon subscription-icon-info">
-                {{ ux_icon('tabler:rocket', {width: 32, height: 32}) }}
+    <div class="subscription-pending-page text-center">
+        {% include '@SolidInvoiceSaas/subscription/_hero.html.twig' with {
+            icon: 'tabler:rocket',
+            tone: 'info',
+            title: (paidTrial ? 'saas.pending.title_paid_trial' : 'saas.pending.title')|trans,
+            subtitle: (paidTrial ? 'saas.pending.subtitle_paid_trial' : 'saas.pending.subtitle')|trans,
+        } only %}
+
+        {# Plan picker #}
+        {% if plans|default([])|length > 0 %}
+            <div class="mb-2 mt-8">
+                {% include '@SolidInvoiceSaas/subscription/_plans_grid.html.twig' with { plans: plans } only %}
             </div>
-
-            {% set paidTrial = toggle('saas_paid_trial') %}
-
-            <h1 class="subscription-title">
-                {{ (paidTrial ? 'saas.pending.title_paid_trial' : 'saas.pending.title')|trans }}
-            </h1>
-            <p class="subscription-subtitle">
-                {{ (paidTrial ? 'saas.pending.subtitle_paid_trial' : 'saas.pending.subtitle')|trans }}
+            <p class="mt-4 flex items-center justify-center gap-1 text-sm text-fg-muted">
+                {{ ux_icon('tabler:lock', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+                {{ (paidTrial ? 'saas.pending.secure_checkout_paid_trial' : 'saas.pending.secure_checkout')|trans }}
             </p>
+        {% else %}
+            {# No plans configured: keep the original CTA so the user can still complete activation. #}
+            <div class="mt-6">
+                <twig:Si:Button size="lg" href="{{ path('saas_subscription_checkout') }}">
+                    {{ ux_icon('tabler:credit-card', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                    {{ 'saas.pending.activate'|trans }}
+                </twig:Si:Button>
+            </div>
+        {% endif %}
 
-            {# Plan picker #}
-            {% if plans|default([])|length > 0 %}
-                <div class="mt-4 mb-2">
-                    {% include '@SolidInvoiceSaas/subscription/_plans_grid.html.twig' with { plans: plans } only %}
-                </div>
+        <div class="mx-auto max-w-2xl">
+            {# Just completed payment #}
+            <twig:Si:Alert type="info" class="mt-6 text-left">
+                <strong class="block">{{ 'saas.pending.just_completed_title'|trans }}</strong>
+                {{ 'saas.pending.just_completed_message'|trans }}
+            </twig:Si:Alert>
 
-                <p class="text-subtle small mt-3 mb-0">
-                    {{ ux_icon('tabler:lock', {width: 14, height: 14, class: 'me-1'}) }}
-                    {{ (paidTrial ? 'saas.pending.secure_checkout_paid_trial' : 'saas.pending.secure_checkout')|trans }}
-                </p>
-            {% else %}
-                {# Fallback when no plans are configured — keep the original CTA so the user can still complete activation. #}
-                <div class="subscription-actions mt-4">
-                    <a href="{{ path('saas_subscription_checkout') }}" class="btn btn-primary btn-lg">
-                        {{ ux_icon('tabler:credit-card', {width: 20, height: 20}) }} {{ 'saas.pending.activate'|trans }}
-                    </a>
-                </div>
-            {% endif %}
-
-            {# Edge Case: Just Completed Payment #}
-            <twig:Ui:Alert type="info" class="mt-4 text-start">
-                <div class="d-flex align-items-start gap-2">
-                    {{ ux_icon('tabler:info-circle', {width: 20, height: 20}) }}
-                    <div>
-                        <strong>{{ 'saas.pending.just_completed_title'|trans }}</strong><br>
-                        {{ 'saas.pending.just_completed_message'|trans }}
-                    </div>
-                </div>
-            </twig:Ui:Alert>
-
-            {# Multiple Companies #}
             {% if availableCompanies|length > 0 %}
-                <twig:Ui:Alert type="info" class="mt-3 text-start">
-                    <div class="d-flex align-items-center gap-2">
-                        {{ ux_icon('tabler:building', {width: 20, height: 20}) }}
-                        <div>
-                            {{ 'saas.pending.already_activated'|trans }}
-                            <a href="{{ path('_switch_company', {'id': availableCompanies|first.id}) }}" class="alert-link">
-                                {{ 'saas.pending.switch_company'|trans }}
-                            </a>
-                        </div>
-                    </div>
-                </twig:Ui:Alert>
+                {% include '@SolidInvoiceSaas/subscription/_switch_company.html.twig' with {
+                    message: 'saas.pending.already_activated'|trans,
+                    linkLabel: 'saas.pending.switch_company'|trans,
+                    companyId: (availableCompanies|first).id,
+                } only %}
             {% endif %}
 
-            {# Help #}
-            <p class="text-subtle small mt-4 mb-0">
+            <p class="mt-6 text-sm text-fg-muted">
                 {{ 'saas.pending.need_help'|trans }}
-                <a href="https://solidinvoice.co/contact" target="_blank" rel="external noreferrer noopener">
-                    {{ 'saas.action.contact_support_short'|trans }}
-                </a>
+                <a href="https://solidinvoice.co/contact" target="_blank" rel="external noreferrer noopener" class="text-primary hover:underline">{{ 'saas.action.contact_support_short'|trans }}</a>
             </p>
         </div>
     </div>

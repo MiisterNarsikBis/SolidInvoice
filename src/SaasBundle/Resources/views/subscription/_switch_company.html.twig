@@ -1,0 +1,23 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    "You can already use another company" notice.
+
+    Variables: message (translated), linkLabel (translated), companyId.
+#}
+<twig:Si:Alert type="info" class="mt-4 text-left">
+    <span class="flex items-center gap-2">
+        {{ ux_icon('tabler:building', {class: 'size-5 shrink-0', 'aria-hidden': 'true'}) }}
+        <span>
+            {{ message }}
+            <a href="{{ path('_switch_company', {'id': companyId}) }}" class="font-medium underline">{{ linkLabel }}</a>
+        </span>
+    </span>
+</twig:Si:Alert>

@@ -1,286 +1,271 @@
 <html><body>
-<div class="billing-form-page" id="in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed" data-controller="live" data-live-name-value="CreateQuote" data-live-url-value="/_components/CreateQuote" data-live-props-value='{"isEdit":false,"quoteEntity":null,"previousClientId":"01JBYEQCR7DJ2YW4EXP6FYJZCR","formName":"quote","quote":{"clientMode":"existing","discount":{"type":"","value":0},"lines":[{"name":"","description":"","price":"100.00","qty":"1"}],"invoiceTaxes":[],"quoteId":"1","terms":"","notes":"","total":0,"baseTotal":0,"tax":0,"customFields":[],"__dynamic_error":"","client":"01JBYEQCR7DJ2YW4EXP6FYJZCR","users":["01JBYEQCR7DJ2YW4EXP6FYJZCR","01JBYEQCR7DJ2YW4EXP6FYJZCR"],"_token":""},"isValidated":false,"validatedFields":[],"@attributes":{"id":"in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed"},"@checksum":"REPLACED_CHECKSUM"}'>
-    
+<div id="in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed" data-controller="live" data-live-name-value="CreateQuote" data-live-url-value="/_components/CreateQuote" data-live-props-value='{"isEdit":false,"quoteEntity":null,"previousClientId":"01JBYEQCR7DJ2YW4EXP6FYJZCR","formName":"quote","quote":{"clientMode":"existing","discount":{"type":"","value":0},"lines":[{"name":"","description":"","price":"100.00","qty":"1"}],"invoiceTaxes":[],"quoteId":"1","terms":"","notes":"","total":0,"baseTotal":0,"tax":0,"customFields":[],"__dynamic_error":"","client":"01JBYEQCR7DJ2YW4EXP6FYJZCR","users":["01JBYEQCR7DJ2YW4EXP6FYJZCR","01JBYEQCR7DJ2YW4EXP6FYJZCR"],"_token":""},"isValidated":false,"validatedFields":[],"@attributes":{"id":"in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed"},"@checksum":"REPLACED_CHECKSUM"}'>
+                
     <form name="quote" method="post" data-controller="solidworx--platform--loading" data-action="submit-&gt;solidworx--platform--loading#onSubmit" data-model="on(change)|*">
 
-    <div class="billing-form-container">
-                <div class="billing-form-header">
-            <div class="billing-form-header-content">
-                <div class="billing-form-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="28" height="28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2M9 9h1m-1 4h6m-6 4h6"></path></g></svg>
-                </div>
-                <div>
-                                            <h1 class="billing-form-title">Create Quote</h1>
-                        <p class="billing-form-subtitle">Build professional quotes for your clients</p>
-                                    </div>
-            </div>
-        </div>
+            <p class="-mt-2 mb-5 text-fg-muted">Build professional quotes for your clients</p>
+    
+    <div class="space-y-6">
+                <section class="grid gap-6 rounded-lg border border-line-light bg-surface p-5 shadow-sm md:grid-cols-2">
+            <div class="space-y-4">
+                                <div class="client-selection">
+                    <div class="client-mode-toggle mb-3">
+                        <div class="mb-4"><div id="quote_clientMode" class="flex flex-wrap gap-x-5 gap-y-1 space-y-2">            <div class="flex items-center gap-2.5">
+<input type="radio" id="quote_clientMode_0" name="quote[clientMode]" data-required="required" data-action="live#$render" class="si-check" value="existing" checked><label class="text-base text-fg" for="quote_clientMode_0">Existing</label>
+</div>
+                    <div class="flex items-center gap-2.5">
+<input type="radio" id="quote_clientMode_1" name="quote[clientMode]" data-required="required" data-action="live#$render" class="si-check" value="new"><label class="text-base text-fg" for="quote_clientMode_1">NewClient</label>
+</div>
+        </div></div>
+                    </div>
 
-                <div class="billing-details-section">
-            <div class="billing-details-grid billing-details-grid--no-dates">
-                                <div class="billing-details-left">
-                                        <div class="client-selection">
-                                                <div class="client-mode-toggle mb-3">
-                            <fieldset class="mb-3">                
-                                        <label class="control-label required form-label required" for="quote_clientMode">Client mode</label><div id="quote_clientMode" class="d-flex gap-2">
-<div class="form-check">
-<input type="radio" id="quote_clientMode_0" name="quote[clientMode]" data-required="required" data-action="live#$render" class="form-check-input" value="existing" checked>
-        <label class="form-check-label required" for="quote_clientMode_0">Existing</label>
-</div>
-<div class="form-check">
-<input type="radio" id="quote_clientMode_1" name="quote[clientMode]" data-required="required" data-action="live#$render" class="form-check-input" value="new">
-        <label class="form-check-label required" for="quote_clientMode_1">NewClient</label>
-</div>
-</div>
-</fieldset>
-                        </div>
-
-                        
-                                                                                <div class="d-none">
-                                                                    <div class="mb-3">                        
-                                <label class="control-label required form-label required" for="quote_client">Client</label>
-            <select id="quote_client" name="quote[client]" data-required="required" class="client-select form-select" data-controller="symfony--ux-autocomplete--autocomplete" data-symfony--ux-autocomplete--autocomplete-url-value="/autocomplete/client_autocomplete_type" data-symfony--ux-autocomplete--autocomplete-max-results-value="10" data-symfony--ux-autocomplete--autocomplete-loading-more-text-value="Loading more results..." data-symfony--ux-autocomplete--autocomplete-no-results-found-text-value="No results found" data-symfony--ux-autocomplete--autocomplete-no-more-results-text-value="No more results" data-symfony--ux-autocomplete--autocomplete-create-option-text-value="Add %placeholder%..." data-symfony--ux-autocomplete--autocomplete-preload-value="focus" data-action="live#$render"><option value="" hidden="hidden">Choose a client</option>
+                    
+                                                                    <div class="hidden">
+                                                            <div class="mb-4">        <label for="quote_client" class="si-label">Client<span class="text-danger-dark" aria-hidden="true"> *</span></label>
+            <select id="quote_client" name="quote[client]" data-required="required" class="client-select si-control" data-controller="symfony--ux-autocomplete--autocomplete" data-symfony--ux-autocomplete--autocomplete-url-value="/autocomplete/client_autocomplete_type" data-symfony--ux-autocomplete--autocomplete-max-results-value="10" data-symfony--ux-autocomplete--autocomplete-loading-more-text-value="Loading more results..." data-symfony--ux-autocomplete--autocomplete-no-results-found-text-value="No results found" data-symfony--ux-autocomplete--autocomplete-no-more-results-text-value="No more results" data-symfony--ux-autocomplete--autocomplete-create-option-text-value="Add %placeholder%..." data-symfony--ux-autocomplete--autocomplete-preload-value="focus" data-action="live#$render"><option value="" hidden="hidden">Choose a client</option>
 <option value="01JBYEQCR7DJ2YW4EXP6FYJZCR" selected>Test Client</option></select>
     </div>
-                                                            </div>
-                                                            
+                                                    </div>
+                                                    
 
-<div class="selected-client-card">
-    <div class="selected-client-header">
-        <span class="selected-client-name">
-            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M9 8h1m-1 4h1m-1 4h1m4-8h1m-1 4h1m-1 4h1M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path></svg>
+<div class="rounded-lg border border-line bg-canvas p-4">
+    <div class="mb-3 flex items-center justify-between gap-3">
+        <span class="flex items-center gap-2 font-semibold text-fg">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5 text-primary" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M9 8h1m-1 4h1m-1 4h1m4-8h1m-1 4h1m-1 4h1M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path></svg>
             Test Client
         </span>
-        <a href="#" class="selected-client-change" data-action="live#action:prevent" data-live-action-param="clearClient">
+        <a href="#" class="text-sm text-primary hover:underline" data-action="live#action:prevent" data-live-action-param="clearClient">
             Change
         </a>
     </div>
 
     
-            <div class="selected-client-contacts">
-            <div class="contacts-label" id="contacts-label">
-                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="m3 7l9 6l9-6"></path></g></svg>
+            <div>
+            <div class="mb-2 flex items-center gap-1.5 text-sm font-medium text-fg-secondary" id="contacts-label">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="m3 7l9 6l9-6"></path></g></svg>
                 Send quote to:
             </div>
 
             
 
-            <div class="contacts-list" role="group" aria-labelledby="contacts-label">
-                                    <label class="contact-checkbox">
-                        <div class="form-check">
-<input type="checkbox" id="quote_users_0" name="quote[users][]" class="form-check-input" value="01JBYEQCR7DJ2YW4EXP6FYJZCR" checked>
-        <label class="form-check-label" for="quote_users_0"></label>
-</div>
-                        <span class="contact-name">John Doe</span>
+            <div class="contacts-list space-y-1.5" role="group" aria-labelledby="contacts-label">
+                                    <label class="contact-checkbox flex cursor-pointer items-center gap-2 text-fg-secondary">
+                        <input type="checkbox" id="quote_users_0" name="quote[users][]" class="si-check" value="01JBYEQCR7DJ2YW4EXP6FYJZCR" checked>
+                        <span class="contact-name text-fg">John Doe</span>
                                             </label>
-                                    <label class="contact-checkbox">
-                        <div class="form-check">
-<input type="checkbox" id="quote_users_1" name="quote[users][]" class="form-check-input" value="01JBYEQCR7DJ2YW4EXP6FYJZCR" checked>
-        <label class="form-check-label" for="quote_users_1"></label>
-</div>
-                        <span class="contact-name">Jane Smith</span>
+                                    <label class="contact-checkbox flex cursor-pointer items-center gap-2 text-fg-secondary">
+                        <input type="checkbox" id="quote_users_1" name="quote[users][]" class="si-check" value="01JBYEQCR7DJ2YW4EXP6FYJZCR" checked>
+                        <span class="contact-name text-fg">Jane Smith</span>
                                             </label>
                             </div>
         </div>
     </div>
-                                                                        </div>
-
-                                        <div data-controller="billing-id">
-                        <span data-billing-id-target="info">
-                            <div class="billing-id-display">
-                                <span class="billing-id-label">Quote #</span>
-                                <span class="billing-id-value" data-billing-id-target="value">1</span>
-                                                                    <button type="button" class="billing-id-edit" data-action="billing-id#edit" aria-label="Edit quote ID" title="Edit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20h4L18.5 9.5a2.828 2.828 0 1 0-4-4L4 16zm9.5-13.5l4 4"></path></svg>
-                                    </button>
                                                             </div>
-                        </span>
 
-                        <div class="d-none billing-id-form" data-billing-id-target="form">
-                                            
-                                <label class="control-label required form-label required" for="quote_quoteId">Quote id</label>
-                            <div class="input-group">
-                                <input type="text" id="quote_quoteId" name="quote[quoteId]" data-required="required" class="form-control form-control" value="1">
-                                <button class="btn btn-outline-primary" type="button" data-action="billing-id#save" aria-label="Save quote ID" title="Save">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12l5 5L20 7"></path></svg>
-                                </button>
-                                <button class="btn btn-outline-secondary" type="button" data-action="billing-id#cancel" aria-label="Cancel editing quote ID" title="Cancel">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                
+<div data-controller="billing-id">
+    <span data-billing-id-target="info">
+        <span class="inline-flex items-center gap-2 rounded-md bg-canvas px-3 py-2">
+            <span class="text-sm text-fg-muted">Quote #</span>
+            <span class="font-semibold text-fg" data-billing-id-target="value">1</span>
+                            <button type="button" class="inline-flex size-7 items-center justify-center rounded text-fg-muted hover:bg-surface-hover hover:text-fg" data-action="billing-id#edit" aria-label="Edit quote ID" title="Edit quote ID">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20h4L18.5 9.5a2.828 2.828 0 1 0-4-4L4 16zm9.5-13.5l4 4"></path></svg>
+                </button>
+                    </span>
+    </span>
 
-                                <div class="billing-details-right">
-                        <label for="quote_discount_value">Discount</label>
-    <div class="mb-3 multiple-form-group input-group">
-        <input type="text" id="quote_discount_value" name="quote[discount][value]" class="discount-value form-control" value="0">
-        <select id="quote_discount_type" name="quote[discount][type]" class="discount-type form-select" data-controller="symfony--ux-autocomplete--autocomplete" data-symfony--ux-autocomplete--autocomplete-max-results-value="10" data-symfony--ux-autocomplete--autocomplete-loading-more-text-value="Loading more results..." data-symfony--ux-autocomplete--autocomplete-no-results-found-text-value="No results found" data-symfony--ux-autocomplete--autocomplete-no-more-results-text-value="No more results" data-symfony--ux-autocomplete--autocomplete-create-option-text-value="Add %placeholder%..." data-symfony--ux-autocomplete--autocomplete-preload-value="focus"><option value="percentage">%</option>
+    <div class="hidden" data-billing-id-target="form">
+        <label for="quote_quoteId" class="si-label">Quote id<span class="text-danger-dark" aria-hidden="true"> *</span></label>
+        <div class="si-group">
+            <input type="text" id="quote_quoteId" name="quote[quoteId]" data-required="required" class="si-control" value="1">
+            <button class="si-btn si-btn--outline si-btn--md rounded-none border-l-0" type="button" data-action="billing-id#save" aria-label="Save quote ID" title="Save quote ID">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-[1.125rem]" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12l5 5L20 7"></path></svg>
+            </button>
+            <button class="si-btn si-btn--outline si-btn--md rounded-l-none border-l-0" type="button" data-action="billing-id#cancel" aria-label="Cancel editing quote ID" title="Cancel editing quote ID">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-[1.125rem]" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    </div>
+</div>
+            </div>
+
+            <div>
+                    <div class="mb-4">
+        <label for="quote_discount_value" class="si-label">Discount</label>
+        <div class="si-group">
+            <input type="text" id="quote_discount_value" name="quote[discount][value]" class="discount-value si-control" value="0">
+            <select id="quote_discount_type" name="quote[discount][type]" class="discount-type si-control" data-controller="symfony--ux-autocomplete--autocomplete" data-symfony--ux-autocomplete--autocomplete-max-results-value="10" data-symfony--ux-autocomplete--autocomplete-loading-more-text-value="Loading more results..." data-symfony--ux-autocomplete--autocomplete-no-results-found-text-value="No results found" data-symfony--ux-autocomplete--autocomplete-no-more-results-text-value="No more results" data-symfony--ux-autocomplete--autocomplete-create-option-text-value="Add %placeholder%..." data-symfony--ux-autocomplete--autocomplete-preload-value="focus"><option value="percentage">%</option>
 <option value="money">USD</option></select>
+        </div>
     </div>
 
-                </div>
             </div>
-        </div>
+        </section>
 
-                <div class="billing-form-main">
-                        <div class="billing-items-section">
-                <div class="billing-items-header">
-                    <div class="billing-items-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5h8m-8 4h5m-5 6h8m-8 4h5M3 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zm0 10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"></path></svg>
-                    </div>
-                    <h2 class="billing-items-title">Line Items</h2>
+                <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            
+
+<section class="rounded-lg border border-line-light bg-surface shadow-sm">
+    <header class="flex items-center gap-3 border-b border-line-light px-5 py-4">
+        <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-lighter text-primary-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5h8m-8 4h5m-5 6h8m-8 4h5M3 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zm0 10a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"></path></svg>
+        </span>
+        <h2 class="text-lg font-semibold text-fg">Line Items</h2>
+    </header>
+
+    <div class="p-5">
+                    <div data-controller="line-reorder" data-line-reorder-announcement-value="Item moved to position %position% of %total%" data-action="keydown-&gt;line-reorder#keydown">
+                                <div class="mb-2 hidden gap-3 px-3 text-xs font-semibold tracking-wide text-fg-muted uppercase lg:grid lg:grid-cols-[1.75rem_minmax(0,3.8fr)_minmax(7rem,1fr)_4rem_minmax(5rem,0.5fr)_1.5rem]">
+                    <div></div>
+                    <div>Item</div>
+                    <div>Price</div>
+                    <div>Qty</div>
+                                        <div class="text-right">Total</div>
+                    <div></div>
                 </div>
 
-                <div class="billing-items-body">
-                                                                                        <div class="billing-items-list" data-controller="line-reorder" data-line-reorder-announcement-value="Item moved to position %position% of %total%" data-action="keydown-&gt;line-reorder#keydown">
-                            <div class="billing-items-header-row">
-                                <div class="column-drag"></div>
-                                <div class="column-description">Item</div>
-                                <div class="column-price">Price</div>
-                                <div class="column-qty">Qty</div>
-                                                                <div class="column-total">Total</div>
-                                <div class="column-actions"></div>
+                <div class="space-y-3">
+                                            <div class="grid grid-cols-2 items-start gap-x-3 gap-y-3 rounded-lg border border-line-light bg-canvas p-3 lg:items-start lg:bg-transparent lg:grid-cols-[1.75rem_minmax(0,3.8fr)_minmax(7rem,1fr)_4rem_minmax(5rem,0.5fr)_1.5rem]" data-line-reorder-row>
+                            <div class="order-first flex items-center lg:block">
+                                <button type="button" class="inline-flex size-7 cursor-grab items-center justify-center rounded text-fg-muted hover:bg-surface-hover hover:text-fg" data-line-reorder-handle title="Reorder item: drag it, or move it with the up and down arrow keys" aria-label="Reorder item: drag it, or move it with the up and down arrow keys">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a1 1 0 1 0 2 0a1 1 0 1 0-2 0m0 7a1 1 0 1 0 2 0a1 1 0 1 0-2 0m0 7a1 1 0 1 0 2 0a1 1 0 1 0-2 0m6-14a1 1 0 1 0 2 0a1 1 0 1 0-2 0m0 7a1 1 0 1 0 2 0a1 1 0 1 0-2 0m0 7a1 1 0 1 0 2 0a1 1 0 1 0-2 0"></path></svg>
+                                </button>
                             </div>
 
-                                                            <div class="billing-item-row" data-line-reorder-row>
-                                    <div class="column-drag">
-                                        <button type="button" class="line-drag-handle" data-line-reorder-handle title="Reorder item: drag it, or move it with the up and down arrow keys" aria-label="Reorder item: drag it, or move it with the up and down arrow keys">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a1 1 0 1 0 2 0a1 1 0 1 0-2 0m0 7a1 1 0 1 0 2 0a1 1 0 1 0-2 0m0 7a1 1 0 1 0 2 0a1 1 0 1 0-2 0m6-14a1 1 0 1 0 2 0a1 1 0 1 0-2 0m0 7a1 1 0 1 0 2 0a1 1 0 1 0-2 0m0 7a1 1 0 1 0 2 0a1 1 0 1 0-2 0"></path></svg>
-                                        </button>
-                                    </div>
-                                    <div class="column-description">
-                                        <span class="mobile-label">Item</span>
-                                        <input type="text" id="quote_lines_0_name" name="quote[lines][0][name]" class="input-medium quote-item-name form-control" placeholder="e.g. Website design" aria-label="Item name">
-                                        
-                                        <details class="line-description">
-                                            <summary class="line-description-toggle">Add description</summary>
-                                            <textarea id="quote_lines_0_description" name="quote[lines][0][description]" class="input-medium quote-item-description form-control" placeholder="Describe the service or product..." rows="2" aria-label="Item description"></textarea>
-                                            
-                                        </details>
-                                    </div>
-                                    <div class="column-price">
-                                        <span class="mobile-label">Price</span>
-                                        <div class="input-group flex-nowrap">
-<span class="input-group-text">$ </span><input type="text" id="quote_lines_0_price" name="quote[lines][0][price]" class="input-small quote-item-price form-control" inputmode="decimal" value="100.00">
-</div>
+                            <div class="col-span-2 min-w-0 lg:col-span-1">
+                                <span class="mb-1 block text-xs font-semibold tracking-wide text-fg-muted uppercase lg:hidden">Item</span>
+                                <input type="text" id="quote_lines_0_name" name="quote[lines][0][name]" class="input-medium quote-item-name si-control" placeholder="e.g. Website design" aria-label="Item name">
+                                
+                                <details class="mt-1.5">
+                                    <summary class="cursor-pointer text-sm text-primary hover:underline">Add description</summary>
+                                    <div class="mt-1.5">
+                                        <textarea id="quote_lines_0_description" name="quote[lines][0][description]" class="input-medium quote-item-description si-control" placeholder="Describe the service or product..." rows="2" aria-label="Item description"></textarea>
                                         
                                     </div>
-                                    <div class="column-qty">
-                                        <span class="mobile-label">Qty</span>
-                                        <input type="text" id="quote_lines_0_qty" name="quote[lines][0][qty]" class="input-mini quote-item-qty form-control" inputmode="decimal" value="1">
-                                        
-                                    </div>
-                                                                        <div class="column-total">
-                                        <span class="mobile-label">Total</span>
-                                        <span class="item-total-value">$100.00</span>
-                                    </div>
-                                    <div class="column-actions">
-                                                                            </div>
-                                </div>
-                                                    </div>
-                    
-                                        <div class="add-item-action">
-                        <button type="button" id="quote_lines_add" name="quote[lines][add]" data-action="live#action" data-live-action-param="addCollectionItem" data-live-name-param="quote[lines]" class="add-item-btn btn-sm btn">Add Item</button>
-                    </div>
-                </div>
+                                </details>
+                            </div>
 
-                
-                </div>
-
-                        <div class="billing-totals-sidebar">
-                <div class="billing-totals-card">
-                    <div class="billing-totals-header">
-                        <div class="billing-totals-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M8 8a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm0 6v.01m4-.01v.01m4-.01v.01M8 17v.01m4-.01v.01m4-.01v.01"></path></g></svg>
-                        </div>
-                        <h2 class="billing-totals-title">Summary</h2>
-                    </div>
-
-                    <div class="billing-totals-body">
-                        <div class="totals-row">
-                            <span class="totals-label">SubTotal</span>
-                            <span class="totals-value">$100.00</span>
-                        </div>
-
-                        
-                        <div class="totals-row totals-row-discount">
-                            <span class="totals-label">Discount</span>
-                            <span class="totals-value">$0.00</span>
-                        </div>
-
-                        <div class="totals-row totals-row-total">
-                            <span class="totals-label">Total</span>
-                            <span class="totals-value">$100.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-                
-                <details class="billing-terms-section">
-            <summary class="terms-summary" aria-label="Toggle terms and notes section">
-                <span class="terms-summary-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 6l6 6l-6 6"></path></svg>
-                </span>
-                <span class="terms-summary-text">
-                    <span class="terms-summary-title">Terms &amp; Notes</span>
-                    <span class="badge bg-secondary-lt">Optional</span>
-                </span>
-            </summary>
-            <div class="terms-content">
-                <div class="terms-grid">
-                    <div class="mb-3">                
-            <label class="control-label form-label" for="quote_terms">Terms</label><input type="text" id="quote_terms" name="quote[terms]" class="form-control">
+                            <div class="min-w-0">
+                                <span class="mb-1 block text-xs font-semibold tracking-wide text-fg-muted uppercase lg:hidden">Price</span>
+                                <div class="si-group">
+<span class="si-addon">$ </span><input type="text" id="quote_lines_0_price" name="quote[lines][0][price]" class="input-small quote-item-price si-control" inputmode="decimal" value="100.00">
 </div>
-                    <div class="mb-3">                
-            <label class="control-label form-label" for="quote_notes">Notes</label><input type="text" id="quote_notes" name="quote[notes]" aria-describedby="quote_notes_help" class="form-control"><div class="form-text text-muted mb-0" id="quote_notes_help">Notes will not be visible to the client</div>
-</div>
-                </div>
-            </div>
-        </details>
+                                
+                            </div>
 
-                <input type="hidden" id="quote_total" name="quote[total]" value="0">
-        <input type="hidden" id="quote_baseTotal" name="quote[baseTotal]" value="0">
-        <input type="hidden" id="quote_tax" name="quote[tax]" value="0">
+                            <div class="min-w-0">
+                                <span class="mb-1 block text-xs font-semibold tracking-wide text-fg-muted uppercase lg:hidden">Qty</span>
+                                <input type="text" id="quote_lines_0_qty" name="quote[lines][0][qty]" class="input-mini quote-item-qty si-control" inputmode="decimal" value="1">
+                                
+                            </div>
 
-                <div class="billing-form-actions">
-            <div class="billing-form-actions-inner">
-                <a href="/quotes/" class="btn btn-ghost">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l6 6m-6-6l6-6"></path></svg>
-                    Cancel
-                </a>
+                            
+                            <div class="flex items-baseline justify-between lg:block lg:text-right">
+                                <span class="mb-1 block text-xs font-semibold tracking-wide text-fg-muted uppercase lg:hidden">Total</span>
+                                <span class="item-total-value tabular font-semibold text-fg lg:inline-block lg:pt-2">$100.00</span>
+                            </div>
 
-                <div class="btn-group save-button-group">
-                                            <button type="button" class="btn btn-primary btn-save-primary" data-action="live#action" data-live-action-param="saveDraft">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 4h10l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"></path><path d="M10 14a2 2 0 1 0 4 0a2 2 0 1 0-4 0m4-10v4H8V4"></path></g></svg>
-                            Save as Draft
-                        </button>
-                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <button type="button" class="dropdown-item" data-action="live#action" data-live-action-param="savePublish">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12l5 5L20 7"></path></svg>
-                                    Publish
-                                </button>
-                            </li>
-                                                        <li>
-                                <button type="button" class="dropdown-item" data-action="live#action" data-live-action-param="saveSend">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14L21 3m0 0l-6.5 18a.55.55 0 0 1-1 0L10 14l-7-3.5a.55.55 0 0 1 0-1z"></path></svg>
-                                    Save and Send
-                                </button>
-                            </li>
-                                                    </ul>
+                            <div class="flex justify-end lg:block">
+                                                            </div>
+                        </div>
                                     </div>
             </div>
+        
+        <div class="mt-4">
+            <button type="button" id="quote_lines_add" name="quote[lines][add]" data-action="live#action" data-live-action-param="addCollectionItem" data-live-name-param="quote[lines]" class="add-item-btn si-btn si-btn--sm si-btn--outline">Add Item</button>
         </div>
     </div>
 
-    <input type="hidden" id="quote___dynamic_error" name="quote[__dynamic_error]"><input type="hidden" id="quote__token" name="quote[_token]" data-controller="csrf-protection">
+    
+    </section>
+            
+<aside class="rounded-lg border border-line-light bg-surface shadow-sm lg:sticky lg:top-20">
+    <header class="flex items-center gap-3 border-b border-line-light px-5 py-4">
+        <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-lighter text-primary-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M8 8a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm0 6v.01m4-.01v.01m4-.01v.01M8 17v.01m4-.01v.01m4-.01v.01"></path></g></svg>
+        </span>
+        <h2 class="text-lg font-semibold text-fg">Summary</h2>
+    </header>
+
+    <dl class="space-y-2 p-5">
+        <div class="flex justify-between">
+            <dt class="text-fg-secondary">SubTotal</dt>
+            <dd class="tabular text-fg">$100.00</dd>
+        </div>
+
+        
+        <div class="flex justify-between text-success-dark">
+            <dt>Discount</dt>
+            <dd class="tabular">$0.00</dd>
+        </div>
+
+        <div class="flex justify-between border-t border-line pt-3 text-lg font-semibold text-fg">
+            <dt>Total</dt>
+            <dd class="tabular">$100.00</dd>
+        </div>
+    </dl>
+</aside>
+        </div>
+
+        
+
+
+<details class="group rounded-lg border border-line-light bg-surface shadow-sm">
+    <summary class="flex cursor-pointer list-none items-center gap-2 px-5 py-4 [&amp;::-webkit-details-marker]:hidden" aria-label="Toggle terms and notes section">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-[1.125rem] text-fg-muted transition-transform group-open:rotate-90" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 6l6 6l-6 6"></path></svg>
+        <span class="text-lg font-semibold text-fg">Terms &amp; Notes</span>
+        <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-ink-100 text-fg-secondary">
+    <span class="size-1.5 rounded-full bg-ink-400" aria-hidden="true"></span>
+    Optional</span>
+    </summary>
+    <div class="grid gap-x-4 border-t border-line-light p-5 md:grid-cols-2">
+        <div><div class="mb-4">
+<label for="quote_terms" class="si-label">Terms</label><input type="text" id="quote_terms" name="quote[terms]" class="si-control">
+</div></div>
+        <div><div class="mb-4">
+<label for="quote_notes" class="si-label">Notes</label><input type="text" id="quote_notes" name="quote[notes]" aria-describedby="quote_notes_help" class="si-control"><div class="si-help" id="quote_notes_help">Notes will not be visible to the client</div>
+</div></div>
+    </div>
+</details>
+    </div>
+
+        <input type="hidden" id="quote_total" name="quote[total]" value="0">
+    <input type="hidden" id="quote_baseTotal" name="quote[baseTotal]" value="0">
+    <input type="hidden" id="quote_tax" name="quote[tax]" value="0">
+
+    
+<div data-form-actions="true" class="sticky bottom-0 z-10 mt-6 border-t border-line bg-surface/95 py-3 backdrop-blur print:hidden -mx-4 px-4 lg:-mx-8 lg:px-8">
+    <div class="flex items-center justify-between gap-3 max-w-none">
+            <a href="/quotes/" class="si-btn si-btn--ghost si-btn--md"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-[1.125rem]" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l6 6m-6-6l6-6"></path></svg>
+            Cancel
+        </a>
+
+                <div class="save-button-group inline-flex">
+            <button type="button" class="btn-save-primary si-btn si-btn--primary si-btn--md rounded-r-none" data-action="live#action" data-live-action-param="saveDraft">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-[1.125rem]" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 4h10l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"></path><path d="M10 14a2 2 0 1 0 4 0a2 2 0 1 0-4 0m4-10v4H8V4"></path></g></svg>
+                Save as Draft
+            </button>
+            
+<div class="relative" data-controller="si-dropdown">
+    <button type="button" class="si-btn si-btn--primary si-btn--md rounded-l-none border-l border-white/30 px-2" data-si-dropdown-target="trigger" data-action="si-dropdown#toggle" aria-haspopup="menu" aria-expanded="false" aria-label="Toggle Dropdown"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 15l6-6l6 6"></path></svg></button>
+
+    <div data-si-dropdown-target="panel" role="menu" hidden class="absolute z-50 bottom-full mb-1.5 rounded-lg border border-line bg-surface p-1 shadow-md min-w-52 right-0">
+<button type="button" role="menuitem" class="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-base text-fg-secondary hover:bg-surface-hover hover:text-fg" data-action="live#action" data-live-action-param="savePublish">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 text-fg-muted" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12l5 5L20 7"></path></svg>
+                    Publish
+                </button>
+                                    <button type="button" role="menuitem" class="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-base text-fg-secondary hover:bg-surface-hover hover:text-fg" data-action="live#action" data-live-action-param="saveSend">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 text-fg-muted" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14L21 3m0 0l-6.5 18a.55.55 0 0 1-1 0L10 14l-7-3.5a.55.55 0 0 1 0-1z"></path></svg>
+                        Save and Send
+                    </button>
+                            </div>
+</div>
+        </div>
+        </div>
+</div>
+
+    <div class="mb-4"><div id="quote_customFields"></div></div>
+<input type="hidden" id="quote___dynamic_error" name="quote[__dynamic_error]"><input type="hidden" id="quote__token" name="quote[_token]" data-controller="csrf-protection">
 </form>
 </div>
 </body></html>

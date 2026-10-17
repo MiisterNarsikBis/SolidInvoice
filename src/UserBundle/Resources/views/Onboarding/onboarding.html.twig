@@ -1,53 +1,45 @@
 {#
-# This file is part of SolidInvoice package.
-#
-# (c) Pierre du Plessis <open-source@solidworx.co>
-#
-# This source file is subject to the MIT license that is bundled
-# with this source code in the file LICENSE.
-#}
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
 
-{% extends '@SolidInvoiceCore/Layout/default_no_nav.html.twig' %}
+{% extends '@SolidInvoiceCore/Layout/focus.html.twig' %}
+
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
 
 {% block page_title %}{{ 'onboarding.page_title'|trans({'%app_name%': app_name}) }}{% endblock %}
 
-{% block body %}
-    <div class="onboarding-container min-vh-100">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-12 col-lg-8 col-xl-6">
-                    <div class="onboarding-step-card">
-                        <div class="welcome-section">
-                            <div class="welcome-badge">
-                                {{ ux_icon('tabler:sparkles', {width: 16, height: 16}) }}
-                                {{ 'onboarding.company.welcome'|trans({'%app_name%': app_name}) }}
-                            </div>
-                            <div class="step-icon">
-                                {{ ux_icon('tabler:building', {width: 32, height: 32}) }}
-                            </div>
-                            <h2 class="h2 mb-2">{{ 'onboarding.company.title'|trans }}</h2>
-                            <p class="text-muted lead mb-0">{{ 'onboarding.company.description'|trans }}</p>
-                        </div>
+{# The card draws its own heading. #}
+{% block page_heading %}{% endblock %}
 
-                        {{ form_start(form) }}
-                            <div class="mb-4">
-                                {{ form_row(form.companyName, {'attr': {'class': 'form-control form-control-lg'}}) }}
-                            </div>
+{% block container_class %}max-w-xl{% endblock %}
 
-                            <div class="mb-4">
-                                {{ form_row(form.companyCurrency, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg w-100">
-                                    {{ 'onboarding.company.submit'|trans }}
-                                    {{ ux_icon('tabler:arrow-right', {width: 18, height: 18}) }}
-                                </button>
-                            </div>
-                        {{ form_end(form) }}
-                    </div>
-                </div>
-            </div>
+{% block content %}
+    <div class="rounded-lg border border-line-light bg-surface p-8 shadow-sm">
+        <div class="mb-6 text-center">
+            <span class="mb-4 inline-flex items-center gap-1.5 rounded-full bg-primary-light px-3 py-1 text-sm font-medium text-primary-dark">
+                {{ ux_icon('tabler:sparkles', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                {{ 'onboarding.company.welcome'|trans({'%app_name%': app_name}) }}
+            </span>
+            <span class="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-primary-lighter text-primary">
+                {{ ux_icon('tabler:building', {class: 'size-8', 'aria-hidden': 'true'}) }}
+            </span>
+            <h2 class="mb-2 text-2xl font-semibold text-fg">{{ 'onboarding.company.title'|trans }}</h2>
+            <p class="text-lg text-fg-muted">{{ 'onboarding.company.description'|trans }}</p>
         </div>
+
+        {{ form_start(form) }}
+            {{ form_row(form.companyName, {'attr': {'class': 'si-control h-11 text-lg'}}) }}
+            {{ form_row(form.companyCurrency) }}
+
+            <twig:Si:Button type="submit" size="lg" class="w-full">
+                {{ 'onboarding.company.submit'|trans }}
+                {{ ux_icon('tabler:arrow-right', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+            </twig:Si:Button>
+        {{ form_end(form) }}
     </div>
 {% endblock %}

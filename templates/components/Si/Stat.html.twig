@@ -1,0 +1,28 @@
+{#
+    A KPI tile: a tinted icon, a figure and its label.
+
+        <twig:Si:Stat icon="tabler:users" tone="primary" label="{{ 'client.stats.active_clients'|trans }}">{{ totalActiveClients }}</twig:Si:Stat>
+
+    The figure is the content (so it can be several lines, one per currency). `label` is already
+    translated. tone: primary | success | warning | danger | info | neutral
+#}
+{% props icon, label, tone = 'primary' %}
+
+{%- set tints = {
+    primary: 'bg-primary-light text-primary-dark',
+    success: 'bg-success-light text-success-dark',
+    warning: 'bg-warning-light text-warning-dark',
+    danger: 'bg-danger-light text-danger-dark',
+    info: 'bg-info-light text-info-dark',
+    neutral: 'bg-ink-100 text-fg-secondary',
+} -%}
+
+<div {{ attributes.defaults({class: 'flex items-center gap-3.5 rounded-lg border border-line-light bg-surface p-4 shadow-sm'}) }}>
+    <span class="flex size-10 shrink-0 items-center justify-center rounded-md {{ tints[tone] }}">
+        {{ ux_icon(icon, {class: 'size-5', 'aria-hidden': 'true'}) }}
+    </span>
+    <div class="min-w-0">
+        <div class="tabular text-xl leading-tight font-semibold text-fg">{% block content %}{% endblock %}</div>
+        <div class="text-sm text-fg-secondary">{{ label }}</div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+{#
+    A button, or a link that looks like one when `href` is given.
+
+        <twig:Si:Button type="submit" class="w-full">{{ 'Sign in'|trans }}</twig:Si:Button>
+        <twig:Si:Button variant="outline" href="{{ path('_register') }}">...</twig:Si:Button>
+
+    variant: primary | secondary (neutral dark) | outline | ghost | danger | danger-ghost
+    size:    sm | md | lg
+
+    The classes (`si-btn si-btn--<variant> si-btn--<size>`) are defined in assets/tailwind/app.css so
+    that buttons rendered by the Symfony form theme look identical. Add a variant there, not here.
+#}
+{% props variant = 'primary', size = 'md', href = null, type = 'button' %}
+
+{#- The look lives in assets/tailwind/app.css (.si-btn*), shared with form-built buttons. -#}
+{%- set classes = 'si-btn si-btn--' ~ variant ~ ' si-btn--' ~ size -%}
+
+{% if href %}
+    <a href="{{ href }}" {{ attributes.defaults({class: classes}) }}>{% block content %}{% endblock %}</a>
+{% else %}
+    <button type="{{ type }}" {{ attributes.defaults({class: classes}) }}>{{ block('content') }}</button>
+{% endif %}

@@ -7,9 +7,9 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
 
-{% block title %}{{ 'invoice.action.create'|trans }}{% endblock title %}
+{% block page_title %}{{ 'invoice.action.create'|trans }}{% endblock page_title %}
 
 {% block content %}
     {% include '@SolidInvoiceCore/Feature/_gated_page.html.twig' with {

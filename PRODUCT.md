@@ -14,7 +14,7 @@ The job to be done: get paid faster, with less friction, and look professional d
 
 Open-source, self-hostable invoicing for people who don't want enterprise accounting software. SolidInvoice exists so a freelancer or small business can run their billing without surrendering data to a SaaS vendor or paying per-seat to QuickBooks/Xero. Success looks like: an invoice goes out in under a minute, a payment is recorded without ambiguity, and the user trusts what the totals say without double-checking in a spreadsheet.
 
-The current rewrite (AdminLTE → Tabler / Bootstrap 5.3) is the moment to shed the legacy "admin panel" feel and become a modern product UI that's pleasant to live in.
+The current rewrite (AdminLTE → Tabler → Tailwind CSS, with the "Ledger" visual identity specified in `DESIGN.md`) is the moment to shed the legacy "admin panel" feel and become a modern product UI that's pleasant to live in.
 
 ## Positioning
 
@@ -28,7 +28,7 @@ Friendly, approachable, modern. The app should feel like a competent colleague, 
 
 ## Anti-references
 
-- **Legacy AdminLTE / Bootstrap admin dashboards.** Dark blue navbar, sidebar tree, boxy widgets, generic icon set. The exact look the rewrite is escaping.
+- **Legacy AdminLTE / Bootstrap admin dashboards.** Heavy dark-blue navbar chrome, a sidebar tree of every entity, boxy widgets, generic icon set. The exact look the rewrite is escaping. (The current sidebar is deliberately light and compact; the anti-reference is the heavy chrome, not having a sidebar.)
 - **Enterprise accounting (QuickBooks, Sage, Xero).** Dense corporate UIs, cluttered toolbars, 90s-feeling forms, intimidating density. SolidInvoice is the opposite end of the market.
 - **AI-slop SaaS templates.** Purple gradients, glass cards, hero-metric tiles, identical card grids, gradient text. Generic startup-dashboard aesthetic.
 - **Crypto / fintech neon-on-black.** Aggressive dark UIs with neon accents. Wrong register entirely for SMB billing.
@@ -38,7 +38,7 @@ Friendly, approachable, modern. The app should feel like a competent colleague, 
 1. **Money clarity first.** Every amount, currency, and total is unambiguous. Numbers are aligned, formatted with explicit currency, and never truncated or hidden behind a hover. If a value could be misread, the design is wrong — not the user.
 2. **Reduce admin dread.** The app should feel lighter than the task. Empty states are encouraging, language is soft and human, errors explain rather than scold. The user came in expecting friction; remove it.
 3. **Multi-tenant safety.** The active company is always visible and unambiguous. Switching context is deliberate, never accidental. No screen ever lets a user act on the wrong tenant's data — the UI makes the boundary obvious before the backend has to.
-4. **Modern without flash.** Tabler-era patterns done with restraint — clean typography, generous whitespace, purposeful color — but no decorative motion, no gradient maximalism, no trend-chasing. The look should still feel right in five years.
+4. **Modern without flash.** Swiss-minimal patterns done with restraint — clean typography, generous whitespace, purposeful color — but no decorative motion, no gradient maximalism, no trend-chasing. The look should still feel right in five years.
 
 ## Accessibility & Inclusion
 

@@ -7,24 +7,14 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends '@SolidInvoiceCore/Layout/default_no_nav.html.twig' %}
+{% extends '@SolidInvoiceCore/Layout/focus.html.twig' %}
 
-{% block body %}
-    <div class="page-wrapper">
-        <div class="page-body">
-            <div class="container-xl">
-                {% include "@SolidInvoiceCore/flash.html.twig" %}
-                {{ block('content') is defined ? block('content') }}
-            </div>
-        </div>
-    </div>
-{% endblock body %}
+{% block page_title %}{{ "installation.title"|trans({"%app_name%" : app_name}) }}{% endblock page_title %}
 
-{% block page_title %}
-    {{ "installation.title"|trans({"%app_name%" : app_name}) }}
-{% endblock page_title %}
+{# The wizard draws its own heading in every step. #}
+{% block page_heading %}{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('installation') }}
-{% endblock stylesheets %}
+{% block container_class %}max-w-5xl{% endblock %}
+
+{# The welcome step and the progress column carry the logo. #}
+{% block brand %}{% endblock %}

@@ -1,0 +1,21 @@
+{#
+    The vertical navigation down the side of a settings section, rendered from a KnpMenu. The
+    Tailwind counterpart of Platform's <twig:Ui:SettingsNav>.
+
+        <twig:Si:SettingsNav menu="profile_menu" />
+
+    The entries come from the ordinary menu builder; the entry matching the current route is
+    highlighted by the same KnpMenu matcher the sidebar uses. It renders nothing when no builder
+    has registered the menu, so a page can mount it unconditionally.
+#}
+{% props menu, title = '' %}
+
+{% if menu_exists(menu) %}
+    <nav {{ attributes.defaults({class: 'overflow-hidden rounded-lg border border-line-light bg-surface shadow-sm lg:sticky lg:top-20'}) }}>
+        {% if title is not empty %}
+            <h2 class="border-b border-line-light px-4 py-3 text-base font-semibold text-fg">{{ title }}</h2>
+        {% endif %}
+
+        {{ render_menu(menu, {template: '@SolidInvoiceCore/Menu/settings_nav.html.twig'}) }}
+    </nav>
+{% endif %}

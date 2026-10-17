@@ -7,9 +7,12 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends "@SolidInvoiceCore/Layout/default_no_nav.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/focus.html.twig" %}
 
 {% block page_title %}{{ title|title }}{% endblock page_title %}
+
+{# The customer-facing view of an invoice or a quote needs the room of a document. #}
+{% block container_class %}max-w-5xl{% endblock %}
 
 {% block content %}
     {% include template %}

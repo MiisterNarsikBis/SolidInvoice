@@ -7,33 +7,25 @@
  # with this source code in the file LICENSE.
  #}
 
-<div class="col-12 mb-4">
-    <twig:Ui:Card>
-        <twig:block name="header">
-            <h3 class="card-title mb-0">{{ 'dashboard.charts.distribution_title'|trans }}</h3>
-        </twig:block>
-
-        <div class="dashboard-donut-container">
-            {% if hasError %}
-                {% include '@SolidInvoiceDashboard/Widget/_error_state.html.twig' %}
-            {% elseif not hasData %}
-                <div class="dashboard-chart-empty">
-                    <div class="dashboard-chart-empty-icon">
-                        {{ ux_icon('tabler:chart-donut', {width: 48, height: 48}) }}
-                    </div>
-                    <p class="dashboard-chart-empty-text">{{ 'dashboard.charts.no_invoices'|trans }}</p>
-                    <a href="{{ path('_invoices_create') }}" class="btn btn-primary btn-sm">
-                        {{ ux_icon('tabler:plus', {width: 16, height: 16}) }}
-                        {{ 'dashboard.actions.create_invoice'|trans }}
-                    </a>
-                </div>
-            {% else %}
-                <div class="dashboard-donut-center">
-                    <span class="dashboard-donut-total">{{ total }}</span>
-                    <span class="dashboard-donut-label">{{ 'dashboard.charts.invoices'|trans }}</span>
-                </div>
-                {{ render_chart(chart, {'class': 'dashboard-donut-chart'}) }}
-            {% endif %}
-        </div>
-    </twig:Ui:Card>
-</div>
+<twig:Si:Card title="{{ 'dashboard.charts.distribution_title'|trans }}">
+    <div class="relative h-64 p-4">
+        {% if hasError %}
+            {% include '@SolidInvoiceDashboard/Widget/_error_state.html.twig' %}
+        {% elseif not hasData %}
+            <div class="flex h-full flex-col items-center justify-center gap-3 text-center">
+                {{ ux_icon('tabler:chart-donut', {class: 'size-10 text-ink-300', 'aria-hidden': 'true'}) }}
+                <p class="font-medium text-fg-secondary">{{ 'dashboard.charts.no_invoices'|trans }}</p>
+                <twig:Si:Button size="sm" href="{{ path('_invoices_create') }}">
+                    {{ ux_icon('tabler:plus', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                    {{ 'dashboard.actions.create_invoice'|trans }}
+                </twig:Si:Button>
+            </div>
+        {% else %}
+            <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                <span class="tabular text-2xl font-semibold text-fg">{{ total }}</span>
+                <span class="text-sm text-fg-muted">{{ 'dashboard.charts.invoices'|trans }}</span>
+            </div>
+            {{ render_chart(chart, {'class': 'dashboard-donut-chart'}) }}
+        {% endif %}
+    </div>
+</twig:Si:Card>
