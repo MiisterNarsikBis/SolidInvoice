@@ -7,40 +7,26 @@
  # with this source code in the file LICENSE.
  #}
 
-<div class="col-12 mb-4">
-    <twig:Ui:Card>
-        <twig:block name="header">
-            <h3 class="card-title mb-0">{{ 'dashboard.actions.title'|trans }}</h3>
-        </twig:block>
+<twig:Si:Card title="{{ 'dashboard.actions.title'|trans }}">
+    <div class="grid grid-cols-2 gap-3 p-4">
+        {# Every tile is the same neutral weight: four equal doors, no colour hierarchy. #}
+        {% set tile = 'flex flex-col items-center gap-2 rounded-lg border border-line px-3 py-4 text-center text-sm font-medium text-fg-secondary transition-colors hover:border-primary-light hover:bg-primary-lighter hover:text-primary-dark' %}
 
-        <div class="quick-actions-grid">
-            <a href="{{ path('_invoices_create') }}" class="quick-action-btn quick-action-btn--primary">
-                <span class="quick-action-icon">
-                    {{ ux_icon('tabler:file-plus', {width: 24, height: 24}) }}
-                </span>
-                <span class="quick-action-label">{{ 'dashboard.actions.create_invoice'|trans }}</span>
-            </a>
-
-            <a href="{{ path('_quotes_create') }}" class="quick-action-btn quick-action-btn--secondary">
-                <span class="quick-action-icon">
-                    {{ ux_icon('tabler:file-description', {width: 24, height: 24}) }}
-                </span>
-                <span class="quick-action-label">{{ 'dashboard.actions.create_quote'|trans }}</span>
-            </a>
-
-            <a href="{{ path('_clients_add') }}" class="quick-action-btn quick-action-btn--info">
-                <span class="quick-action-icon">
-                    {{ ux_icon('tabler:user-plus', {width: 24, height: 24}) }}
-                </span>
-                <span class="quick-action-label">{{ 'dashboard.actions.add_client'|trans }}</span>
-            </a>
-
-            <a href="{{ path('_payments_index') }}" class="quick-action-btn quick-action-btn--success">
-                <span class="quick-action-icon">
-                    {{ ux_icon('tabler:cash', {width: 24, height: 24}) }}
-                </span>
-                <span class="quick-action-label">{{ 'dashboard.actions.view_payments'|trans }}</span>
-            </a>
-        </div>
-    </twig:Ui:Card>
-</div>
+        <a href="{{ path('_invoices_create') }}" class="{{ tile }}">
+            {{ ux_icon('tabler:file-plus', {class: 'size-6 text-primary', 'aria-hidden': 'true'}) }}
+            {{ 'dashboard.actions.create_invoice'|trans }}
+        </a>
+        <a href="{{ path('_quotes_create') }}" class="{{ tile }}">
+            {{ ux_icon('tabler:file-description', {class: 'size-6 text-primary', 'aria-hidden': 'true'}) }}
+            {{ 'dashboard.actions.create_quote'|trans }}
+        </a>
+        <a href="{{ path('_clients_add') }}" class="{{ tile }}">
+            {{ ux_icon('tabler:user-plus', {class: 'size-6 text-primary', 'aria-hidden': 'true'}) }}
+            {{ 'dashboard.actions.add_client'|trans }}
+        </a>
+        <a href="{{ path('_payments_index') }}" class="{{ tile }}">
+            {{ ux_icon('tabler:cash', {class: 'size-6 text-primary', 'aria-hidden': 'true'}) }}
+            {{ 'dashboard.actions.view_payments'|trans }}
+        </a>
+    </div>
+</twig:Si:Card>

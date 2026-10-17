@@ -1,0 +1,51 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    The progress column of the wizard: the logo and the list of steps with where you are.
+
+    Variable: form. `#current_step_text` is the hook the install script uses to flag a failure.
+#}
+<aside class="shrink-0 border-b border-line-light bg-canvas p-6 lg:w-72 lg:border-r lg:border-b-0">
+    <div class="flex h-full flex-col">
+        <div class="flex-1">
+            <h2 class="flex items-center gap-2 pb-3 text-lg font-semibold text-fg">
+                {{ app_logo(showDefault: true) }}
+                <span>{{ app_name }} {{ 'installation.label'|trans }}</span>
+            </h2>
+
+            <ol class="my-6 space-y-5">
+                {% for step in form.vars.visible_steps|filter(v => v.name != 'start') %}
+                    {% set upcoming = step.index > form.vars.cursor.stepIndex %}
+                    <li class="flex items-center gap-3 {{ upcoming ? 'text-fg-muted' : 'text-fg' }}">
+                        <span class="shrink-0">
+                            {% if step.is_current_step %}
+                                <span class="text-warning">{{ ux_icon('tabler:circle-dot', {class: 'size-8', 'aria-hidden': 'true'}) }}</span>
+                            {% elseif upcoming %}
+                                {{ ux_icon('tabler:circle-dashed', {class: 'size-8', 'aria-hidden': 'true'}) }}
+                            {% else %}
+                                <span class="text-primary">{{ ux_icon('tabler:circle-check', {class: 'size-8', 'aria-hidden': 'true'}) }}</span>
+                            {% endif %}
+                        </span>
+                        <strong class="font-semibold{{ step.is_current_step and not form.vars.valid ? ' text-danger-dark' }}"{{ step.is_current_step ? ' id="current_step_text"' }}>{{ step.name|u.replace('_', ' ').title(allWords: true) }}</strong>
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {% if form.navigator.reset is defined %}
+            <div>
+                {{ form_widget(form.navigator.reset, {
+                    attr: {class: 'si-btn si-btn--md si-btn--outline'},
+                    icon: ux_icon('tabler:restore', {class: 'size-5', 'aria-hidden': 'true'}),
+                }) }}
+            </div>
+        {% endif %}
+    </div>
+</aside>

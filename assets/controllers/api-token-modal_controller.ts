@@ -1,67 +1,58 @@
 import { Context, Controller } from '@hotwired/stimulus';
-import { Modal } from '@tabler/core';
 import { getComponent } from '@symfony/ux-live-component';
+import { closeModal } from '../lib/modal';
 
 /**
- * Coordinates the modal hide/show sequence for API token creation
- * to ensure Bootstrap modal cleanup completes before LiveComponent re-renders
+ * Coordinates closing the API-token creation dialog (a <twig:Si:Modal>, a native <dialog>) with the
+ * Live Component state: after the user confirms they have copied the token, the dialog closes and
+ * only then is the `clearToken` action sent, so the token is not wiped from the screen while it is
+ * still being read.
  */
 export default class extends Controller<HTMLElement> {
     private shouldClearOnHide: boolean = false;
-    private modalElement: HTMLElement | null = null;
-    private boundHandleModalHidden: () => Promise<void>;
+    private dialog: HTMLDialogElement | null = null;
+    private boundHandleHidden: () => Promise<void>;
 
     constructor(context: Context) {
         super(context);
-        this.boundHandleModalHidden = this.handleModalHidden.bind(this);
+        this.boundHandleHidden = this.handleHidden.bind(this);
     }
 
     connect(): void {
-        // Find the actual modal element within our wrapper
-        this.modalElement = this.element.querySelector('.modal');
+        this.dialog = this.element.querySelector('dialog');
 
-        if (this.modalElement) {
-            // Listen for when modal is fully hidden on the modal element itself
-            this.modalElement.addEventListener('hidden.bs.modal', this.boundHandleModalHidden);
-        }
+        // <twig:Si:Modal> re-dispatches the dialog's native `close` as a bubbling `si-modal:hidden`.
+        this.element.addEventListener('si-modal:hidden', this.boundHandleHidden);
     }
 
     disconnect(): void {
-        if (this.modalElement) {
-            this.modalElement.removeEventListener('hidden.bs.modal', this.boundHandleModalHidden);
-        }
+        this.element.removeEventListener('si-modal:hidden', this.boundHandleHidden);
     }
 
     confirmAndClose(event: Event): void {
         event.preventDefault();
 
-        if (!this.modalElement) {
+        if (!this.dialog) {
             return;
         }
 
-        // Set flag that we should clear state after modal hides
+        // Only clear the state when the close was started by the confirm button.
         this.shouldClearOnHide = true;
-
-        // Close the modal - Bootstrap will handle animation and cleanup
-        const modalInstance = Modal.getInstance(this.modalElement) as Modal | null;
-        if (modalInstance) {
-            modalInstance.hide();
-        }
+        closeModal(this.dialog);
     }
 
-    private async handleModalHidden(): Promise<void> {
-        // Only clear state if we initiated the close via the confirm button
-        if (this.shouldClearOnHide) {
-            this.shouldClearOnHide = false;
+    private async handleHidden(): Promise<void> {
+        if (!this.shouldClearOnHide) {
+            return;
+        }
 
-            // Modal is now fully hidden and cleaned up
-            // Find the LiveComponent and trigger clearToken action
-            const liveComponent = this.element.closest('[data-controller*="live"]');
-            if (liveComponent instanceof HTMLElement) {
-                // Use official Symfony UX LiveComponent API
-                const component = await getComponent(liveComponent);
-                await component.action('clearToken');
-            }
+        this.shouldClearOnHide = false;
+
+        const liveComponent = this.element.closest('[data-controller*="live"]');
+
+        if (liveComponent instanceof HTMLElement) {
+            const component = await getComponent(liveComponent);
+            await component.action('clearToken');
         }
     }
 }

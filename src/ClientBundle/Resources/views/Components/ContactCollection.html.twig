@@ -1,59 +1,50 @@
-<div {{ attributes }} class="mb-5">
-    {# Section Header #}
-    <div class="client-section-header">
-        <h3 class="client-section-title">
-            {{ ux_icon('tabler:users', {width: 20, height: 20, class: 'text-primary'}) }}
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
+
+<div {{ attributes }} class="mb-6">
+    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h3 class="flex items-center gap-2 text-lg font-semibold text-fg">
+            {{ ux_icon('tabler:users', {class: 'size-5 text-primary', 'aria-hidden': 'true'}) }}
             {{ 'client.heading.contacts'|trans }}
-            <span class="badge bg-secondary-lt">{{ client.contacts|length }}</span>
+            <twig:Si:Badge>{{ client.contacts|length }}</twig:Si:Badge>
         </h3>
-        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#add-contact">
-            {{ ux_icon('tabler:plus', {width: 16, height: 16}) }}
+        <twig:Si:Button type="button" size="sm" data-si-modal-open="#add-contact">
+            {{ ux_icon('tabler:plus', {class: 'size-4', 'aria-hidden': 'true'}) }}
             {{ 'client.view.actions.add_contact'|trans }}
-        </button>
+        </twig:Si:Button>
     </div>
 
-    {# Contacts Grid #}
-    <div class="row g-3">
-        {% for contact in client.contacts %}
-            <div class="col-md-6">
-                <twig:ContactInfo :contact="contact" :key="contact.id" canDelete="{{ client.contacts|length > 1 }}" />
-            </div>
+    <div class="grid gap-4 md:grid-cols-2">
+        {% for entry in client.contacts %}
+            <twig:ContactInfo :contact="entry" :key="entry.id" canDelete="{{ client.contacts|length > 1 }}" />
         {% else %}
-            <div class="col-12">
-                <div class="empty">
-                    <div class="empty-icon">
-                        {{ ux_icon('tabler:user-off', {width: 48, height: 48}) }}
-                    </div>
-                    <p class="empty-title">{{ 'client.contacts.empty.title'|trans }}</p>
-                    <p class="empty-subtitle text-secondary">{{ 'client.contacts.empty.description'|trans }}</p>
-                    <div class="empty-action">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-contact">
-                            {{ ux_icon('tabler:plus', {width: 16, height: 16}) }}
-                            {{ 'client.view.actions.add_contact'|trans }}
-                        </button>
-                    </div>
-                </div>
+            <div class="md:col-span-2">
+                <twig:Si:EmptyState icon="tabler:user-off" title="{{ 'client.contacts.empty.title'|trans }}" description="{{ 'client.contacts.empty.description'|trans }}">
+                    <twig:Si:Button type="button" data-si-modal-open="#add-contact">
+                        {{ ux_icon('tabler:plus', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                        {{ 'client.view.actions.add_contact'|trans }}
+                    </twig:Si:Button>
+                </twig:Si:EmptyState>
             </div>
         {% endfor %}
     </div>
 
-    {# Add Contact Modal #}
+    {# The add dialog #}
     {{ form_start(form, {
         attr: {
             'data-action': 'live#action:prevent',
             'data-live-action-param': 'save'
         }
     }) }}
-    <twig:Ui:Modal id="add-contact" title="{{ 'client.modal.add_contact'|trans }}">
+    <twig:Si:Modal id="add-contact" title="{{ 'client.modal.add_contact'|trans }}">
         {{ form_row(form) }}
 
         <twig:block name="footer">
-            <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">{{ 'action.cancel'|trans }}</button>
-            <button type="submit" class="btn btn-primary">
-                {{ ux_icon('tabler:device-floppy', {width: 16, height: 16}) }}
+            <twig:Si:Button type="button" variant="ghost" data-si-modal-close>{{ 'action.cancel'|trans }}</twig:Si:Button>
+            <twig:Si:Button type="submit">
+                {{ ux_icon('tabler:device-floppy', {class: 'size-4', 'aria-hidden': 'true'}) }}
                 {{ 'action.save'|trans }}
-            </button>
+            </twig:Si:Button>
         </twig:block>
-    </twig:Ui:Modal>
+    </twig:Si:Modal>
     {{ form_end(form) }}
 </div>

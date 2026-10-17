@@ -7,15 +7,15 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
 
-{% block title %}{{ "quote.create.title"|trans }}{% endblock %}
+{% block page_title %}{{ 'quote.create.title'|trans }}{% endblock %}
 
 {% block content %}
-    <div class="alert alert-warning">
-        <h4>
-            {{ ux_icon('tabler:alert-triangle', {width: 20, height: 20, class: 'me-1'}) }}
-            {{ "quote.client.empty"|trans }} <a href="{{ url('_clients_add') }}">{{ "quote.client.create"|trans }}</a>
-        </h4>
-    </div>
+    <twig:Si:Alert type="warning">
+        <p class="flex flex-wrap items-center gap-1 font-semibold">
+            {{ ux_icon('tabler:alert-triangle', {class: 'size-5', 'aria-hidden': 'true'}) }}
+            {{ 'quote.client.empty'|trans }} <a href="{{ url('_clients_add') }}" class="underline">{{ 'quote.client.create'|trans }}</a>
+        </p>
+    </twig:Si:Alert>
 {% endblock %}

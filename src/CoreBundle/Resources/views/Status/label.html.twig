@@ -7,4 +7,28 @@
  # with this source code in the file LICENSE.
  #}
 
-<span class="badge{{ entity.label ? " bg-" ~ entity.label ~ " text-" ~ entity.label ~ "-fg" }}"{% if tooltip is defined and tooltip is not empty %}title="{{ tooltip }}" rel="tooltip" {% endif %}>{{ entity.name|title }}</span>
+{# A status pill (the markup of <twig:Si:Badge>, spelled out: this renders outside the component runtime too). `entity.label` is the colour a status enum picks (a Tabler colour name); it maps onto the badge tones. #}
+{%- set tones = {
+    green: 'success', teal: 'success', lime: 'success',
+    red: 'danger', pink: 'danger', orange: 'warning', yellow: 'warning',
+    blue: 'primary', azure: 'primary', indigo: 'primary', primary: 'primary',
+    cyan: 'info', purple: 'info',
+} -%}
+{%- set tone = tones[entity.label]|default('neutral') -%}
+{%- set fills = {
+    neutral: 'bg-ink-100 text-fg-secondary',
+    primary: 'bg-primary-light text-primary-dark',
+    success: 'bg-success-light text-success-dark',
+    danger: 'bg-danger-light text-danger-dark',
+    warning: 'bg-warning-light text-warning-dark',
+    info: 'bg-info-light text-info-dark',
+} -%}
+{%- set dots = {
+    neutral: 'bg-ink-400',
+    primary: 'bg-primary',
+    success: 'bg-success',
+    danger: 'bg-danger',
+    warning: 'bg-warning',
+    info: 'bg-info',
+} -%}
+<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold {{ fills[tone] }}" data-status-tone="{{ tone }}"{% if tooltip is defined and tooltip is not empty %} title="{{ tooltip }}"{% endif %}><span class="size-1.5 rounded-full {{ dots[tone] }}" aria-hidden="true"></span>{{ entity.name|title }}</span>

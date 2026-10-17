@@ -1,0 +1,164 @@
+{#
+# This file is part of SolidInvoice package.
+#
+# (c) Pierre du Plessis <open-source@solidworx.co>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+#}
+
+{#
+ # The settings form theme for Tailwind pages: the counterpart of Form/fields.html.twig, on top of
+ # the Core Tailwind theme.
+ #
+ #     {% form_theme form '@SolidInvoiceSettings/Form/tailwind.html.twig' %}
+ #}
+{% extends '@SolidInvoiceCore/Form/tailwind.html.twig' %}
+
+{#
+ # Compact upgrade badge: a link to the SaaS plan picker / checkout that carries the plan name as
+ # both the visible label and the hover tooltip.
+ #}
+{% macro feature_gated_badge(plan) %}
+    <a href="{{ path('saas_subscription_plans') }}"
+       class="inline-flex items-center gap-1 rounded-full bg-info-light px-2 py-0.5 text-xs font-semibold text-info-dark no-underline hover:bg-info-light/70"
+       title="{{ plan
+            ? 'settings.upgrade.tooltip_plan'|trans({'%plan%': plan})
+            : 'settings.upgrade.tooltip'|trans }}">
+        {{ ux_icon('tabler:arrow-up-circle', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+        {%- if plan -%}
+            {{ 'settings.upgrade.label_plan'|trans({'%plan%': plan}) }}
+        {%- else -%}
+            {{ 'settings.upgrade.label'|trans }}
+        {%- endif -%}
+    </a>
+{% endmacro %}
+
+{% macro trial_restricted_badge() %}
+    <a href="{{ path('saas_subscription_checkout') }}"
+       class="inline-flex items-center gap-1 rounded-full bg-info-light px-2 py-0.5 text-xs font-semibold text-info-dark no-underline hover:bg-info-light/70"
+       title="{{ 'settings.upgrade.activate_tooltip'|trans }}">
+        {{ ux_icon('tabler:arrow-up-circle', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+        {{ 'settings.upgrade.activate'|trans }}
+    </a>
+{% endmacro %}
+
+{# A feature-gated or trial-restricted switch: the row label sits above with the upgrade badge on the right. #}
+{% block checkbox_row %}
+    {% import _self as upgrade %}
+    {% if (feature_gated_active|default(false) or trial_restricted_active|default(false)) and toggle('saas_enabled') %}
+        <div class="mb-4">
+            <div class="mb-2 flex items-center justify-between">
+                <span class="si-label mb-0">{{ label|trans }}</span>
+                {% if feature_gated_active|default(false) %}
+                    {{ upgrade.feature_gated_badge(feature_gated_plan|default(null)) }}
+                {% else %}
+                    {{ upgrade.trial_restricted_badge() }}
+                {% endif %}
+            </div>
+
+            {# The inner switch label is suppressed so the label is not shown twice. #}
+            <label class="inline-flex cursor-pointer items-center gap-3">
+                {{- form_widget(form, {attr: {class: 'si-switch'}, label: false}) -}}
+            </label>
+            {{ form_help(form) }}
+            {{ form_errors(form) }}
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block form_row %}
+    {% import _self as upgrade %}
+    {% if (feature_gated_active|default(false) or trial_restricted_active|default(false)) and toggle('saas_enabled') %}
+        <div class="mb-4">
+            <div class="mb-1.5 flex items-center justify-between">
+                <span class="si-label mb-0">{{ label|trans }}</span>
+                {% if feature_gated_active|default(false) %}
+                    {{ upgrade.feature_gated_badge(feature_gated_plan|default(null)) }}
+                {% else %}
+                    {{ upgrade.trial_restricted_badge() }}
+                {% endif %}
+            </div>
+
+            {{ form_widget(form) }}
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{# The company address: a labelled grid on a tinted panel. #}
+{% block settings_address_widget %}
+    <div class="rounded-lg bg-canvas p-4">
+        <div class="grid gap-x-4 sm:grid-cols-2">
+            <div class="sm:col-span-2">{{ form_row(form.street1, {label: 'settings.address.street1'|trans, attr: {placeholder: 'settings.address.street1_placeholder'|trans}}) }}</div>
+            <div class="sm:col-span-2">{{ form_row(form.street2, {label: 'settings.address.street2'|trans, attr: {placeholder: 'settings.address.street2_placeholder'|trans}}) }}</div>
+            <div>{{ form_row(form.city, {label: 'settings.address.city'|trans, attr: {placeholder: 'settings.address.city_placeholder'|trans}}) }}</div>
+            <div>{{ form_row(form.state, {label: 'settings.address.state'|trans, attr: {placeholder: 'settings.address.state_placeholder'|trans}}) }}</div>
+            <div>{{ form_row(form.zip, {label: 'settings.address.zip'|trans, attr: {placeholder: 'settings.address.zip_placeholder'|trans}}) }}</div>
+            <div>{{ form_row(form.country, {label: 'settings.address.country'|trans}) }}</div>
+        </div>
+    </div>
+{% endblock settings_address_widget %}
+
+{# The logo upload: a preview (only when a logo exists) beside the dropzone. #}
+{% block image_upload_widget %}
+    {% set currentLogo = app_logo(width=80, showDefault=false) %}
+    <div class="flex items-start gap-4 rounded-lg border border-line bg-canvas p-3">
+        {% if currentLogo is not empty %}
+            <div class="flex shrink-0 items-center justify-center rounded-md border border-line bg-surface p-2">
+                {{ currentLogo|raw }}
+            </div>
+        {% endif %}
+        <div class="min-w-0 flex-1">
+            {{ block('dropzone_widget') }}
+            <p class="mt-2 text-sm text-fg-muted">{{ 'settings.logo.help'|trans }}</p>
+        </div>
+    </div>
+{% endblock image_upload_widget %}
+
+{# The invoice/quote design template picker: a gallery of live previews, one radio per card. #}
+{% block invoice_template_widget %}
+    <div id="{{ id }}" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3{% if disabled %} opacity-60{% endif %}">
+        {% for child in form %}
+            {% set previewUrl = path('saas_template_preview', {slug: child.vars.value}) %}
+            <div class="overflow-hidden rounded-lg border border-line bg-surface transition-shadow has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/25 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary">
+                <label class="relative block {{ disabled ? 'cursor-not-allowed' : 'cursor-pointer' }}" for="{{ child.vars.id }}">
+                    {{ form_widget(child, {attr: {class: 'peer sr-only'}}) }}
+                    <span class="relative block aspect-[4/3] w-full overflow-hidden bg-canvas">
+                        <iframe src="{{ previewUrl }}" loading="lazy" tabindex="-1" scrolling="no" title="{{ child.vars.label }}" aria-hidden="true" class="pointer-events-none absolute top-0 left-0 h-[400%] w-[400%] origin-top-left scale-25 border-0 bg-white"></iframe>
+                    </span>
+                    <span class="absolute top-2 right-2 hidden size-7 items-center justify-center rounded-full bg-primary text-white shadow-sm peer-checked:flex" aria-hidden="true">
+                        {{ ux_icon('tabler:check', {class: 'size-4'}) }}
+                    </span>
+                </label>
+                <div class="flex items-center justify-between gap-2 border-t border-line-light px-3 py-2">
+                    <span class="font-medium text-fg">{{ child.vars.label }}</span>
+                    <a href="{{ previewUrl }}" target="_blank" rel="noopener" class="si-btn si-btn--sm si-btn--ghost" title="{{ 'settings.page.design.template.preview_full'|trans }}">
+                        {{ ux_icon('tabler:eye', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                        {{ 'settings.page.design.template.preview'|trans }}
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock invoice_template_widget %}
+
+{# Mail transport: a provider selector with one configuration panel per provider. #}
+{% block mail_transport_widget %}
+    <div {{ stimulus_controller('mailsettings') }}>
+        {% for child in form %}
+            {% if child.vars.name == 'provider' %}
+                {{ form_row(child) }}
+            {% else %}
+                <div class="mail-provider-config {{ child.vars.row_attr.class|default('') }}" data-provider="{{ child.vars.name }}">
+                    <div class="mt-3 rounded-lg bg-canvas p-4">
+                        {{ form_widget(child) }}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock mail_transport_widget %}

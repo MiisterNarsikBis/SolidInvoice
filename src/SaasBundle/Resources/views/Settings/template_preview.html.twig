@@ -10,6 +10,11 @@
  # data. Loaded in an <iframe> by the settings-page template picker and
  # openable in a new tab for a full-size preview.
  #}
+{#
+ # Standalone page that renders a single design-template fragment with sample
+ # data. Loaded in an <iframe> by the settings-page template picker and
+ # openable in a new tab for a full-size preview.
+ #}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,17 +22,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>{{ 'saas.settings.template_preview.title'|trans }}</title>
-    {{ encore_entry_link_tags('_platform_ui') }}
-    {{ encore_entry_link_tags('app') }}
-    <style>
-        body {
-            background: #f1f5f9;
-            padding: 1.5rem;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('ui/app.css') }}">
 </head>
-<body>
-    <div class="container-xl">
+<body class="bg-canvas p-6 text-fg">
+    <div class="mx-auto max-w-6xl">
         {% include documentTemplate %}
     </div>
 </body>

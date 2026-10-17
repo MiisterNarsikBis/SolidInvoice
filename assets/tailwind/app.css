@@ -1,0 +1,836 @@
+/**
+ * SolidInvoice - Tailwind theme ("Ledger")
+ *
+ * Entry point of the Tailwind build. It is compiled by the Tailwind CLI, NOT by webpack:
+ * Platform's webpack config runs a PostCSS plugin that prefixes every custom property with
+ * `--tblr-`, which would rename Tailwind's `--tw-*` and break it. The CLI writes
+ * `public/ui/app.css`, which migrated templates load with `{{ asset('ui/app.css') }}`.
+ *
+ *   npm run dev          encore + this build
+ *   npm run watch:tw     rebuild on change (run next to `npm run watch`)
+ *
+ * This file is the only source of the design tokens. The identity itself is specified in
+ * DESIGN.md.
+ *
+ * The default Tailwind palette is switched off on purpose: a screen can only use the colours
+ * below, so the brand cannot drift through `bg-blue-500` or an arbitrary `bg-[#123456]`.
+ */
+
+@import 'tailwindcss';
+
+@source '../../src';
+@source '../../templates';
+@source '../controllers';
+
+/* Plus Jakarta Sans, self-hosted: see public/fonts-ui/fonts.css. */
+@import '../../public/fonts-ui/fonts.css';
+
+/* The look of a customer-facing quote / invoice design template: see design-templates.css. */
+@import './design-templates.css';
+
+@theme {
+    /* ------------------------------------------------------------------ colours */
+    --color-*: initial;
+
+    --color-white: #ffffff;
+    --color-black: #000000;
+
+    /* Brand: trust blue. `primary` is AA as text (5.17:1 on white, 4.72:1 on a table row)
+       and as a white-text fill. */
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-primary-dark: #1e40af;
+    --color-primary-light: #dbeafe;
+    --color-primary-lighter: #eff6ff;
+
+    /* Accent: orange, used rarely (one highlight per screen at most). A FILL only (3.56:1);
+       accent text uses accent-dark (5.18:1). */
+    --color-accent: #ea580c;
+    --color-accent-dark: #c2410c;
+    --color-accent-light: #ffedd5;
+
+    /* Status. The base colours are fills (icons, dots, borders); status TEXT uses -dark. */
+    --color-success: #16a34a;
+    --color-success-dark: #15803d;
+    --color-success-light: #dcfce7;
+    --color-danger: #dc2626;
+    --color-danger-hover: #b91c1c;
+    --color-danger-dark: #b91c1c;
+    --color-danger-light: #fee2e2;
+    --color-warning: #f59e0b;
+    --color-warning-dark: #92400e;
+    --color-warning-light: #fef3c7;
+    --color-info: #0891b2;
+    --color-info-dark: #0e7490;
+    --color-info-light: #cffafe;
+
+    /* Slate neutrals. */
+    --color-ink-50: #f8fafc;
+    --color-ink-100: #f1f5f9;
+    --color-ink-200: #e2e8f0;
+    --color-ink-300: #cbd5e1;
+    --color-ink-400: #94a3b8;
+    --color-ink-500: #64748b;
+    --color-ink-600: #475569;
+    --color-ink-700: #334155;
+    --color-ink-800: #1e293b;
+    --color-ink-900: #0f172a;
+
+    /* Semantic surfaces and text. Prefer these over the raw ink steps. */
+    --color-canvas: #f8fafc;
+    --color-surface: #ffffff;
+    --color-surface-hover: #f1f5f9;
+    --color-line: #e2e8f0;
+    --color-line-light: #eef2f6;
+    --color-fg: #1e293b;            /* 14.63:1 on surface */
+    --color-fg-secondary: #475569;  /* 7.58:1 */
+    --color-fg-muted: #5b6779;      /* 5.74:1 on surface, 5.24:1 on a hovered row */
+
+    /* ------------------------------------------------------------------- shape */
+    /* Swiss and restrained: tighter radii than the previous identity, nothing pill-shaped
+       except badges. */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.25rem;
+
+    /* Flat by default: a hairline border does the separating, shadows only lift overlays. */
+    --shadow-xs: 0 1px 1px 0 rgb(15 23 42 / 4%);
+    --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 6%);
+    --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 10%), 0 2px 4px -2px rgb(15 23 42 / 6%);
+    --shadow-lg: 0 12px 28px -6px rgb(15 23 42 / 16%), 0 4px 8px -4px rgb(15 23 42 / 8%);
+
+    /* ------------------------------------------------------------------- type */
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+        roboto, 'Helvetica Neue', arial, 'Noto Sans', sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', menlo, monaco, consolas, 'Liberation Mono', monospace;
+
+    /* 14px body: this is a dense work tool, not a marketing page. */
+    --text-xs: 0.75rem;
+    --text-xs--line-height: 1.5;
+    --text-sm: 0.8125rem;
+    --text-sm--line-height: 1.5;
+    --text-base: 0.875rem;
+    --text-base--line-height: 1.5;
+    --text-lg: 1rem;
+    --text-lg--line-height: 1.5;
+    --text-xl: 1.125rem;
+    --text-xl--line-height: 1.4;
+    --text-2xl: 1.375rem;
+    --text-2xl--line-height: 1.3;
+    --text-3xl: 1.75rem;
+    --text-3xl--line-height: 1.2;
+
+    --tracking-tight: -0.015em;
+}
+
+@layer base {
+    html {
+        font-family: var(--font-sans);
+    }
+
+    body {
+        background-color: var(--color-canvas);
+        color: var(--color-fg);
+        font-size: var(--text-base);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Money and IDs line up in columns. */
+    .tabular,
+    table {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Keyboard focus: a clear 2px blue ring with a gap, never removed (DESIGN.md). Only for
+       keyboard users, so a mouse click does not leave a ring behind. */
+    :focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            transition-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+        }
+    }
+}
+
+/* ------------------------------------------------------------------------------------------
+   Shared component classes.
+
+   These exist because the same look is needed in two places that cannot share a Twig
+   component: <twig:Si:Button> and the Symfony form theme (a form-built <button>, <input>,
+   <select> is rendered by a theme block, not by a component). One definition here keeps them
+   identical. Everything else stays utilities-in-the-template.
+   ------------------------------------------------------------------------------------------ */
+@layer components {
+    /* ---- buttons ---- */
+    .si-btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap transition-colors duration-150 pointer-coarse:min-h-11 disabled:pointer-events-none disabled:opacity-50;
+    }
+
+    .si-btn--sm {
+        @apply h-8 px-3 text-sm;
+    }
+
+    .si-btn--md {
+        @apply h-9 px-3.5 text-base;
+    }
+
+    .si-btn--lg {
+        @apply h-11 px-5 text-base;
+    }
+
+    .si-btn--primary {
+        @apply bg-primary text-white shadow-xs hover:bg-primary-hover active:bg-primary-dark;
+    }
+
+    .si-btn--secondary {
+        @apply bg-ink-800 text-white shadow-xs hover:bg-ink-900;
+    }
+
+    .si-btn--outline {
+        @apply border border-line bg-surface text-fg shadow-xs hover:bg-surface-hover;
+    }
+
+    .si-btn--ghost {
+        @apply text-fg-secondary hover:bg-ink-100 hover:text-fg;
+    }
+
+    .si-btn--danger {
+        @apply bg-danger-dark text-white shadow-xs hover:bg-danger-hover;
+    }
+
+    .si-btn--danger-ghost {
+        @apply text-danger-dark hover:bg-danger-light;
+    }
+
+    /* ---- text controls: input, select, textarea ---- */
+    .si-control {
+        @apply block min-h-9 w-full rounded-md border border-line bg-surface px-3 py-1.5 text-base text-fg transition-colors placeholder:text-fg-muted focus:border-primary disabled:bg-ink-50 disabled:text-fg-muted pointer-coarse:min-h-11;
+    }
+
+    .si-control[aria-invalid='true'] {
+        @apply border-danger;
+    }
+
+    select.si-control {
+        @apply appearance-none pr-9;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%235b6779' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.625rem center;
+        background-repeat: no-repeat;
+        background-size: 1.1rem;
+    }
+
+    select.si-control[multiple] {
+        @apply pr-3;
+        background-image: none;
+    }
+
+    textarea.si-control {
+        @apply min-h-24;
+    }
+
+    input[type='file'].si-control {
+        @apply p-1.5 file:mr-3 file:rounded-sm file:border-0 file:bg-ink-100 file:px-3 file:py-1 file:text-sm file:font-medium file:text-fg-secondary hover:file:bg-ink-200;
+    }
+
+    /* ---- label, help, error ---- */
+    .si-label {
+        @apply mb-1.5 block text-sm font-medium text-fg-secondary;
+    }
+
+    .si-help {
+        @apply mt-1 text-sm text-fg-muted;
+    }
+
+    .si-error {
+        @apply mt-1.5 space-y-0.5 text-sm text-danger-dark;
+    }
+
+    /* ---- checkbox, radio, switch ---- */
+    .si-check {
+        @apply size-4 shrink-0 rounded-sm border-line accent-primary;
+    }
+
+    .si-check[type='radio'] {
+        @apply rounded-full;
+    }
+
+    .si-switch {
+        @apply relative h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full bg-ink-300 transition-colors checked:bg-primary disabled:opacity-50;
+    }
+
+    .si-switch::after {
+        content: '';
+        @apply absolute left-0.5 top-0.5 size-4 rounded-full bg-white shadow-xs transition-transform;
+    }
+
+    .si-switch:checked::after {
+        @apply translate-x-4;
+    }
+
+    /* ---- input group: addon + control joined edge to edge ---- */
+    .si-group {
+        @apply flex items-stretch;
+    }
+
+    .si-group > .si-control {
+        @apply min-w-0 flex-1 rounded-none;
+    }
+
+    .si-group > :first-child {
+        @apply rounded-l-md;
+    }
+
+    .si-group > :last-child {
+        @apply rounded-r-md;
+    }
+
+    .si-group > * + * {
+        @apply -ml-px;
+    }
+
+    .si-group > .si-control:focus {
+        @apply relative z-10;
+    }
+
+    .si-addon {
+        @apply inline-flex items-center gap-1.5 border border-line bg-ink-50 px-3 text-base whitespace-nowrap text-fg-muted;
+    }
+}
+
+/* ------------------------------------------------------------------------------------------
+   Data grid (<twig:DataGrid tailwind>). Cells are rendered by PHP formatters that emit semantic
+   hook classes (`datagrid-status status-*`, `datagrid-relative-date`, `col-money`, `col-date`,
+   `col-id`), so those are styled here by selector instead of being repeated in PHP.
+   ------------------------------------------------------------------------------------------ */
+@layer components {
+    .si-datagrid td a:not(.si-btn) {
+        @apply font-medium text-primary hover:text-primary-dark hover:underline;
+    }
+
+    .si-datagrid .col-money {
+        @apply text-right whitespace-nowrap tabular-nums;
+    }
+
+    .si-datagrid .col-date {
+        @apply whitespace-nowrap text-fg-secondary;
+    }
+
+    .si-datagrid .col-id {
+        @apply font-mono text-sm whitespace-nowrap text-fg-secondary;
+    }
+
+    .datagrid-relative-date {
+        @apply text-fg-secondary;
+    }
+
+    .datagrid-status {
+        @apply inline-flex items-center gap-1.5 rounded-full bg-ink-100 px-2 py-0.5 text-xs font-semibold text-fg-secondary;
+    }
+
+    .datagrid-status::before {
+        content: '';
+        @apply size-1.5 rounded-full bg-current;
+    }
+
+    .datagrid-status.status-success {
+        @apply bg-success-light text-success-dark;
+    }
+
+    .datagrid-status.status-danger {
+        @apply bg-danger-light text-danger-dark;
+    }
+
+    .datagrid-status.status-warning {
+        @apply bg-warning-light text-warning-dark;
+    }
+
+    .datagrid-status.status-info {
+        @apply bg-info-light text-info-dark;
+    }
+
+    .datagrid-status.status-primary {
+        @apply bg-primary-light text-primary-dark;
+    }
+}
+
+/* ------------------------------------------------------------------------------------------
+   Third-party widgets. Tabler used to style these (TomSelect, the rich text editor) or the
+   package shipped its own stylesheet that only the Tabler layout loads (Dropzone), so a Tailwind
+   page needs them restated here. They use the same tokens as everything else.
+   ------------------------------------------------------------------------------------------ */
+@layer components {
+    /* ---- TomSelect (ux-autocomplete). TomSelect copies the select's classes onto its wrapper,
+       so `.ts-wrapper.si-control` already has the border, background and radius. ---- */
+    .ts-wrapper {
+        @apply relative;
+    }
+
+    .ts-wrapper.si-control {
+        @apply p-0;
+    }
+
+    .ts-wrapper.focus {
+        @apply border-primary;
+    }
+
+    .ts-wrapper.disabled {
+        @apply bg-ink-50 opacity-70;
+    }
+
+    .ts-control {
+        @apply flex min-h-9 flex-wrap items-center gap-1 px-3 py-1.5 text-base text-fg;
+    }
+
+    .ts-control > input {
+        @apply min-w-12 flex-1 border-0 bg-transparent p-0 text-base text-fg shadow-none outline-none placeholder:text-fg-muted;
+    }
+
+    .ts-wrapper.single .ts-control {
+        @apply relative cursor-pointer pr-9;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%235b6779' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.625rem center;
+        background-repeat: no-repeat;
+        background-size: 1.1rem;
+    }
+
+    .ts-wrapper.multi .ts-control > .item {
+        @apply inline-flex items-center gap-1 rounded-sm bg-primary-light px-2 py-0.5 text-sm font-medium text-primary-dark;
+    }
+
+    .ts-wrapper.multi .ts-control > .item .remove {
+        @apply ml-1 border-l border-primary/25 pl-1.5 text-primary-dark no-underline hover:text-primary;
+    }
+
+    .ts-dropdown {
+        @apply absolute z-50 mt-1 w-full overflow-hidden rounded-lg border border-line bg-surface shadow-md;
+    }
+
+    .ts-dropdown .ts-dropdown-content {
+        @apply max-h-60 overflow-y-auto p-1;
+    }
+
+    .ts-dropdown .option,
+    .ts-dropdown .no-results,
+    .ts-dropdown .create {
+        @apply cursor-pointer rounded-md px-2.5 py-1.5 text-base text-fg-secondary;
+    }
+
+    .ts-dropdown .active {
+        @apply bg-surface-hover text-fg;
+    }
+
+    .ts-dropdown .option.selected {
+        @apply bg-primary-lighter text-primary-dark;
+    }
+
+    .ts-dropdown .optgroup-header {
+        @apply px-2.5 py-1.5 text-xs font-semibold tracking-wide text-fg-muted uppercase;
+    }
+
+    .ts-hidden-accessible {
+        @apply sr-only;
+    }
+
+    /* ---- Dropzone (ux-dropzone): the package's functional rules plus the brand look ---- */
+    .dropzone-container {
+        @apply relative flex min-h-24 items-center rounded-lg border-2 border-dashed border-ink-300 bg-surface px-3 py-5 transition-colors hover:border-primary hover:bg-primary-lighter;
+    }
+
+    .dropzone-input {
+        @apply absolute top-0 left-0 z-10 block size-full cursor-pointer opacity-0;
+    }
+
+    .dropzone-placeholder {
+        @apply grow text-center text-fg-muted;
+    }
+
+    .dropzone-preview {
+        @apply flex max-w-full items-center gap-3;
+    }
+
+    .dropzone-preview-image {
+        @apply size-12 shrink-0 bg-contain bg-center bg-no-repeat;
+    }
+
+    .dropzone-preview-filename {
+        @apply text-fg [overflow-wrap:anywhere];
+    }
+
+    .dropzone-preview-button {
+        @apply absolute top-0 right-0 z-10 cursor-pointer appearance-none border-0 bg-transparent p-0;
+    }
+
+    .dropzone-preview-button::before {
+        content: '\00d7';
+        @apply cursor-pointer px-2 py-0.5 text-xl text-fg-muted hover:text-fg;
+    }
+
+    .dropzone-container-multiple {
+        @apply flex-col items-stretch;
+    }
+
+    .dropzone-preview-list {
+        @apply relative z-20 mt-2.5 w-full list-none p-0;
+    }
+
+    .dropzone-preview-list-item {
+        @apply flex items-center gap-2.5 py-1;
+    }
+
+    .dropzone-preview-list-remove {
+        @apply cursor-pointer appearance-none border-0 bg-transparent p-0 text-fg-muted hover:text-danger-dark;
+    }
+
+    /* ---- Rich text editor (Platform's TextEditorType, Tiptap) ---- */
+    .swp-text-editor__toolbar {
+        @apply flex flex-wrap gap-1 rounded-t-md border border-b-0 border-line bg-canvas p-1.5;
+    }
+
+    .swp-text-editor__button {
+        @apply inline-flex size-8 items-center justify-center rounded-sm text-fg-secondary transition-colors hover:bg-ink-100 hover:text-fg;
+    }
+
+    .swp-text-editor__button.active {
+        @apply bg-primary text-white hover:bg-primary-hover;
+    }
+
+    .swp-text-editor__content .ProseMirror {
+        @apply min-h-32 overflow-y-auto rounded-b-md border border-line bg-surface px-3 py-2 text-base text-fg focus:border-primary;
+    }
+
+    .swp-text-editor__content .ProseMirror > :first-child {
+        @apply mt-0;
+    }
+
+    .swp-text-editor__content .ProseMirror > :last-child {
+        @apply mb-0;
+    }
+
+    .swp-text-editor__content .ProseMirror p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        @apply pointer-events-none float-left h-0 text-fg-muted;
+    }
+
+    .swp-text-editor__content .ProseMirror h1 {
+        @apply mt-3 mb-2 text-2xl font-semibold;
+    }
+
+    .swp-text-editor__content .ProseMirror h2 {
+        @apply mt-3 mb-2 text-xl font-semibold;
+    }
+
+    .swp-text-editor__content .ProseMirror h3 {
+        @apply mt-3 mb-1.5 text-lg font-semibold;
+    }
+
+    .swp-text-editor__content .ProseMirror ul {
+        @apply my-2 list-disc pl-6;
+    }
+
+    .swp-text-editor__content .ProseMirror ol {
+        @apply my-2 list-decimal pl-6;
+    }
+
+    .swp-text-editor__content .ProseMirror a {
+        @apply text-primary underline;
+    }
+
+    .swp-text-editor__content .ProseMirror blockquote {
+        @apply my-2 border-l-4 border-line pl-4 text-fg-secondary;
+    }
+
+    .swp-text-editor__content .ProseMirror code {
+        @apply rounded-sm bg-ink-100 px-1 py-0.5 font-mono text-[0.875em];
+    }
+
+    .swp-text-editor__content .ProseMirror pre {
+        @apply my-2 overflow-x-auto rounded-md bg-ink-900 px-4 py-3 font-mono text-sm text-ink-100;
+    }
+
+    .swp-text-editor__content .ProseMirror hr {
+        @apply my-4 border-line;
+    }
+}
+
+/* ------------------------------------------------------------------------------------------
+   Global search. The dropdown, chips and result rows are built by global-search_controller.ts,
+   which emits these class names, so they are styled here by selector. `is-open` / `is-active`
+   are the controller's state classes.
+   ------------------------------------------------------------------------------------------ */
+@layer components {
+    .global-search {
+        @apply relative w-full max-w-xl;
+    }
+
+    .global-search-input-wrapper {
+        @apply relative flex items-center;
+    }
+
+    .global-search-icon {
+        @apply pointer-events-none absolute top-1/2 left-3 z-10 flex -translate-y-1/2 items-center text-fg-muted;
+    }
+
+    .global-search-input {
+        @apply h-9 w-full appearance-none rounded-md border border-line bg-surface py-0 pr-28 pl-10 text-base text-fg transition-colors placeholder:text-fg-muted focus:border-primary pointer-coarse:h-11;
+    }
+
+    .global-search-input::-webkit-search-cancel-button,
+    .global-search-input::-webkit-search-decoration {
+        appearance: none;
+    }
+
+    .global-search-actions {
+        @apply absolute top-1/2 right-2.5 flex -translate-y-1/2 items-center gap-1.5;
+    }
+
+    .global-search-shortcut {
+        @apply pointer-events-none flex gap-0.5;
+    }
+
+    .global-search-shortcut kbd {
+        @apply inline-flex items-center justify-center rounded-sm border border-line bg-canvas px-1.5 py-0.5 font-mono text-[0.7rem] leading-none text-fg-muted;
+    }
+
+    .search-help-trigger {
+        @apply flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line bg-transparent p-0 text-fg-muted transition-colors hover:border-fg-muted hover:text-fg;
+    }
+
+    .search-dropdown {
+        @apply absolute top-[calc(100%+6px)] right-0 left-0 z-50 hidden min-w-[32rem] rounded-lg border border-line bg-surface shadow-lg;
+        margin-right: -3.75rem;
+        margin-left: -3.75rem;
+        isolation: isolate;
+    }
+
+    .search-dropdown.is-open {
+        @apply block;
+    }
+
+    .search-spinner {
+        @apply flex items-center justify-center gap-2 p-5 text-base text-fg-muted;
+    }
+
+    .search-results {
+        @apply max-h-[27.5rem] overflow-y-auto overscroll-contain rounded-lg bg-surface;
+    }
+
+    .search-group + .search-group {
+        @apply border-t border-line-light;
+    }
+
+    .search-group:last-child {
+        @apply pb-1;
+    }
+
+    .search-group-label,
+    .search-suggestions-header {
+        @apply px-3.5 pt-2.5 pb-1 text-[0.7rem] font-bold tracking-wider text-fg-muted uppercase;
+    }
+
+    .search-result-link {
+        @apply flex items-center gap-3 px-3.5 py-2 text-fg no-underline transition-colors;
+    }
+
+    .search-result-item.is-active .search-result-link,
+    .search-result-item:hover .search-result-link {
+        @apply bg-surface-hover no-underline;
+    }
+
+    .search-result-icon {
+        @apply flex size-9 shrink-0 items-center justify-center rounded-md p-1.5;
+    }
+
+    .search-result-body {
+        @apply flex min-w-0 flex-1 flex-col;
+    }
+
+    .search-result-title {
+        @apply truncate text-base font-medium text-fg;
+    }
+
+    .search-result-subtitle {
+        @apply mt-px truncate text-sm text-fg-muted;
+    }
+
+    .search-result-aside {
+        @apply ml-auto flex shrink-0 flex-col items-end gap-1 pl-2;
+    }
+
+    .search-result-meta {
+        @apply text-sm font-semibold whitespace-nowrap text-fg;
+    }
+
+    .search-result-badge {
+        @apply inline-flex items-center rounded-full bg-ink-100 px-2 py-0.5 text-[0.65rem] font-semibold text-fg-secondary;
+    }
+
+    .search-result-badge--success {
+        @apply bg-success-light text-success-dark;
+    }
+
+    .search-result-badge--danger {
+        @apply bg-danger-light text-danger-dark;
+    }
+
+    .search-result-badge--warning {
+        @apply bg-warning-light text-warning-dark;
+    }
+
+    .search-result-badge--info {
+        @apply bg-info-light text-info-dark;
+    }
+
+    .search-result-badge--primary {
+        @apply bg-primary-light text-primary-dark;
+    }
+
+    .search-empty {
+        @apply flex flex-col items-center justify-center bg-surface px-4 py-10 text-fg-muted;
+    }
+
+    .search-empty-icon {
+        @apply mb-2.5 flex opacity-40;
+    }
+
+    .search-empty-text {
+        @apply m-0 text-base font-medium;
+    }
+
+    .search-error {
+        @apply bg-surface p-5 text-center text-base text-danger-dark;
+    }
+
+    .search-chips-bar {
+        @apply flex flex-wrap gap-1 border-b border-line-light px-2 py-1;
+    }
+
+    .search-chips-bar:empty {
+        @apply hidden;
+    }
+
+    .search-chip {
+        @apply inline-flex shrink-0 items-center gap-1 rounded-sm bg-info-light px-2 py-0.5 text-sm font-medium whitespace-nowrap text-info-dark;
+    }
+
+    .search-chip-remove {
+        @apply cursor-pointer border-0 bg-transparent p-0 text-base leading-none text-inherit opacity-60 hover:opacity-100;
+    }
+
+    .search-suggestions {
+        @apply absolute top-[calc(100%+4px)] left-0 z-50 hidden min-w-56 rounded-md border border-line bg-surface py-1 shadow-md;
+    }
+
+    .search-suggestions.is-open {
+        @apply block;
+    }
+
+    .search-suggestions-item {
+        @apply cursor-pointer px-3 py-1.5 text-base text-fg hover:bg-surface-hover;
+    }
+
+    .search-suggestions-item.is-active {
+        @apply bg-surface-hover;
+    }
+
+    .search-suggestions-item code {
+        @apply ml-2 text-xs text-fg-muted;
+    }
+
+    /* Help modal */
+    .search-help-section-title {
+        @apply mb-3 text-[0.7rem] font-bold tracking-wider text-fg-muted uppercase;
+    }
+
+    .search-help-op {
+        @apply rounded-sm bg-canvas px-2 py-0.5 font-mono text-sm text-fg;
+    }
+
+    .search-help-example {
+        @apply flex flex-col gap-0.5 rounded-md border-l-[3px] border-primary bg-canvas px-3 py-2;
+    }
+
+    .search-help-example code {
+        @apply font-mono text-sm break-all text-info-dark;
+    }
+
+    .search-help-example span {
+        @apply text-sm text-fg-muted;
+    }
+}
+
+/* ------------------------------------------------------------------------------------------
+   Compatibility for Platform's own JavaScript.
+
+   `vendor/solidworx/platform/assets/controllers/loading.js` (attached to every Symfony form by
+   Platform's LoaderTypeExtension) builds its busy overlay out of Bootstrap utility classes and
+   toggles `d-none` / `d-flex` on it. vendor/ is never edited, so a Tailwind page defines exactly
+   those classes here, or the overlay would render permanently as a visible "Loading..." block.
+   Nothing else should use these names; remove the block with the controller's last caller.
+   ------------------------------------------------------------------------------------------ */
+@layer components {
+    .d-none {
+        display: none !important;
+    }
+
+    .d-flex {
+        display: flex !important;
+    }
+
+    .position-absolute {
+        position: absolute;
+    }
+
+    .start-0 {
+        inset-inline-start: 0;
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+
+    .h-100 {
+        height: 100%;
+    }
+
+    .justify-content-center {
+        justify-content: center;
+    }
+
+    .align-items-center {
+        align-items: center;
+    }
+
+    .visually-hidden {
+        @apply sr-only;
+    }
+
+    /* Symfony UX Toggle Password: the controller appends a Show / Hide button after the input. */
+    .toggle-password-container {
+        @apply relative;
+    }
+
+    .toggle-password-container .si-control {
+        @apply pr-24;
+    }
+
+    .toggle-password-button {
+        @apply absolute top-1/2 right-2 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-md border-0 bg-transparent px-2 py-1 text-sm text-fg-muted hover:text-fg;
+    }
+
+    .toggle-password-icon {
+        @apply size-4;
+    }
+
+    .spinner-border {
+        @apply inline-block size-8 animate-spin rounded-full border-4 border-current border-r-transparent align-[-0.125em];
+    }
+}

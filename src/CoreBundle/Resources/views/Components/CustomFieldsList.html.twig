@@ -22,55 +22,53 @@
         multi_select: 'tabler:list-check',
     } %}
 
-    <div class="card my-3 custom-fields-card">
-        <div class="card-header">
-            <span class="d-flex align-items-center gap-2">
-                {{ ux_icon('tabler:forms', {width: 16, height: 16, class: 'text-muted'}) }}
-                <span class="fw-medium">{{ 'custom_fields.label'|trans }}</span>
-            </span>
+    <div class="custom-fields-card my-4 rounded-lg border border-line-light bg-surface">
+        <div class="flex items-center gap-2 border-b border-line-light px-4 py-2.5">
+            {{ ux_icon('tabler:forms', {class: 'size-4 text-fg-muted', 'aria-hidden': 'true'}) }}
+            <span class="font-medium text-fg">{{ 'custom_fields.label'|trans }}</span>
         </div>
-        <div class="card-body py-2">
-            <dl class="custom-fields-list mb-0">
-                {% for row in populated %}
-                    {% set t = row.field.type.value %}
-                    <div class="custom-fields-item">
-                        <dt class="custom-fields-label">
-                            {{ ux_icon(typeIcons[t]|default('tabler:tag'), {width: 14, height: 14, class: 'text-muted'}) }}
-                            <span>{{ row.field.label }}</span>
-                        </dt>
-                        <dd class="custom-fields-value mb-0">
-                            {% if t == 'url' %}
-                                {% set safeUrl = row.raw matches '#^(https?:)?//#i' ? row.raw : null %}
-                                {% if safeUrl %}
-                                    <a href="{{ safeUrl }}" target="_blank" rel="noopener noreferrer">{{ row.raw }}</a>
-                                {% else %}
-                                    {{ row.raw }}
-                                {% endif %}
-                            {% elseif t == 'email' %}
-                                <a href="mailto:{{ row.raw }}">{{ row.raw }}</a>
-                            {% elseif t == 'date' %}
-                                {{ row.raw|date('M d, Y') }}
-                            {% elseif t == 'textarea' %}
-                                <span class="text-pre-wrap">{{ row.formatted|nl2br }}</span>
-                            {% elseif t == 'checkbox' %}
-                                {% if row.raw == '1' %}
-                                    {{ ux_icon('tabler:check', {width: 16, height: 16, class: 'text-success'}) }}
-                                {% else %}
-                                    {{ ux_icon('tabler:x', {width: 16, height: 16, class: 'text-muted'}) }}
-                                {% endif %}
-                            {% elseif t == 'multi_select' %}
-                                {% for label in row.formatted|split(', ') %}
-                                    <span class="badge bg-secondary-lt">{{ label }}</span>
-                                {% endfor %}
-                            {% elseif t == 'select' %}
-                                <span class="badge bg-secondary-lt">{{ row.formatted }}</span>
+        <dl class="custom-fields-list divide-y divide-line-light px-4">
+            {% for row in populated %}
+                {% set t = row.field.type.value %}
+                <div class="custom-fields-item grid gap-1 py-2.5 sm:grid-cols-3 sm:gap-4">
+                    <dt class="custom-fields-label flex items-center gap-2 text-fg-secondary">
+                        {{ ux_icon(typeIcons[t]|default('tabler:tag'), {class: 'size-3.5 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}
+                        <span>{{ row.field.label }}</span>
+                    </dt>
+                    <dd class="custom-fields-value min-w-0 text-fg sm:col-span-2">
+                        {% if t == 'url' %}
+                            {% set safeUrl = row.raw matches '#^(https?:)?//#i' ? row.raw : null %}
+                            {% if safeUrl %}
+                                <a href="{{ safeUrl }}" target="_blank" rel="noopener noreferrer" class="break-all text-primary hover:underline">{{ row.raw }}</a>
                             {% else %}
-                                {{ row.formatted }}
+                                {{ row.raw }}
                             {% endif %}
-                        </dd>
-                    </div>
-                {% endfor %}
-            </dl>
-        </div>
+                        {% elseif t == 'email' %}
+                            <a href="mailto:{{ row.raw }}" class="break-all text-primary hover:underline">{{ row.raw }}</a>
+                        {% elseif t == 'date' %}
+                            {{ row.raw|date('M d, Y') }}
+                        {% elseif t == 'textarea' %}
+                            <span class="whitespace-pre-wrap">{{ row.formatted|nl2br }}</span>
+                        {% elseif t == 'checkbox' %}
+                            {% if row.raw == '1' %}
+                                {{ ux_icon('tabler:check', {class: 'size-4 text-success-dark', 'aria-hidden': 'true'}) }}
+                            {% else %}
+                                {{ ux_icon('tabler:x', {class: 'size-4 text-fg-muted', 'aria-hidden': 'true'}) }}
+                            {% endif %}
+                        {% elseif t == 'multi_select' %}
+                            <span class="flex flex-wrap gap-1.5">
+                                {% for label in row.formatted|split(', ') %}
+                                    <twig:Si:Badge>{{ label }}</twig:Si:Badge>
+                                {% endfor %}
+                            </span>
+                        {% elseif t == 'select' %}
+                            <twig:Si:Badge>{{ row.formatted }}</twig:Si:Badge>
+                        {% else %}
+                            {{ row.formatted }}
+                        {% endif %}
+                    </dd>
+                </div>
+            {% endfor %}
+        </dl>
     </div>
 {% endif %}

@@ -68,7 +68,7 @@ final class UnverifiedSendButtonTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/invoices/view/' . $invoice->getId());
 
         self::assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('button.btn-hero[disabled][aria-describedby="send-gated-hint"]'));
+        self::assertCount(1, $crawler->filter('button[data-hero-action][disabled][aria-describedby="send-gated-hint"]'));
         self::assertCount(1, $crawler->filter('form#resend-verification-email'));
         // The public page 404s while nobody in the company is verified, so there is no link to copy.
         self::assertCount(0, $crawler->filter('[data-controller="clipboard"]'));

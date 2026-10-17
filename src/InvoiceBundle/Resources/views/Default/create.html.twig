@@ -9,7 +9,9 @@
 
 {% set isEdit = isEdit|default(false) %}
 
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
+
+{% block page_title %}{{ (recurring ? 'invoice.recurring.create.title' : 'invoice.action.create')|trans }}{% endblock page_title %}
 
 {% block content %}
     {% if recurring %}
@@ -18,4 +20,3 @@
         <twig:CreateInvoice :form="form" :dto="dto" :isEdit="isEdit" :invoice="invoice|default(null)" />
     {% endif %}
 {% endblock content %}
-

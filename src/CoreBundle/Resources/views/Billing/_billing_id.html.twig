@@ -1,0 +1,43 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    The quote / invoice number: shown as text with a pencil, and swapped for an input while it is
+    edited (the `billing-id` Stimulus controller). The input stays in the form, so a number typed
+    and "saved" here is what submits.
+
+    Variables: id_field (the FormView), label, editLabel, saveLabel, cancelLabel (all translated),
+    canEdit (bool).
+#}
+<div {{ stimulus_controller('billing-id') }}>
+    <span {{ stimulus_target('billing-id', 'info') }}>
+        <span class="inline-flex items-center gap-2 rounded-md bg-canvas px-3 py-2">
+            <span class="text-sm text-fg-muted">{{ label }}</span>
+            <span class="font-semibold text-fg" {{ stimulus_target('billing-id', 'value') }}>{{ id_field.vars.data }}</span>
+            {% if canEdit %}
+                <button type="button" class="inline-flex size-7 items-center justify-center rounded text-fg-muted hover:bg-surface-hover hover:text-fg" {{ stimulus_action('billing-id', 'edit') }} aria-label="{{ editLabel }}" title="{{ editLabel }}">
+                    {{ ux_icon('tabler:pencil', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                </button>
+            {% endif %}
+        </span>
+    </span>
+
+    <div class="hidden" {{ stimulus_target('billing-id', 'form') }}>
+        {{ form_label(id_field) }}
+        <div class="si-group">
+            {{ form_widget(id_field) }}
+            <button class="si-btn si-btn--outline si-btn--md rounded-none border-l-0" type="button" {{ stimulus_action('billing-id', 'save') }} aria-label="{{ saveLabel }}" title="{{ saveLabel }}">
+                {{ ux_icon('tabler:check', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+            </button>
+            <button class="si-btn si-btn--outline si-btn--md rounded-l-none border-l-0" type="button" {{ stimulus_action('billing-id', 'cancel') }} aria-label="{{ cancelLabel }}" title="{{ cancelLabel }}">
+                {{ ux_icon('tabler:x', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+            </button>
+        </div>
+    </div>
+</div>

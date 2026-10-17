@@ -1,0 +1,78 @@
+{#
+    A modal dialog on the native <dialog> element (focus trap, Escape and backdrop come from the
+    browser). The Tailwind counterpart of Platform's <twig:Ui:Modal>, with the same props so a
+    page moves over by renaming the tag.
+
+        <button type="button" data-si-modal-open="#confirm">...</button>
+
+        <twig:Si:Modal id="confirm" title="{{ 'action.confirm'|trans }}" status="danger">
+            <p>...</p>
+            <twig:block name="footer">
+                <twig:Si:Button variant="ghost" data-si-modal-close>{{ 'action.cancel'|trans }}</twig:Si:Button>
+                <twig:Si:Button variant="danger" type="submit">{{ 'action.delete'|trans }}</twig:Si:Button>
+            </twig:block>
+        </twig:Si:Modal>
+
+    show            render it already open (a Live Component does this after a server action)
+    title           translation key or text; also the accessible name
+    size            sm | md | lg | xl | full
+    staticBackdrop  a backdrop click does not close it
+    closeable       show the close button in the header
+    status          danger | warning | success | info | primary: a coloured bar on the top edge
+
+    The header, body and footer blocks can each be replaced. Open and dismiss buttons are wired by
+    the delegated listeners in assets/lib/modal.ts (`data-si-modal-open`, `data-si-modal-close`).
+#}
+{% props show = false, title = '', id = null, size = 'md', staticBackdrop = false, closeable = true, status = '' %}
+
+{%- set modalId = id ?? ('modal-' ~ random()) -%}
+{%- set sizes = {
+    sm: 'max-w-sm',
+    md: 'max-w-lg',
+    lg: 'max-w-3xl',
+    xl: 'max-w-6xl',
+    full: 'max-w-none h-dvh rounded-none',
+} -%}
+{%- set bars = {
+    danger: 'bg-danger',
+    warning: 'bg-warning',
+    success: 'bg-success',
+    info: 'bg-info',
+    primary: 'bg-primary',
+} -%}
+
+<dialog
+    {{ attributes.defaults({class: 'm-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] flex-col overflow-hidden rounded-xl bg-surface p-0 text-fg shadow-lg backdrop:bg-ink-900/55 open:flex ' ~ sizes[size]}) }}
+    id="{{ modalId }}"
+    aria-labelledby="{{ modalId }}-title"
+    data-controller="si-modal"
+    data-si-modal-show-value="{{ show ? 'true' : 'false' }}"
+    data-si-modal-static-value="{{ staticBackdrop ? 'true' : 'false' }}"
+>
+    {% if status is not empty %}
+        <div class="h-1 shrink-0 {{ bars[status]|default('bg-primary') }}" aria-hidden="true"></div>
+    {% endif %}
+
+    {% block full_content %}
+        <div class="flex shrink-0 items-center justify-between gap-3 border-b border-line-light px-5 py-4">
+            {% block header %}
+                    <h2 id="{{ modalId }}-title" class="text-lg font-semibold text-fg">{{ title|trans }}</h2>
+                    {% if closeable %}
+                        <button type="button" class="-mr-1 inline-flex size-8 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-surface-hover hover:text-fg" data-si-modal-close aria-label="{{ 'action.close'|trans }}">
+                            {{ ux_icon('tabler:x', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                        </button>
+                    {% endif %}
+            {% endblock header %}
+        </div>
+
+        <div class="min-h-0 flex-1 overflow-y-auto p-5">
+            {% block body %}{% block content %}{% endblock %}{% endblock %}
+        </div>
+
+        {% if block('footer') is defined and block('footer') is not empty %}
+            <div class="flex shrink-0 items-center justify-end gap-2 border-t border-line-light px-5 py-3">
+                {% block footer %}{% endblock %}
+            </div>
+        {% endif %}
+    {% endblock full_content %}
+</dialog>

@@ -1,0 +1,135 @@
+/**
+ * Design templates: the look of a customer-facing quote or invoice.
+ *
+ * A company picks a design template (classic, editorial, friendly, modern, monochrome,
+ * photographer) and it decides how its invoices and quotes look on the web, in PDFs and in
+ * e-mails. That look belongs to the company, not to the application, so it does not follow the
+ * Ledger identity.
+ *
+ * The web fragments (`Templates/<name>/preview.html.twig` in the Invoice and Quote bundles) were
+ * written with Bootstrap utility classes (`d-flex`, `row`, `col-md-6`, `fw-bold`, ...). Rather than
+ * rewrite every template, this file gives that small vocabulary a meaning inside the two roots a
+ * template renders under, `.invoice-template` and `.quote-template`, and nowhere else. Nothing here
+ * leaks into the application's own screens, and an application screen must not use these names.
+ *
+ * Colours are neutral on purpose: a template that wants a colour sets it inline.
+ */
+
+@layer components {
+    :is(.invoice-template, .quote-template) {
+        color: #1f2937;
+        font-size: 1rem;
+        line-height: 1.5;
+
+        /* ---- layout: flex, grid-ish rows and columns ---- */
+        & .d-flex { display: flex; }
+        & .flex-grow-1 { flex-grow: 1; }
+        & .justify-content-between { justify-content: space-between; }
+        & .justify-content-end { justify-content: flex-end; }
+        & .align-items-center { align-items: center; }
+        & .align-items-end { align-items: flex-end; }
+
+        & .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-inline: -0.75rem;
+        }
+
+        & .row > * {
+            box-sizing: border-box;
+            padding-inline: 0.75rem;
+            width: 100%;
+        }
+
+        & .row > .col-6 { width: 50%; }
+
+        @media (width >= 768px) {
+            & .row > .col-md-4 { width: 33.3333%; }
+            & .row > .col-md-5 { width: 41.6667%; }
+            & .row > .col-md-6 { width: 50%; }
+        }
+
+        /* ---- spacing ---- */
+        & .mb-0 { margin-bottom: 0; }
+        & .mb-1 { margin-bottom: 0.25rem; }
+        & .mb-2 { margin-bottom: 0.5rem; }
+        & .mb-3 { margin-bottom: 1rem; }
+        & .mb-4 { margin-bottom: 1.5rem; }
+        & .mb-5 { margin-bottom: 3rem; }
+        & .mt-2 { margin-top: 0.5rem; }
+        & .mt-3 { margin-top: 1rem; }
+        & .mt-4 { margin-top: 1.5rem; }
+        & .mt-5 { margin-top: 3rem; }
+        & .my-4 { margin-block: 1.5rem; }
+        & .me-2 { margin-inline-end: 0.5rem; }
+        & .p-0 { padding: 0; }
+        & .p-3 { padding: 1rem; }
+        & .p-4 { padding: 1.5rem; }
+        & .p-5 { padding: 3rem; }
+        & .py-3 { padding-block: 1rem; }
+        & .py-4 { padding-block: 1.5rem; }
+        & .pt-3 { padding-top: 1rem; }
+        & .pt-4 { padding-top: 1.5rem; }
+        & .pb-2 { padding-bottom: 0.5rem; }
+        & .pb-3 { padding-bottom: 1rem; }
+
+        /* ---- type ---- */
+        & .small { font-size: 0.875em; }
+        & .fs-3 { font-size: 1.75rem; }
+        & .fs-4 { font-size: 1.5rem; }
+        & .fs-5 { font-size: 1.25rem; }
+        & .display-3 { font-size: 3.5rem; font-weight: 300; line-height: 1.2; }
+        & .display-5 { font-size: 2.5rem; font-weight: 300; line-height: 1.2; }
+        & .display-6 { font-size: 2rem; font-weight: 300; line-height: 1.2; }
+        & .fw-semibold { font-weight: 600; }
+        & .fw-bold { font-weight: 700; }
+        & .fst-italic { font-style: italic; }
+        & .font-monospace { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+        & .text-uppercase { text-transform: uppercase; }
+        & .text-end { text-align: end; }
+        & .text-center { text-align: center; }
+        & .text-muted { color: #6b7280; }
+        & .text-secondary { color: #6b7280; }
+        & .text-dark { color: #111827; }
+        & .text-white { color: #fff; }
+        & .text-success { color: #15803d; }
+        & .text-danger { color: #b91c1c; }
+        & h1, & h2, & h3, & h4, & h5, & h6 { font-weight: 600; line-height: 1.2; margin-block: 0 0.5rem; }
+        & hr { border: 0; border-top: 1px solid #d1d5db; }
+
+        /* ---- surfaces ---- */
+        & .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 0.5rem; }
+        & .card-body { padding: 1.5rem; }
+        & .rounded { border-radius: 0.5rem; }
+        & .shadow-sm { box-shadow: 0 1px 2px rgb(0 0 0 / 8%); }
+        & .bg-success-lt { background: #dcfce7; }
+
+        /* ---- borders ---- */
+        & .border { border: 1px solid #e5e7eb; }
+        & .border-0 { border: 0; }
+        & .border-2 { border-width: 2px; }
+        & .border-top { border-top: 1px solid #e5e7eb; }
+        & .border-bottom { border-bottom: 1px solid #e5e7eb; }
+        & .border-dark { border-color: #111827 !important; }
+
+        /* ---- tables ---- */
+        & .table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        & .table :is(th, td) {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.5rem 0.75rem;
+            text-align: start;
+            vertical-align: top;
+        }
+
+        & .table :is(th, td).text-end { text-align: end; }
+        & .table-sm :is(th, td) { padding: 0.25rem 0.5rem; }
+        & .table-bordered :is(th, td) { border: 1px solid #e5e7eb; }
+        & .table-borderless :is(th, td) { border: 0; }
+        & .table-striped tbody tr:nth-child(odd) { background: #f9fafb; }
+        & .table-light { background: #f3f4f6; }
+    }
+}

@@ -1,0 +1,45 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    The Previous / Next row under a step.
+
+    Variables: form, nextDisabled (bool, optional).
+#}
+{% set primary = 'si-btn si-btn--md si-btn--primary flex-row-reverse' %}
+<div class="mt-6 flex items-center justify-between gap-3 border-t border-line-light pt-4">
+    <div class="flex gap-3">
+        {% if form.navigator.previous is defined %}
+            {{ form_widget(form.navigator.previous, {
+                attr: {class: 'si-btn si-btn--md si-btn--outline'},
+                icon: ux_icon('tabler:arrow-left', {class: 'size-5', 'aria-hidden': 'true'}),
+            }) }}
+        {% endif %}
+    </div>
+    <div class="flex gap-3">
+        {% if form.navigator.next is defined %}
+            {{ form_widget(form.navigator.next, {
+                attr: {class: primary, disabled: nextDisabled|default(false)},
+                icon: ux_icon('tabler:arrow-right', {class: 'size-5', 'aria-hidden': 'true'}),
+            }) }}
+        {% endif %}
+        {% if form.navigator.install is defined %}
+            {{ form_widget(form.navigator.install, {
+                attr: {class: primary},
+                icon: ux_icon('tabler:location', {class: 'size-5', 'aria-hidden': 'true'}),
+            }) }}
+        {% endif %}
+        {% if form.navigator.finish is defined %}
+            {{ form_widget(form.navigator.finish, {
+                attr: {class: primary},
+                icon: ux_icon('tabler:send', {class: 'size-5', 'aria-hidden': 'true'}),
+            }) }}
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,48 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    The collapsible sections under the line items: custom fields, then terms and notes.
+
+    Variables: form, prefix ('quote' | 'invoice'), customFieldsLabel (translation key),
+    hasTermsOrNotes (bool).
+#}
+{% set summary_class = 'flex cursor-pointer list-none items-center gap-2 px-5 py-4 [&::-webkit-details-marker]:hidden' %}
+
+{# Custom fields #}
+{% if form.customFields is defined and form.customFields|length > 0 %}
+    <details class="group rounded-lg border border-line-light bg-surface shadow-sm" open>
+        <summary class="{{ summary_class }}" aria-label="{{ customFieldsLabel|trans }}">
+            {{ ux_icon('tabler:chevron-right', {class: 'size-[1.125rem] text-fg-muted transition-transform group-open:rotate-90', 'aria-hidden': 'true'}) }}
+            <span class="text-lg font-semibold text-fg">{{ customFieldsLabel|trans }}</span>
+        </summary>
+        <div class="grid gap-x-4 border-t border-line-light p-5 md:grid-cols-2">
+            {% for child in form.customFields %}
+                <div>{{ form_row(child) }}</div>
+            {% endfor %}
+        </div>
+    </details>
+
+    {# The children are rendered by hand, so mark the collection rendered to keep `form_end()`
+       from repeating it unstyled. #}
+    {%- do form.customFields.setRendered() -%}
+{% endif %}
+
+{# Terms and notes #}
+<details class="group rounded-lg border border-line-light bg-surface shadow-sm"{{ hasTermsOrNotes ? ' open' : '' }}>
+    <summary class="{{ summary_class }}" aria-label="{{ (prefix ~ '.terms_notes.toggle')|trans }}">
+        {{ ux_icon('tabler:chevron-right', {class: 'size-[1.125rem] text-fg-muted transition-transform group-open:rotate-90', 'aria-hidden': 'true'}) }}
+        <span class="text-lg font-semibold text-fg">{{ (prefix ~ '.terms_notes.title')|trans }}</span>
+        <twig:Si:Badge>{{ 'optional'|trans }}</twig:Si:Badge>
+    </summary>
+    <div class="grid gap-x-4 border-t border-line-light p-5 md:grid-cols-2">
+        <div>{{ form_row(form.terms) }}</div>
+        <div>{{ form_row(form.notes) }}</div>
+    </div>
+</details>

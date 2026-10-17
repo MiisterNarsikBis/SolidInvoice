@@ -1,0 +1,25 @@
+{#
+    A tab strip with its panels. Switching is client-side (the `si-tabs` controller); for tabs that
+    navigate to another URL use <twig:Si:Tab href="...">, which needs no controller.
+
+        <twig:Si:Tabs>
+            <twig:block name="tabs">
+                <twig:Si:Tab target="info" :active="true" icon="tabler:info-circle">{{ 'client.view.tabs.info'|trans }}</twig:Si:Tab>
+                <twig:Si:Tab target="quotes" icon="tabler:file-text" :count="client.quotes|length">{{ 'client.view.tabs.quotes'|trans }}</twig:Si:Tab>
+            </twig:block>
+
+            <twig:Si:TabPanel id="info" :active="true">...</twig:Si:TabPanel>
+            <twig:Si:TabPanel id="quotes">...</twig:Si:TabPanel>
+        </twig:Si:Tabs>
+
+    The tab strip sits on a ruled baseline; `tabsClass` adds classes to it (padding when it lives in a
+    card header, for instance).
+#}
+{% props tabsClass = '' %}
+
+<div {{ attributes }} data-controller="si-tabs">
+    <div role="tablist" data-action="keydown->si-tabs#keydown" class="flex flex-wrap gap-x-1 border-b border-line {{ tabsClass }}">
+        {% block tabs %}{% endblock %}
+    </div>
+    {% block content %}{% endblock %}
+</div>

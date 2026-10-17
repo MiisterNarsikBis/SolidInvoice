@@ -149,7 +149,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"][value="sqlite"]')
@@ -216,11 +216,11 @@ final class InstallationTest extends PantherTestCase
             ->assertSee('Memory Limit')
             ->use(function (Client $client): void {
                 // Ensure that the requirements sections are collapsed
-                self::assertSame('accordion-collapse collapse', $client->getCrawler()->filter('#mandatory-requirements')->attr('class'));
-                self::assertSame('accordion-collapse collapse', $client->getCrawler()->filter('#optional-requirements')->attr('class'));
+                self::assertNull($client->getCrawler()->filter('#mandatory-requirements')->attr('open'));
+                self::assertNull($client->getCrawler()->filter('#optional-requirements')->attr('open'));
             })
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger');
+            ->assertNotSeeElement('[data-requirements-alert]');
     }
 
     public function testDatabaseConfigPageDisplaysDriverOptions(): void
@@ -231,7 +231,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"]')
@@ -250,7 +250,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"]')
@@ -259,7 +259,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][previous]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
         ;
     }
 
@@ -271,7 +271,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"]')
@@ -293,7 +293,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"][value="sqlite"]')
@@ -321,7 +321,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"][value="sqlite"]')
@@ -354,7 +354,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"][value="sqlite"]')
@@ -397,7 +397,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"]')
@@ -433,7 +433,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][previous]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
         ;
     }
 
@@ -449,7 +449,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('label[data-testid="database-driver-sqlite"]')
@@ -485,7 +485,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"][value="sqlite"]')
@@ -522,7 +522,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"][value="sqlite"]')
@@ -566,7 +566,7 @@ final class InstallationTest extends PantherTestCase
             ->click('button[name="installation[navigator][next]"]')
             ->waitUntilSeeIn('h4', 'System requirements')
             ->assertNotSee('Some requirements were not met')
-            ->assertNotSeeElement('.alert-danger')
+            ->assertNotSeeElement('[data-requirements-alert]')
             ->click('button[name="installation[navigator][next]"]')
             ->use(
                 static fn (Client $client) => $client->waitFor('input[name="installation[database_config][driver]"][value="sqlite"]')

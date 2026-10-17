@@ -1,0 +1,9 @@
+{#
+    A row in a <twig:Si:Dropdown>. Pass `icon` as a `tabler:` icon name. Text must be translated
+    by the caller.
+#}
+{% props href, icon = null %}
+<a href="{{ href }}" role="menuitem" {{ attributes.defaults({class: 'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-base text-fg-secondary transition-colors hover:bg-surface-hover hover:text-fg'}) }}>
+    {% if icon %}{{ ux_icon(icon, {class: 'size-4 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}{% endif %}
+    {% block content %}{% endblock %}
+</a>

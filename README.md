@@ -91,7 +91,7 @@ Most invoicing tools force a trade-off: easy to use *or* respectful of your data
 
 ### 🚀 Modern Stack
 - Symfony 7.1, PHP 8.4, Doctrine ORM, API Platform 4
-- Tabler UI on Bootstrap 5.3 — fully responsive, mobile-friendly
+- Tailwind CSS UI — fully responsive, mobile-friendly
 - Stimulus, Webpack Encore, Bun, Sass
 - Helm charts for Kubernetes, opt-in Prometheus metrics
 - Symfony Messenger for async task processing
@@ -188,7 +188,7 @@ bun run build
 ## 🛠 Tech Stack
 
 **Backend:** Symfony 7.1 · PHP 8.4 · Doctrine ORM · API Platform 4 · Payum · MoneyPHP
-**Frontend:** Tabler · Bootstrap 5.3 · Stimulus · Webpack Encore · Bun · Sass
+**Frontend:** Tailwind CSS · Stimulus · Webpack Encore · Bun · Sass
 **Quality:** PHPStan (level 6) · ECS · Rector · PHPUnit · Foundry · GitHub Actions
 
 ---

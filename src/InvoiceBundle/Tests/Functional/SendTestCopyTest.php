@@ -94,7 +94,7 @@ final class SendTestCopyTest extends WebTestCase
 
         self::assertTrue(self::getContainer()->get('doctrine')->getRepository(User::class)->find($this->user->getId())?->isVerified());
         self::assertSame('/invoices/view/' . $this->invoice->getId(), $this->browser->getRequest()->getPathInfo());
-        self::assertCount(1, $crawler->filter('form[action="/invoices/action/send/' . $this->invoice->getId() . '"] button.btn-hero:not([disabled])'));
+        self::assertCount(1, $crawler->filter('form[action="/invoices/action/send/' . $this->invoice->getId() . '"] button[data-hero-action]:not([disabled])'));
     }
 
     private function sendTestCopy(): void

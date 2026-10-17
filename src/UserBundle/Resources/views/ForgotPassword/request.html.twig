@@ -1,52 +1,34 @@
 {#
-# This file is part of SolidInvoice package.
-#
-# (c) Pierre du Plessis <open-source@solidworx.co>
-#
-# This source file is subject to the MIT license that is bundled
-# with this source code in the file LICENSE.
-#}
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
 
-{% extends "@SolidInvoiceCore/Layout/default_no_nav.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/auth.html.twig" %}
 
-{% block title %}{{ "forgot_password.request.title"|trans }}{% endblock title %}
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
 
-{% block content %}
-    <div class="container-tight py-4">
-        <div class="text-center mb-4">
-            <span class="navbar-brand navbar-brand-autodark h1">
-                {{ app_logo(showDefault: true, showOnlyAppIcon: true) }} {{ app_name }}
-            </span>
-        </div>
+{% block page_title %}{{ "forgot_password.request.title"|trans }}{% endblock page_title %}
 
-        {% include "@SolidInvoiceCore/flash.html.twig" %}
+{% block contents %}
+    <h1 class="mb-2 text-center text-xl font-semibold text-fg">{{ 'forgot_password.request.heading'|trans }}</h1>
+    <p class="mb-6 text-center text-fg-muted">{{ 'forgot_password.request.description'|trans }}</p>
 
-        <div class="card card-md">
-            <div class="card-body">
-                <h2 class="h2 text-center mb-4">{{ 'forgot_password.request.heading'|trans }}</h2>
-                <p class="text-muted text-center mb-4">
-                    {{ 'forgot_password.request.description'|trans }}
-                </p>
+    {{ form_start(form) }}
+        {{ form_row(form.email) }}
+        <twig:Si:Button type="submit" size="lg" class="w-full">
+            {{ ux_icon('tabler:lock', {class: 'size-5', 'aria-hidden': 'true'}) }}
+            {{ 'forgot_password.request.submit'|trans }}
+        </twig:Si:Button>
+    {{ form_end(form) }}
+{% endblock contents %}
 
-                {{ form_start(form) }}
-                    <div class="mb-3">
-                        {{ form_row(form.email) }}
-                    </div>
-                    <div class="form-footer">
-                        <button type="submit" class="btn btn-primary w-100">
-                            {{ ux_icon('tabler:lock', {width: 20, height: 20}) }}
-                            {{ 'forgot_password.request.submit'|trans }}
-                        </button>
-                    </div>
-                {{ form_end(form) }}
-            </div>
-        </div>
-
-        <div class="text-center text-secondary mt-3">
-            <a href="{{ path('_login_main') }}" class="d-flex align-items-center justify-content-center gap-1">
-                {{ ux_icon('tabler:arrow-left', {width: 16, height: 16}) }}
-                {{ 'forgot_password.request.back_to_login'|trans }}
-            </a>
-        </div>
-    </div>
-{% endblock %}
+{% block below_card %}
+    <a href="{{ path('_login_main') }}" class="mt-6 inline-flex items-center justify-center gap-1 rounded-md bg-surface/95 px-4 py-2 text-sm text-fg-secondary shadow-sm hover:text-primary">
+        {{ ux_icon('tabler:arrow-left', {class: 'size-4', 'aria-hidden': 'true'}) }}
+        {{ 'forgot_password.request.back_to_login'|trans }}
+    </a>
+{% endblock below_card %}

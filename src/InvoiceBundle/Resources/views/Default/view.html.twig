@@ -6,638 +6,319 @@
  # This source file is subject to the MIT license that is bundled
  # with this source code in the file LICENSE.
  #}
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
 
-{% block page_title %}
-    {{ "invoice.title"|trans({"%id%" : invoice.invoiceId}) }}
-{% endblock page_title %}
+{% block page_title %}{{ "invoice.title"|trans({"%id%" : invoice.invoiceId}) }}{% endblock page_title %}
+
+{% block page_title_actions %}
+    {% import '@SolidInvoiceInvoice/Default/_send_gate.html.twig' as send_gate %}
+    {% set gated = is_email_verification_gated() %}
+    {% set InvoiceStatus = enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus') %}
+    {% set overdue = invoice.status == InvoiceStatus.Overdue %}
+
+    {# Always available #}
+    <button type="button" onclick="window.print()" class="si-btn si-btn--ghost si-btn--md" title="{{ 'invoice.action.print'|trans }}" aria-label="{{ 'invoice.action.print'|trans }}">
+        {{ ux_icon('tabler:printer', {class: 'size-5', 'aria-hidden': 'true'}) }}
+    </button>
+    {# The public page 404s while the company is unverified, and the archivable filter hides archived invoices from it, so only offer a link that works. #}
+    {% if not gated and invoice.status not in [InvoiceStatus.Draft, InvoiceStatus.Archived] %}
+        <span {{ stimulus_controller('clipboard', {'success-content': 'invoice.view.toolbar.link_copied'|trans}) }}>
+            <input type="hidden" value="{{ url('_view_invoice_external', {'uuid': invoice.uuid}) }}" {{ stimulus_target('clipboard', 'source') }}>
+            <button type="button" class="si-btn si-btn--ghost si-btn--md" {{ stimulus_target('clipboard', 'button') }} {{ stimulus_action('clipboard', 'copy') }}>
+                {{ ux_icon('tabler:link', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                {{ 'invoice.view.toolbar.copy_link'|trans }}
+            </button>
+        </span>
+    {% endif %}
+    {% if can_print_pdf() %}
+        <a href="{{ path('_invoices_view', {'id': invoice.id, '_format': 'pdf'}) }}" target="_blank" class="si-btn si-btn--ghost si-btn--md" title="{{ 'invoice.action.pdf'|trans }}" aria-label="{{ 'invoice.action.pdf'|trans }}">
+            {{ ux_icon('tabler:file-type-pdf', {class: 'size-5', 'aria-hidden': 'true'}) }}
+        </a>
+    {% endif %}
+
+    <twig:Si:Dropdown label="{{ 'invoice.view.toolbar.more_actions'|trans }}" triggerClass="si-btn si-btn--ghost si-btn--md">
+        <twig:block name="trigger">{{ ux_icon('tabler:dots-vertical', {class: 'size-5', 'aria-hidden': 'true'}) }}</twig:block>
+        {% if invoice.quote is not null and invoice.quote.valid %}
+            <twig:Si:MenuItem href="{{ path('_quotes_view', {'id' : invoice.quote.id}) }}" icon="tabler:file-text">{{ "invoice.view.toolbar.view_quote"|trans }}</twig:Si:MenuItem>
+            <div class="my-1 h-px bg-line-light" role="separator"></div>
+        {% endif %}
+
+        <twig:Si:MenuItem href="{{ path('_invoices_clone', {'id' : invoice.id}) }}" icon="tabler:copy">{{ "invoice.view.toolbar.clone"|trans }}</twig:Si:MenuItem>
+
+        {% if invoice.status in [InvoiceStatus.Pending, InvoiceStatus.Overdue] and invoice.users|length > 0 %}
+            <div class="my-1 h-px bg-line-light" role="separator"></div>
+            <a href="#" role="menuitem" class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-base text-fg-secondary transition-colors hover:bg-surface-hover hover:text-fg" data-si-modal-open="#send-reminder-modal">
+                {{ ux_icon('tabler:bell', {class: 'size-4 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}
+                {{ "invoice.view.toolbar.send_reminder"|trans }}
+            </a>
+        {% endif %}
+
+        {% if invoice.status == InvoiceStatus.Paid and invoice.users|length > 0 %}
+            <div class="my-1 h-px bg-line-light" role="separator"></div>
+            {% if gated %}
+                <span class="flex items-center gap-2 px-2.5 py-1.5 text-base text-fg-muted" aria-disabled="true" title="{{ email_verification_message('sending this invoice') }}">
+                    {{ ux_icon('tabler:send', {class: 'size-4 shrink-0', 'aria-hidden': 'true'}) }}
+                    {{ "invoice.view.toolbar.send"|trans }}
+                </span>
+            {% else %}
+                <a href="#" role="menuitem" class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-base text-fg-secondary transition-colors hover:bg-surface-hover hover:text-fg" data-si-modal-open="#send-paid-invoice-modal">
+                    {{ ux_icon('tabler:send', {class: 'size-4 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}
+                    {{ "invoice.view.toolbar.send"|trans }}
+                </a>
+            {% endif %}
+        {% endif %}
+
+        {% if workflow_can(invoice, 'edit') %}
+            <twig:Si:MenuItem href="{{ path('_invoices_edit', {'id' : invoice.id}) }}" icon="tabler:pencil">{{ "invoice.view.toolbar.edit"|trans }}</twig:Si:MenuItem>
+        {% endif %}
+
+        {% if workflow_can(invoice, 'reopen') %}
+            <twig:Si:MenuItem href="{{ path('_action_invoice', {'action' : 'reopen', 'id' : invoice.id}) }}" icon="tabler:refresh">{{ "invoice.view.toolbar.reopen"|trans }}</twig:Si:MenuItem>
+        {% endif %}
+
+        {% if workflow_can(invoice, 'archive') %}
+            <div class="my-1 h-px bg-line-light" role="separator"></div>
+            <twig:Si:MenuItem href="{{ path('_action_invoice', {'action' : 'archive', 'id' : invoice.id}) }}" icon="tabler:archive">{{ "invoice.view.toolbar.archive"|trans }}</twig:Si:MenuItem>
+        {% endif %}
+
+        {% if workflow_can(invoice, 'cancel') %}
+            <div class="my-1 h-px bg-line-light" role="separator"></div>
+            <twig:Si:MenuItem href="{{ path('_action_invoice', {'action' : 'cancel', 'id' : invoice.id}) }}" icon="tabler:x" class="text-danger-dark">{{ "invoice.view.toolbar.cancel"|trans }}</twig:Si:MenuItem>
+        {% endif %}
+    </twig:Si:Dropdown>
+
+    {# The main action depends on where the invoice is in its life #}
+    {% if workflow_can(invoice, 'pay') %}
+        <twig:Si:Button variant="{{ overdue ? 'danger' : 'primary' }}" href="{{ path('_payments_create', {'uuid' : invoice.uuid}) }}">
+            {{ ux_icon('tabler:credit-card', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+            {{ "invoice.view.toolbar.pay_now"|trans }}
+        </twig:Si:Button>
+        {% if gated %}
+            {{ send_gate.hint() }}
+            {{ send_gate.test_copy(invoice) }}
+            <twig:Si:Button type="button" variant="{{ overdue ? 'danger' : 'primary' }}" disabled aria-describedby="send-gated-hint" data-hero-action>
+                {{ ux_icon('tabler:send', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                {{ "invoice.view.toolbar.send"|trans }}
+            </twig:Si:Button>
+        {% else %}
+            <form method="post" action="{{ path('_send_invoice', {'id' : invoice.id}) }}" class="inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('send_invoice') }}">
+                <twig:Si:Button type="submit" variant="{{ overdue ? 'danger' : 'primary' }}" data-hero-action>
+                    {{ ux_icon('tabler:send', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                    {{ "invoice.view.toolbar.send"|trans }}
+                </twig:Si:Button>
+            </form>
+        {% endif %}
+    {% elseif workflow_can(invoice, 'accept') %}
+        {% if gated %}
+            {{ send_gate.hint() }}
+            {{ send_gate.test_copy(invoice) }}
+        {% endif %}
+        <div class="inline-flex">
+            {% if gated %}
+                <twig:Si:Button type="button" class="rounded-r-none" disabled aria-describedby="send-gated-hint" data-hero-action>
+                    {{ ux_icon('tabler:send', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                    {{ 'invoice.save.send'|trans }}
+                </twig:Si:Button>
+            {% else %}
+                <form method="post" action="{{ path('_send_invoice', {'id' : invoice.id}) }}" class="inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('send_invoice') }}">
+                    <twig:Si:Button type="submit" class="rounded-r-none" data-hero-action>
+                        {{ ux_icon('tabler:send', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                        {{ 'invoice.save.send'|trans }}
+                    </twig:Si:Button>
+                </form>
+            {% endif %}
+            <twig:Si:Dropdown label="{{ 'invoice.view.toolbar.toggle_dropdown'|trans }}" triggerClass="si-btn si-btn--primary si-btn--md rounded-l-none border-l border-white/30 px-2">
+                <twig:block name="trigger">{{ ux_icon('tabler:chevron-down', {class: 'size-4', 'aria-hidden': 'true'}) }}</twig:block>
+                <twig:Si:MenuItem href="{{ path('_action_invoice', {'action' : 'accept', 'id' : invoice.id}) }}" icon="tabler:check">{{ 'invoice.save.publish_only'|trans }}</twig:Si:MenuItem>
+            </twig:Si:Dropdown>
+        </div>
+    {% endif %}
+{% endblock page_title_actions %}
 
 {% block content %}
-{% import '@SolidInvoiceInvoice/Templates/_macros.html.twig' as inv %}
-{% import '@SolidInvoiceInvoice/Default/_send_gate.html.twig' as send_gate %}
-{% set gated = is_email_verification_gated() %}
-{% set currency = invoice.currency %}
-<div class="doc-view-page">
-    <div class="doc-view-header no-print">
-        <div class="doc-view-header-left">
-            <div class="doc-view-icon">
-                {{ ux_icon('tabler:file-invoice', {width: 32, height: 32}) }}
-            </div>
-            <div class="doc-view-title-group">
-                <h1 class="doc-view-title">{{ "invoice.title"|trans({"%id%" : invoice.invoiceId}) }}</h1>
-                <div class="doc-view-meta">
-                    {{ invoice_label(invoice.status) }}
-                    {% if invoice.due is not empty %}
-                        <span class="doc-view-meta-item">
-                            {{ ux_icon('tabler:calendar', {width: 14, height: 14}) }}
-                            {{ 'invoice.due_date'|trans }}: {{ invoice.due|date('M d, Y') ~ (invoice.paymentTerms.value != 'custom' ? ' · ' ~ invoice.paymentTerms.label|trans : '') }}
-                        </span>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+    {% import '@SolidInvoiceInvoice/Default/_send_gate.html.twig' as send_gate %}
+    {% set gated = is_email_verification_gated() %}
+    {% set currency = invoice.currency %}
+    {% set InvoiceStatus = enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus') %}
+    {% set PaymentStatus = enum('SolidInvoice\\PaymentBundle\\Enum\\PaymentStatus') %}
 
-        <div class="doc-view-header-actions">
-            {# Always available actions #}
-            <div class="doc-view-utility-actions">
-                <button type="button" onclick="window.print()" class="btn btn-ghost btn-icon" title="{{ 'invoice.action.print'|trans }}">
-                    {{ ux_icon('tabler:printer', {width: 20, height: 20}) }}
-                </button>
-                {# The public page 404s while the company is unverified, and the archivable filter hides archived invoices from it, so only offer a link that works. #}
-                {% if not gated and invoice.status not in [enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Draft, enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Archived] %}
-                    <span {{ stimulus_controller('clipboard', {'success-content': 'invoice.view.toolbar.link_copied'|trans}) }}>
-                        <input type="hidden" value="{{ url('_view_invoice_external', {'uuid': invoice.uuid}) }}" {{ stimulus_target('clipboard', 'source') }}>
-                        <button type="button" class="btn btn-ghost" {{ stimulus_target('clipboard', 'button') }} {{ stimulus_action('clipboard', 'copy') }}>
-                            {{ ux_icon('tabler:link', {width: 18, height: 18}) }}
-                            {{ 'invoice.view.toolbar.copy_link'|trans }}
-                        </button>
-                    </span>
-                {% endif %}
-                {% if can_print_pdf() %}
-                    <a href="{{ path('_invoices_view', {'id': invoice.id, '_format': 'pdf'}) }}" target="_blank" class="btn btn-ghost btn-icon" title="{{ 'invoice.action.pdf'|trans }}">
-                        {{ ux_icon('tabler:file-type-pdf', {width: 20, height: 20}) }}
-                    </a>
-                {% endif %}
-
-                {# More Actions Dropdown #}
-                <div class="dropdown">
-                    <button class="btn btn-ghost btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ 'invoice.view.toolbar.more_actions'|trans }}">
-                        {{ ux_icon('tabler:dots-vertical', {width: 20, height: 20}) }}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        {% if invoice.quote is not null and invoice.quote.valid %}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('_quotes_view', {'id' : invoice.quote.id}) }}">
-                                    {{ ux_icon('tabler:file-text', {width: 16, height: 16}) }}
-                                    {{ "invoice.view.toolbar.view_quote"|trans }}
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                        {% endif %}
-
-                        <li>
-                            <a class="dropdown-item" href="{{ path('_invoices_clone', {'id' : invoice.id}) }}">
-                                {{ ux_icon('tabler:copy', {width: 16, height: 16}) }}
-                                {{ "invoice.view.toolbar.clone"|trans }}
-                            </a>
-                        </li>
-
-                        {% if invoice.status in [enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Pending, enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Overdue] and invoice.users|length > 0 %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#send-reminder-modal">
-                                    {{ ux_icon('tabler:bell', {width: 16, height: 16}) }}
-                                    {{ "invoice.view.toolbar.send_reminder"|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
-
-                        {% if invoice.status == enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Paid and invoice.users|length > 0 %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                {% if gated %}
-                                    <span class="d-block" tabindex="0"
-                                          data-bs-toggle="tooltip"
-                                          title="{{ email_verification_message('sending this invoice') }}">
-                                        <button type="button" class="dropdown-item disabled" disabled style="pointer-events: none;">
-                                            {{ ux_icon('tabler:send', {width: 16, height: 16}) }}
-                                            {{ "invoice.view.toolbar.send"|trans }}
-                                        </button>
-                                    </span>
-                                {% else %}
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#send-paid-invoice-modal">
-                                        {{ ux_icon('tabler:send', {width: 16, height: 16}) }}
-                                        {{ "invoice.view.toolbar.send"|trans }}
-                                    </a>
-                                {% endif %}
-                            </li>
-                        {% endif %}
-
-                        {% if workflow_can(invoice, 'edit') %}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('_invoices_edit', {'id' : invoice.id}) }}">
-                                    {{ ux_icon('tabler:pencil', {width: 16, height: 16}) }}
-                                    {{ "invoice.view.toolbar.edit"|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
-
-                        {% if workflow_can(invoice, 'reopen') %}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('_action_invoice', {'action' : 'reopen', 'id' : invoice.id}) }}">
-                                    {{ ux_icon('tabler:refresh', {width: 16, height: 16}) }}
-                                    {{ "invoice.view.toolbar.reopen"|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
-
-                        {% if workflow_can(invoice, 'archive') %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('_action_invoice', {'action' : 'archive', 'id' : invoice.id}) }}">
-                                    {{ ux_icon('tabler:archive', {width: 16, height: 16}) }}
-                                    {{ "invoice.view.toolbar.archive"|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
-
-                        {% if workflow_can(invoice, 'cancel') %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="{{ path('_action_invoice', {'action' : 'cancel', 'id' : invoice.id}) }}">
-                                    {{ ux_icon('tabler:x', {width: 16, height: 16}) }}
-                                    {{ "invoice.view.toolbar.cancel"|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-
-            {# Hero Action - Changes based on invoice state #}
-            {% if workflow_can(invoice, 'pay') %}
-                <a href="{{ path('_payments_create', {'uuid' : invoice.uuid}) }}" class="btn btn-primary btn-hero {{ invoice.status == enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Overdue ? 'btn-hero-urgent' : '' }}">
-                    {{ ux_icon('tabler:credit-card', {width: 18, height: 18}) }}
-                    {{ "invoice.view.toolbar.pay_now"|trans }}
-                </a>
-                {% if gated %}
-                    {{ send_gate.hint() }}
-                    {{ send_gate.test_copy(invoice) }}
-                    <button type="button" class="btn btn-primary btn-hero {{ invoice.status == enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Overdue ? 'btn-hero-urgent' : '' }}" disabled aria-describedby="send-gated-hint">
-                        {{ ux_icon('tabler:send', {width: 18, height: 18}) }}
-                        {{ "invoice.view.toolbar.send"|trans }}
-                    </button>
-                {% else %}
-                    <form method="post" action="{{ path('_send_invoice', {'id' : invoice.id}) }}" class="d-inline">
-                        <input type="hidden" name="_token" value="{{ csrf_token('send_invoice') }}">
-                        <button type="submit" class="btn btn-primary btn-hero {{ invoice.status == enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Overdue ? 'btn-hero-urgent' : '' }}">
-                            {{ ux_icon('tabler:send', {width: 18, height: 18}) }}
-                            {{ "invoice.view.toolbar.send"|trans }}
-                        </button>
-                    </form>
-                {% endif %}
-            {% elseif workflow_can(invoice, 'accept') %}
-                {% if gated %}
-                    {{ send_gate.hint() }}
-                    {{ send_gate.test_copy(invoice) }}
-                {% endif %}
-                <div class="btn-group">
-                    {% if gated %}
-                        <button type="button" class="btn btn-primary btn-hero" disabled aria-describedby="send-gated-hint">
-                            {{ ux_icon('tabler:send', {width: 18, height: 18}) }}
-                            {{ 'invoice.save.send'|trans }}
-                        </button>
-                    {% else %}
-                        <form method="post" action="{{ path('_send_invoice', {'id' : invoice.id}) }}" class="d-inline">
-                            <input type="hidden" name="_token" value="{{ csrf_token('send_invoice') }}">
-                            <button type="submit" class="btn btn-primary btn-hero rounded-end-0">
-                                {{ ux_icon('tabler:send', {width: 18, height: 18}) }}
-                                {{ 'invoice.save.send'|trans }}
-                            </button>
-                        </form>
-                    {% endif %}
-                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">{{ 'invoice.view.toolbar.toggle_dropdown'|trans }}</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="{{ path('_action_invoice', {'action' : 'accept', 'id' : invoice.id}) }}">
-                                {{ ux_icon('tabler:check', {width: 16, height: 16}) }}
-                                {{ 'invoice.save.publish_only'|trans }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            {% endif %}
-        </div>
+    <div class="-mt-2 mb-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-fg-secondary print:hidden">
+        {{ invoice_label(invoice.status) }}
+        {% if invoice.due is not empty %}
+            <span class="inline-flex items-center gap-1.5">
+                {{ ux_icon('tabler:calendar', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+                {{ 'invoice.due_date'|trans }}: {{ invoice.due|date('M d, Y') ~ (invoice.paymentTerms.value != 'custom' ? ' · ' ~ invoice.paymentTerms.label|trans : '') }}
+            </span>
+        {% endif %}
     </div>
 
-    {# ═══════════════════════════════════════════════════════════════════════
-       MAIN CONTENT - Invoice Document + Sidebar
-    ═══════════════════════════════════════════════════════════════════════ #}
-    <div class="doc-view-content">
-        {# Invoice Document (Main Area) #}
-        <div class="doc-view-document">
+    <div class="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
+        <div class="min-w-0">
             {% if documentTemplate|default(null) is not empty %}
                 {% include documentTemplate %}
             {% else %}
-            <div class="doc-card">
-                {# Document Header - From/To #}
-                <div class="doc-header-from-to">
-                    <div class="doc-party doc-party-from">
-                        <div class="doc-party-label">{{ 'invoice.from'|trans }}</div>
-                        <h3 class="doc-party-name">{{ company_name() }}</h3>
-
-                        {% for identifier in tax_identifiers() %}
-                            <div class="doc-party-detail">
-                                <span class="detail-label">{{ identifier.label }}</span>
-                                <span class="detail-value">{{ identifier.value }}</span>
-                            </div>
-                        {% endfor %}
-
-                        {% set email = setting('system/company/contact_details/email') %}
-                        {% if email is not empty %}
-                            <div class="doc-party-detail">
-                                {{ ux_icon('tabler:mail', {width: 14, height: 14}) }}
-                                <span class="detail-value">{{ email }}</span>
-                            </div>
-                        {% endif %}
-
-                        {% set phoneNumber = setting('system/company/contact_details/phone_number') %}
-                        {% if phoneNumber is not empty %}
-                            <div class="doc-party-detail">
-                                {{ ux_icon('tabler:phone', {width: 14, height: 14}) }}
-                                <span class="detail-value">{{ phoneNumber }}</span>
-                            </div>
-                        {% endif %}
-
-                        {% set address = setting('system/company/contact_details/address', null, true) %}
-                        {% if address is not null and address|filter(v => v) is not empty %}
-                            <div class="doc-party-detail">
-                                {{ ux_icon('tabler:map-pin', {width: 14, height: 14}) }}
-                                <span class="detail-value">{{ address(address)|replace({"\n": ", "}) }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="doc-party doc-party-to">
-                        <div class="doc-party-label">{{ 'invoice.to'|trans }}</div>
-                        <h3 class="doc-party-name">{{ invoice.client }}</h3>
-
-                        {% if invoice.client.website is not empty %}
-                            <div class="doc-party-detail">
-                            {% set website_url = invoice.client.website starts with 'http://' or invoice.client.website starts with 'https://' ? invoice.client.website : 'https://' ~ invoice.client.website %}
-                                {{ ux_icon('tabler:world', {width: 14, height: 14}) }}
-                                <a href="{{ website_url }}" class="detail-value" rel="external noopener" target="_blank">
-                                    <span>{{ invoice.client.website }}</span>
-                                    {{ ux_icon('tabler:external-link', {width: 14, height: 14}) }}
-                                </a>
-                            </div>
-                        {% endif %}
-
-                        {% for identifier in tax_identifiers(invoice.client) %}
-                            <div class="doc-party-detail">
-                                <span class="detail-label">{{ identifier.label }}</span>
-                                <span class="detail-value">{{ identifier.value }}</span>
-                            </div>
-                        {% endfor %}
-
-                        {% for address in invoice.client.addresses %}
-                            <div class="doc-party-detail">
-                                {{ ux_icon('tabler:map-pin', {width: 14, height: 14}) }}
-                                <span class="detail-value">{{ address|replace({"\n": ", "}) }}</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                {# Line Items Table #}
-                <div class="doc-items">
-                    <table class="doc-items-table">
-                        <thead>
-                            <tr>
-                                <th class="column-description">{{ 'invoice.item.heading.description'|trans }}</th>
-                                <th class="column-price">{{ 'invoice.item.heading.price'|trans }}</th>
-                                <th class="column-qty">{{ 'invoice.item.heading.qty'|trans }}</th>
-                                {% if invoice.tax.positive %}
-                                    <th class="column-tax">{{ 'invoice.item.heading.tax'|trans }}</th>
-                                {% endif %}
-                                <th class="column-total">{{ 'invoice.item.heading.total'|trans }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in invoice.lines %}
-                                <tr>
-                                    <td class="column-description" data-label="{{ 'invoice.item.heading.description'|trans }}">{{ item.name }}{{ inv.line_description(item, false) }}</td>
-                                    <td class="column-price" data-label="{{ 'invoice.item.heading.price'|trans }}">{{ item.price|formatCurrency(currency) }}</td>
-                                    <td class="column-qty" data-label="{{ 'invoice.item.heading.qty'|trans }}">{{ item.qty }}</td>
-                                    {% if invoice.tax.positive %}
-                                        <td class="column-tax" data-label="{{ 'invoice.item.heading.tax'|trans }}">
-                                            {% for lineTax in item.taxes %}{{ lineTax.nameSnapshot }} ({{ lineTax.rateSnapshot }}%){% if not loop.last %}, {% endif %}{% endfor %}
-                                        </td>
-                                    {% endif %}
-                                    <td class="column-total" data-label="{{ 'invoice.item.heading.total'|trans }}">{{ item.total|formatCurrency(currency) }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                {# Totals Section #}
-                <div class="doc-totals">
-                    <div class="doc-totals-grid">
-                        <div class="totals-row">
-                            <span class="totals-label">{{ 'invoice.subtotal'|trans }}</span>
-                            <span class="totals-value">{{ invoice.baseTotal|formatCurrency(currency) }}</span>
-                        </div>
-
-                        {% set _tb = tax_breakdown(invoice) %}
-                        {% if invoice.tax.positive %}
-                            <div class="totals-row">
-                                <span class="totals-label">{{ 'invoice.line_tax'|trans }}</span>
-                                <span class="totals-value">{{ invoice.tax|formatCurrency(currency) }}</span>
-                            </div>
-                            {% for row in _tb.lineTaxRows %}
-                                <div class="totals-row totals-row-tax-breakdown">
-                                    <span class="totals-label totals-label-sub">{{ row.name }} ({{ row.rate }}%)</span>
-                                    <span class="totals-value">{{ row.amount|formatCurrency(currency) }}</span>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                        {% for row in _tb.additiveRows %}
-                            <div class="totals-row">
-                                <span class="totals-label">{{ row.name }} ({{ row.rate }}%)</span>
-                                <span class="totals-value">{{ row.amount|formatCurrency(currency) }}</span>
-                            </div>
-                        {% endfor %}
-                        {% for row in _tb.informationalRows %}
-                            <div class="totals-row totals-row-tax-breakdown">
-                                <span class="totals-label totals-label-sub">{{ row.name }} ({{ row.rate }}%){% if row.note %} — {{ row.note }}{% endif %}</span>
-                                <span class="totals-value text-muted">{{ 'invoice.invoice_taxes.informational'|trans }}</span>
-                            </div>
-                        {% endfor %}
-
-                        {% if invoice.hasDiscount %}
-                            <div class="totals-row totals-row-discount">
-                                <span class="totals-label">{{ 'invoice.discount'|trans }}</span>
-                                <span class="totals-value">-{{ discount(invoice)|formatCurrency(currency) }}</span>
-                            </div>
-                        {% endif %}
-
-                        {# Show partial payments in totals #}
-                        {% if invoice.payments|length > 0 and not invoice.balance.isZero %}
-                            {% for payment in invoice.payments|filter((v) => v.status == enum('SolidInvoice\\PaymentBundle\\Enum\\PaymentStatus').Captured) %}
-                                <div class="totals-row totals-row-payment">
-                                    <span class="totals-label">
-                                        {{ 'invoice.payment.label'|trans }}: {{ payment.method.name }}
-                                    </span>
-                                    <span class="totals-value">-{{ payment.amount.amount|formatCurrency(currency) }}</span>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-
-                        {% set hasOutstandingBalance = invoice.payments|length > 0 and not invoice.balance.isZero %}
-                        <div class="totals-row totals-row-final">
-                            <span class="totals-label">
-                                {{ hasOutstandingBalance ? 'invoice.balance'|trans : 'invoice.total'|trans }}
-                            </span>
-                            <span class="totals-value">
-                                {{ (hasOutstandingBalance ? invoice.balance : invoice.total)|formatCurrency(currency) }}
-                            </span>
-                        </div>
-                        {% if invoice.withholdingAmount.positive %}
-                            <div class="totals-row">
-                                <span class="totals-label">{{ 'invoice.withholding'|trans }}</span>
-                                <span class="totals-value">-{{ invoice.withholdingAmount|formatCurrency(currency) }}</span>
-                            </div>
-                            <div class="totals-row totals-row-final">
-                                <span class="totals-label">{{ 'invoice.amount_payable'|trans }}</span>
-                                <span class="totals-value">{{ payable_amount(invoice)|formatCurrency(currency) }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                {# Custom Fields (admin view shows ALL fields) #}
-                <twig:CustomFieldsList :target="enum('SolidInvoice\\CoreBundle\\Enum\\CustomFieldTarget').INVOICE" :recordId="invoice.id" />
-
-                {# Terms & Notes #}
-                {% if invoice.terms is not empty or invoice.notes is not empty %}
-                    <div class="doc-footer">
-                        {% if invoice.terms is not empty %}
-                            <div class="doc-footer-section">
-                                <h4 class="doc-footer-title">{{ 'invoice.terms'|trans }}</h4>
-                                <p class="doc-footer-text">{{ invoice.terms|nl2br }}</p>
-                            </div>
-                        {% endif %}
-
-                        {% if invoice.notes is not empty %}
-                            <div class="doc-footer-section no-print">
-                                <h4 class="doc-footer-title">{{ 'invoice.notes'|trans }}</h4>
-                                <p class="doc-footer-text">{{ invoice.notes|nl2br }}</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            </div>
+                {% include '@SolidInvoiceCore/Billing/_document.html.twig' with {
+                    doc: invoice,
+                    type: 'invoice',
+                    currency: currency,
+                    target: enum('SolidInvoice\\CoreBundle\\Enum\\CustomFieldTarget').INVOICE,
+                } only %}
             {% endif %}
         </div>
 
         {# Sidebar #}
-        <div class="doc-view-sidebar no-print">
-            {# Client Card #}
-            <div class="doc-sidebar-card">
-                <div class="doc-sidebar-card-header">
-                    <div class="doc-sidebar-card-icon">
-                        {{ ux_icon('tabler:building', {width: 18, height: 18}) }}
-                    </div>
-                    <h3 class="doc-sidebar-card-title">{{ 'invoice.client.title'|trans }}</h3>
-                </div>
-                <div class="doc-sidebar-card-body">
-                    <div class="client-info">
-                        <a href="{{ path('_clients_view', {'id': invoice.client.id}) }}" class="client-name">
-                            {{ invoice.client }}
-                        </a>
+        <div class="space-y-4 print:hidden">
+            <twig:Si:Card title="{{ 'invoice.client.title'|trans }}" icon="tabler:building" iconColor="primary" :padded="true">
+                <a href="{{ path('_clients_view', {'id': invoice.client.id}) }}" class="font-semibold text-primary hover:underline">{{ invoice.client }}</a>
 
-                        {% if invoice.users|length > 0 %}
-                            <div class="client-contacts">
-                                {% for user in invoice.users %}
-                                    <div class="client-contact">
-                                        <div class="contact-name">{{ user }}</div>
-                                        <div class="contact-email">
-                                            {{ ux_icon('tabler:mail', {width: 12, height: 12}) }}
-                                            {{ user.email }}
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            {# Invoice Summary Card #}
-            <div class="doc-sidebar-card">
-                <div class="doc-sidebar-card-header">
-                    <div class="doc-sidebar-card-icon">
-                        {{ ux_icon('tabler:receipt', {width: 18, height: 18}) }}
-                    </div>
-                    <h3 class="doc-sidebar-card-title">{{ 'invoice.summary'|trans }}</h3>
-                </div>
-                <div class="doc-sidebar-card-body">
-                    <div class="doc-summary-grid">
-                        <div class="summary-item">
-                            <span class="summary-label">{{ 'invoice.status'|trans }}</span>
-                            <span class="summary-value">{{ invoice_label(invoice.status) }}</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="summary-label">{{ 'invoice.total'|trans }}</span>
-                            <span class="summary-value summary-value-amount">{{ invoice.total|formatCurrency(currency) }}</span>
-                        </div>
-                        {% if invoice.payments|length > 0 and not invoice.balance.isZero %}
-                            <div class="summary-item">
-                                <span class="summary-label">{{ 'invoice.balance'|trans }}</span>
-                                <span class="summary-value summary-value-balance">{{ invoice.balance|formatCurrency(currency) }}</span>
-                            </div>
-                        {% endif %}
-                        <div class="summary-item">
-                            <span class="summary-label">{{ 'invoice.date'|trans }}</span>
-                            <span class="summary-value">{{ invoice.invoiceDate|date('M d, Y') }}</span>
-                        </div>
-                        {% if invoice.due is not empty %}
-                            <div class="summary-item {{ invoice.status == enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Overdue ? 'summary-item-overdue' : '' }}">
-                                <span class="summary-label">{{ 'invoice.due_date'|trans }}</span>
-                                <span class="summary-value">{{ invoice.due|date('M d, Y') ~ (invoice.paymentTerms.value != 'custom' ? ' · ' ~ invoice.paymentTerms.label|trans : '') }}</span>
-                            </div>
-                        {% endif %}
-                        {% if invoice.paidDate is not empty %}
-                            <div class="summary-item summary-item-paid">
-                                <span class="summary-label">{{ 'invoice.paid_date'|trans }}</span>
-                                <span class="summary-value">{{ invoice.paidDate|date('M d, Y') }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            {# Payments Card (if any) #}
-            {% if payments|length > 0 %}
-                <div class="doc-sidebar-card">
-                    <div class="doc-sidebar-card-header">
-                        <div class="doc-sidebar-card-icon">
-                            {{ ux_icon('tabler:credit-card', {width: 18, height: 18}) }}
-                        </div>
-                        <h3 class="doc-sidebar-card-title">{{ 'invoice.view.payments'|trans }}</h3>
-                    </div>
-                    <div class="doc-sidebar-card-body">
-                        <div class="payments-list">
-                            {% for payment in payments %}
-                                <div class="payment-card {{ payment.status == enum('SolidInvoice\\PaymentBundle\\Enum\\PaymentStatus').Captured ? 'payment-card-captured' : '' }}">
-                                    <div class="payment-card-header">
-                                        <div class="payment-amount">{{ payment.totalAmount|formatCurrency(currency) }}</div>
-                                        <div class="payment-status">{{ payment_label(payment.status) }}</div>
-                                    </div>
-                                    <div class="payment-card-body">
-                                        {% if payment.method is not empty %}
-                                            <div class="payment-method">
-                                                {{ ux_icon('tabler:credit-card', {width: 14, height: 14}) }}
-                                                {{ payment.method }}
-                                            </div>
-                                        {% endif %}
-                                        {% if payment.completed is not empty %}
-                                            <div class="payment-date">
-                                                {{ ux_icon('tabler:calendar', {width: 14, height: 14}) }}
-                                                {{ payment.completed|date('M d, Y') }}
-                                            </div>
-                                        {% endif %}
-                                        {% if payment.message is not empty %}
-                                            <div class="payment-message">{{ payment.message }}</div>
-                                        {% endif %}
-                                    </div>
+                {% if invoice.users|length > 0 %}
+                    <ul class="mt-3 space-y-2">
+                        {% for user in invoice.users %}
+                            <li class="text-sm">
+                                <div class="text-fg">{{ user }}</div>
+                                <div class="flex items-center gap-1 text-fg-muted">
+                                    {{ ux_icon('tabler:mail', {class: 'size-3', 'aria-hidden': 'true'}) }}
+                                    {{ user.email }}
                                 </div>
-                            {% endfor %}
-                        </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </twig:Si:Card>
+
+            <twig:Si:Card title="{{ 'invoice.summary'|trans }}" icon="tabler:receipt" iconColor="primary" :padded="true">
+                <dl class="space-y-3 text-sm">
+                    <div class="flex items-center justify-between gap-3">
+                        <dt class="text-fg-secondary">{{ 'invoice.status'|trans }}</dt>
+                        <dd>{{ invoice_label(invoice.status) }}</dd>
                     </div>
-                </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <dt class="text-fg-secondary">{{ 'invoice.total'|trans }}</dt>
+                        <dd class="tabular text-base font-semibold text-fg">{{ invoice.total|formatCurrency(currency) }}</dd>
+                    </div>
+                    {% if invoice.payments|length > 0 and not invoice.balance.isZero %}
+                        <div class="flex items-center justify-between gap-3">
+                            <dt class="text-fg-secondary">{{ 'invoice.balance'|trans }}</dt>
+                            <dd class="tabular font-semibold text-warning-dark">{{ invoice.balance|formatCurrency(currency) }}</dd>
+                        </div>
+                    {% endif %}
+                    <div class="flex items-center justify-between gap-3">
+                        <dt class="text-fg-secondary">{{ 'invoice.date'|trans }}</dt>
+                        <dd class="text-fg">{{ invoice.invoiceDate|date('M d, Y') }}</dd>
+                    </div>
+                    {% if invoice.due is not empty %}
+                        <div class="flex items-center justify-between gap-3">
+                            <dt class="text-fg-secondary">{{ 'invoice.due_date'|trans }}</dt>
+                            <dd class="{{ invoice.status == InvoiceStatus.Overdue ? 'font-semibold text-danger-dark' : 'text-fg' }}">{{ invoice.due|date('M d, Y') ~ (invoice.paymentTerms.value != 'custom' ? ' · ' ~ invoice.paymentTerms.label|trans : '') }}</dd>
+                        </div>
+                    {% endif %}
+                    {% if invoice.paidDate is not empty %}
+                        <div class="flex items-center justify-between gap-3">
+                            <dt class="text-fg-secondary">{{ 'invoice.paid_date'|trans }}</dt>
+                            <dd class="text-success-dark">{{ invoice.paidDate|date('M d, Y') }}</dd>
+                        </div>
+                    {% endif %}
+                </dl>
+            </twig:Si:Card>
+
+            {% if payments|length > 0 %}
+                <twig:Si:Card title="{{ 'invoice.view.payments'|trans }}" icon="tabler:credit-card" iconColor="primary" :padded="true">
+                    <ul class="space-y-3">
+                        {% for payment in payments %}
+                            <li class="rounded-md border border-line-light border-l-4 p-3 {{ payment.status == PaymentStatus.Captured ? 'border-l-success' : 'border-l-ink-300' }}">
+                                <div class="mb-1.5 flex items-center justify-between gap-2">
+                                    <span class="tabular font-semibold text-fg">{{ payment.totalAmount|formatCurrency(currency) }}</span>
+                                    {{ payment_label(payment.status) }}
+                                </div>
+                                <div class="space-y-1 text-sm text-fg-secondary">
+                                    {% if payment.method is not empty %}
+                                        <div class="flex items-center gap-1.5">{{ ux_icon('tabler:credit-card', {class: 'size-3.5 text-fg-muted', 'aria-hidden': 'true'}) }}{{ payment.method }}</div>
+                                    {% endif %}
+                                    {% if payment.completed is not empty %}
+                                        <div class="flex items-center gap-1.5">{{ ux_icon('tabler:calendar', {class: 'size-3.5 text-fg-muted', 'aria-hidden': 'true'}) }}{{ payment.completed|date('M d, Y') }}</div>
+                                    {% endif %}
+                                    {% if payment.message is not empty %}
+                                        <p class="text-fg-muted">{{ payment.message }}</p>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </twig:Si:Card>
             {% endif %}
 
-            {# Related Quote Card (if exists) #}
             {% if invoice.quote is not null and invoice.quote.valid %}
-                <div class="doc-sidebar-card doc-sidebar-card-muted">
-                    <div class="doc-sidebar-card-header">
-                        <div class="doc-sidebar-card-icon">
-                            {{ ux_icon('tabler:file-text', {width: 18, height: 18}) }}
-                        </div>
-                        <h3 class="doc-sidebar-card-title">{{ 'invoice.view.related_quote'|trans }}</h3>
-                    </div>
-                    <div class="doc-sidebar-card-body">
-                        <a href="{{ path('_quotes_view', {'id' : invoice.quote.id}) }}" class="related-quote-link">
-                            {{ ux_icon('tabler:external-link', {width: 14, height: 14}) }}
-                            {{ 'quote.title'|trans({'%id%': invoice.quote.quoteId}) }}
-                        </a>
-                    </div>
-                </div>
+                <twig:Si:Card title="{{ 'invoice.view.related_quote'|trans }}" icon="tabler:file-text" :padded="true">
+                    <a href="{{ path('_quotes_view', {'id' : invoice.quote.id}) }}" class="inline-flex items-center gap-1 font-medium text-primary hover:underline">
+                        {{ ux_icon('tabler:external-link', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+                        {{ 'quote.title'|trans({'%id%': invoice.quote.quoteId}) }}
+                    </a>
+                </twig:Si:Card>
             {% endif %}
         </div>
     </div>
 
-    {# ═══════════════════════════════════════════════════════════════════════
-       SEND REMINDER CONFIRMATION MODAL
-    ═══════════════════════════════════════════════════════════════════════ #}
-    {% if invoice.status in [enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Pending, enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Overdue] and invoice.users|length > 0 %}
-        <twig:Ui:Modal id="send-reminder-modal" title="{{ 'invoice.modal.send_reminder.title'|trans }}" :centered="true">
-            <div class="text-center py-3">
-                <div class="mb-3">
-                    {{ ux_icon('tabler:bell', {width: 48, height: 48, class: 'text-primary'}) }}
-                </div>
-                <h3>{{ 'invoice.modal.send_reminder.heading'|trans }}</h3>
-                <p class="text-muted">{{ 'invoice.modal.send_reminder.message'|trans({'%invoice_id%': invoice.invoiceId}) }}</p>
+    {# Confirm sending a reminder #}
+    {% if invoice.status in [InvoiceStatus.Pending, InvoiceStatus.Overdue] and invoice.users|length > 0 %}
+        <twig:Si:Modal id="send-reminder-modal" title="{{ 'invoice.modal.send_reminder.title'|trans }}" size="sm">
+            <div class="py-3 text-center">
+                {{ ux_icon('tabler:bell', {class: 'mx-auto mb-3 size-12 text-primary', 'aria-hidden': 'true'}) }}
+                <h3 class="mb-1 text-lg font-semibold text-fg">{{ 'invoice.modal.send_reminder.heading'|trans }}</h3>
+                <p class="text-fg-muted">{{ 'invoice.modal.send_reminder.message'|trans({'%invoice_id%': invoice.invoiceId}) }}</p>
 
-                {% if invoice.users|length > 0 %}
-                    <div class="mt-3">
-                        <p class="text-sm text-muted mb-2">{{ 'invoice.modal.send_reminder.recipients'|trans }}</p>
-                        <div class="d-flex flex-column gap-1 align-items-center">
-                            {% for user in invoice.users %}
-                                <div class="text-sm">
-                                    {{ ux_icon('tabler:mail', {width: 14, height: 14}) }}
-                                    {{ user.email }}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endif %}
+                <p class="mt-3 mb-1 text-sm text-fg-muted">{{ 'invoice.modal.send_reminder.recipients'|trans }}</p>
+                <ul class="space-y-1 text-sm text-fg-secondary">
+                    {% for user in invoice.users %}
+                        <li class="flex items-center justify-center gap-1.5">{{ ux_icon('tabler:mail', {class: 'size-3.5', 'aria-hidden': 'true'}) }}{{ user.email }}</li>
+                    {% endfor %}
+                </ul>
             </div>
 
             <twig:block name="footer">
-                <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">{{ 'invoice.view.toolbar.cancel'|trans }}</button>
-                <form method="post" action="{{ path('_send_manual_reminder', {'id': invoice.id}) }}" class="d-inline">
+                <twig:Si:Button type="button" variant="ghost" data-si-modal-close>{{ 'invoice.view.toolbar.cancel'|trans }}</twig:Si:Button>
+                <form method="post" action="{{ path('_send_manual_reminder', {'id': invoice.id}) }}" class="inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('send_manual_reminder') }}">
-                    <button type="submit" class="btn btn-primary">
-                        {{ ux_icon('tabler:send', {width: 16, height: 16}) }}
+                    <twig:Si:Button type="submit">
+                        {{ ux_icon('tabler:send', {class: 'size-4', 'aria-hidden': 'true'}) }}
                         {{ 'invoice.modal.send_reminder.confirm'|trans }}
-                    </button>
+                    </twig:Si:Button>
                 </form>
             </twig:block>
-        </twig:Ui:Modal>
+        </twig:Si:Modal>
     {% endif %}
 
-    {% if invoice.status == enum('SolidInvoice\\InvoiceBundle\\Enum\\InvoiceStatus').Paid and invoice.users|length > 0 %}
-        <twig:Ui:Modal id="send-paid-invoice-modal" title="{{ 'invoice.modal.send_paid.title'|trans }}" :centered="true">
-            <div class="text-center py-3">
-                <div class="mb-3">
-                    {{ ux_icon('tabler:send', {width: 48, height: 48, class: 'text-primary'}) }}
-                </div>
-                <h3>{{ 'invoice.modal.send_paid.heading'|trans }}</h3>
-                <p class="text-muted">{{ 'invoice.modal.send_paid.message'|trans({'%invoice_id%': invoice.invoiceId}) }}</p>
+    {# Confirm sending a paid invoice #}
+    {% if invoice.status == InvoiceStatus.Paid and invoice.users|length > 0 %}
+        <twig:Si:Modal id="send-paid-invoice-modal" title="{{ 'invoice.modal.send_paid.title'|trans }}" size="sm">
+            <div class="py-3 text-center">
+                {{ ux_icon('tabler:send', {class: 'mx-auto mb-3 size-12 text-primary', 'aria-hidden': 'true'}) }}
+                <h3 class="mb-1 text-lg font-semibold text-fg">{{ 'invoice.modal.send_paid.heading'|trans }}</h3>
+                <p class="text-fg-muted">{{ 'invoice.modal.send_paid.message'|trans({'%invoice_id%': invoice.invoiceId}) }}</p>
 
-                <div class="mt-3">
-                    <p class="text-sm text-muted mb-2">{{ 'invoice.modal.send_paid.recipients'|trans }}</p>
-                    <div class="d-flex flex-column gap-1 align-items-center">
-                        {% for user in invoice.users %}
-                            <div class="text-sm">
-                                {{ ux_icon('tabler:mail', {width: 14, height: 14}) }}
-                                {{ user.email }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+                <p class="mt-3 mb-1 text-sm text-fg-muted">{{ 'invoice.modal.send_paid.recipients'|trans }}</p>
+                <ul class="space-y-1 text-sm text-fg-secondary">
+                    {% for user in invoice.users %}
+                        <li class="flex items-center justify-center gap-1.5">{{ ux_icon('tabler:mail', {class: 'size-3.5', 'aria-hidden': 'true'}) }}{{ user.email }}</li>
+                    {% endfor %}
+                </ul>
             </div>
 
             <twig:block name="footer">
-                <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">{{ 'invoice.view.toolbar.cancel'|trans }}</button>
-                <form method="post" action="{{ path('_send_invoice', {'id': invoice.id}) }}" class="d-inline">
+                <twig:Si:Button type="button" variant="ghost" data-si-modal-close>{{ 'invoice.view.toolbar.cancel'|trans }}</twig:Si:Button>
+                <form method="post" action="{{ path('_send_invoice', {'id': invoice.id}) }}" class="inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('send_invoice') }}">
-                    <button type="submit" class="btn btn-primary">
-                        {{ ux_icon('tabler:send', {width: 16, height: 16}) }}
+                    <twig:Si:Button type="submit">
+                        {{ ux_icon('tabler:send', {class: 'size-4', 'aria-hidden': 'true'}) }}
                         {{ 'invoice.modal.send_paid.confirm'|trans }}
-                    </button>
+                    </twig:Si:Button>
                 </form>
             </twig:block>
-        </twig:Ui:Modal>
+        </twig:Si:Modal>
     {% endif %}
 
     {% if gated %}
         {{ send_gate.resend_form() }}
     {% endif %}
-</div>
 {% endblock content %}

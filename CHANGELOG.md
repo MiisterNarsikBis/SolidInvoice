@@ -6,6 +6,7 @@ Unreleased
 
 ### Changes
 
+* A new look. The app moves from green to a blue "Ledger" identity with a self-hosted font, a lighter and more compact sidebar, flatter cards and tabular figures for money. Every screen is rebuilt on Tailwind CSS, replacing Tabler and Bootstrap: sign-in, dashboard, clients, quotes, invoices, payments, settings, profile, the installer and the subscription pages. Quotes and invoices keep the design template you picked, and PDFs and emails sent to clients are not restyled yet
 * Getting started is now a single step. New users enter their company name and currency, then go straight to the invoice editor to add their first client and send their first invoice. The separate client, invoice and "you're all set" screens are gone; the first invoice used to be saved without a recipient, so it could not be sent
 * The dashboard setup checklist now starts with "Create Your Company" already ticked off
 * "Send to client" is now the main button when creating or editing an invoice, and on a draft invoice's page. "Save as Draft" and "Publish without sending" are still one click away

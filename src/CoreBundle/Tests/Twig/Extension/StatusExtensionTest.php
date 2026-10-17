@@ -53,38 +53,38 @@ final class StatusExtensionTest extends TestCase
         yield 'invoice_label' => [
             '{{ invoice_label(status) }}',
             ['status' => InvoiceStatus::Paid],
-            '<span class="badge bg-green text-green-fg">Translated Paid</span>',
+            '<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-success-light text-success-dark" data-status-tone="success"><span class="size-1.5 rounded-full bg-success" aria-hidden="true"></span>Translated Paid</span>',
         ];
 
         yield 'invoice_label with a recurring status' => [
             '{{ invoice_label(status) }}',
             ['status' => RecurringInvoiceStatus::Paused],
-            '<span class="badge bg-dark text-dark-fg">Translated Paused</span>',
+            '<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-ink-100 text-fg-secondary" data-status-tone="neutral"><span class="size-1.5 rounded-full bg-ink-400" aria-hidden="true"></span>Translated Paused</span>',
         ];
 
         yield 'quote_label' => [
             '{{ quote_label(status) }}',
             ['status' => QuoteStatus::Accepted],
-            '<span class="badge bg-green text-green-fg">Translated Accepted</span>',
+            '<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-success-light text-success-dark" data-status-tone="success"><span class="size-1.5 rounded-full bg-success" aria-hidden="true"></span>Translated Accepted</span>',
         ];
 
         yield 'payment_label' => [
             '{{ payment_label(status) }}',
             ['status' => PaymentStatus::Captured],
-            '<span class="badge bg-green text-green-fg">Translated Captured</span>',
+            '<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-success-light text-success-dark" data-status-tone="success"><span class="size-1.5 rounded-full bg-success" aria-hidden="true"></span>Translated Captured</span>',
         ];
 
         yield 'client_label' => [
             '{{ client_label(status) }}',
             ['status' => ClientStatus::Active],
-            '<span class="badge bg-green text-green-fg">Translated Active</span>',
+            '<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-success-light text-success-dark" data-status-tone="success"><span class="size-1.5 rounded-full bg-success" aria-hidden="true"></span>Translated Active</span>',
         ];
     }
 
     public function testTheTooltipStaysTheSecondArgument(): void
     {
         self::assertSame(
-            '<span class="badge bg-yellow text-yellow-fg"title="Waiting for the client" rel="tooltip" >Translated Pending</span>',
+            '<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-warning-light text-warning-dark" data-status-tone="warning" title="Waiting for the client"><span class="size-1.5 rounded-full bg-warning" aria-hidden="true"></span>Translated Pending</span>',
             trim($this->render('{{ quote_label(status, tooltip) }}', [
                 'status' => QuoteStatus::Pending,
                 'tooltip' => 'Waiting for the client',
@@ -133,7 +133,7 @@ final class StatusExtensionTest extends TestCase
     public function testNoStatusMapsEachValueToItsRenderedLabel(): void
     {
         self::assertSame(
-            '<span class="badge bg-purple text-purple-fg">Translated Archived</span>',
+            '<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold bg-info-light text-info-dark" data-status-tone="info"><span class="size-1.5 rounded-full bg-info" aria-hidden="true"></span>Translated Archived</span>',
             trim($this->render('{{ quote_label()["archived"]|raw }}'))
         );
     }

@@ -4,6 +4,10 @@ Guidance for AI agents working in this repository. Everything here is derived fr
 repository itself; each rule cites the file that establishes it. Where this file and the
 code disagree, the code wins — fix this file in the same PR.
 
+**This is a fork** of `SolidInvoice/SolidInvoice`. In a clone, `origin` is the fork and
+`upstream` is the official repository. Do not push to, open PRs against, or merge anything
+on `upstream` unless the user asks for it explicitly (see §15).
+
 **Default branch is `3.2.x`, not `main`.** Branch from and target `3.2.x`. Release
 branches are one per minor (`2.3.x`, `2.4.x`, `3.0.x`, `3.1.x`); `main` does not exist.
 `unit-tests.yml` only runs on pushes to `3.1.x` and `3.2.x`.
@@ -26,7 +30,7 @@ Versions below are the constraints in `composer.json` / `package.json` as of thi
 | API Platform | `^4.3` | `composer.json` |
 | PHPUnit | `^13.2` | `composer.json`, `phpunit.xml.dist` schema |
 | PHPStan | `^2.2`, **level 6** | `phpstan.neon` |
-| Tabler | `@tabler/core ^1.4.0` | `package.json` |
+| Tailwind CSS | `tailwindcss ^4.3` + `@tailwindcss/cli` | `package.json` |
 | Bun | `bun@1.3.14` (`packageManager`) | `package.json` |
 | Node | `22` (`engines`) | `package.json` |
 
@@ -117,12 +121,37 @@ Running bare `bin/phpstan analyse` will disagree with CI.
 bun install                 # bun install --frozen-lockfile in CI
 bun run dev                 # encore dev
 bun run watch               # encore dev --watch
+bun run watch:tw            # Tailwind rebuild on change (separate from Encore)
 bun run build               # encore production --progress
 ```
 
 `bun run build` is a **prerequisite for PHPStan and for the test suite in CI** —
 `static-analysis.yml`, `unit-tests.yml` and `db-tests.yml` all run `bun install && bun run
 build` before PHP runs.
+
+**Without bun (local fallback, not what CI runs).** Run `composer install` first: several
+`package.json` dependencies are `file:vendor/...` links and cannot resolve before `vendor/`
+exists. A plain `npm install` then fails on those links, so use:
+
+```bash
+npm install --legacy-peer-deps --install-links ajv@8 "@babel/core@^8" globals@^17
+git checkout package.json    # npm just added ajv/globals; do not commit that
+npm run dev                  # `npm run watch` to rebuild on change
+```
+
+Why each flag: `--install-links` copies the `file:` packages into `node_modules` (npm's
+default symlinks them, and ESLint then lints `vendor/**/dist` as project code and fails the
+build); `--legacy-peer-deps` avoids an npm 10 arborist crash on those links but stops
+peer dependencies installing, hence `@babel/core`; `ajv@8` and `globals` are needed because
+the hoisted `ajv@6` from eslint breaks `ajv-keywords`, and Platform's `eslint.config.js`
+imports `globals`. A later bare `npm install` can prune these — re-run the command above.
+`--install-links` means a change under `vendor/` needs the command again. `package.json`
+asks for Node 22; older Node may build but is not what CI uses.
+
+**PHP extensions.** `composer.json` requires `ext-soap` and `ext-xsl` (enable them in
+`php.ini`) and `symfony/redis-messenger` requires `ext-redis`. If `ext-redis` is not
+available locally, add `--ignore-platform-req=ext-redis` to `composer install`; only the
+Redis Messenger transport needs it.
 
 ### Pre-commit
 
@@ -345,8 +374,8 @@ Rules that hold throughout the codebase:
 - There is **one** JS entry point: `assets/app.ts`. `webpack.config.js` has a single
   `addEntry`; `assets/webmcp.ts` is imported *by* `app.ts` and is not an entry of its own.
   There is no `assets/core.ts` in this repo — that is Platform's.
-- Style-only entries: `login`, `register`, `installation`, `pdf`, `email-colors`,
-  `email-modern`.
+- Style-only entries: `login` (the sign-in background photo), `pdf`, `email-colors`,
+  `email-modern`. The application's own CSS is not a webpack entry: see *How Tailwind is built*.
 - Stimulus via `enableStimulusBridge('./assets/controllers.json')`.
 - Controllers live in `assets/controllers/` and are **TypeScript (`.ts`) here**. Note this
   is the opposite of Platform, where controllers must be `.js` — see the Platform
@@ -354,23 +383,67 @@ Rules that hold throughout the codebase:
 - Controller filenames are currently **inconsistent** — both
   `vat-validator-controller.ts` and `global-search_controller.ts` exist. Match the
   neighbouring files in whatever area you are editing rather than "fixing" the other style.
-- SCSS in `assets/scss/`, with design tokens under `assets/scss/design-system/_tokens.scss`
-  using a `--swp-` custom-property prefix.
-- Tabler/Bootstrap supplies button, table, modal and alert styling. Do not write SCSS that
-  duplicates it.
-- **A page rendered outside the app shell must also load `_platform_ui`.** `app.css`
-  carries this app's styles only — the Bootstrap/Tabler core lives in Platform's entry. A
-  standalone template (a preview, a print view, anything not extending the main layout)
-  needs both:
-
-  ```twig
-  {{ encore_entry_link_tags('_platform_ui') }}
-  {{ encore_entry_link_tags('app') }}
-  ```
-
-  `src/SaasBundle/Resources/views/Settings/template_preview.html.twig` is the one page in
-  the repo that does this. Without it the page renders unstyled and it looks like a build
-  problem.
+- **The UI is Tailwind CSS.** The application is written with Tailwind utility classes and this
+  repository's own Twig components (`<twig:Si:*>`, see §11). There is no Tabler or Bootstrap
+  markup left in the app: do **not** add any (`btn`, `card`, `row`/`col-*`, `modal`, `navbar`,
+  `data-bs-*`), and do not write SCSS for the application's screens. The remaining SCSS under
+  `assets/scss/` is only for customer-facing output that is not part of the theme: `login.scss`
+  (the sign-in background), `pdf.scss`, and `email/`. Their colours are the product's
+  customer-facing look, not the Ledger identity (see `DESIGN.md`).
+- **The design tokens live in one place**: the `@theme` block of `assets/tailwind/app.css`. Do
+  not hard-code palette hex values in Twig or TypeScript; use the theme tokens. The few
+  unavoidable literals (Chart.js datasets in `RevenueChartWidget.php`, the icon colours in
+  `global-search_controller.ts`, print/PDF/e-mail styles) are listed in `DESIGN.md` and must be
+  changed together with the tokens. There is no dark mode.
+- **`solidworx/platform` is not forked and `vendor/` is never edited** (`composer install`
+  overwrites it). Platform's own pages are replaced from this repository: `platform.yaml` points
+  its layout at our shell and its profile pages at our templates, and a Platform template with
+  no setting is overridden under `templates/bundles/SolidWorxPlatformBundle/`. Platform's
+  `<twig:Ui:*>` components are Tabler markup: **never use them**; use `<twig:Si:*>`. Its
+  `_platform_ui` entry still loads on every page for its JavaScript (the loading overlay, the
+  password toggle, forms); the few Bootstrap class names that JavaScript creates are given a
+  meaning in the compat block at the end of `assets/tailwind/app.css`.
+- **How Tailwind is built.** Tailwind v4 is compiled by its own CLI, **not by webpack**:
+  Platform's webpack config runs a PostCSS step that prefixes every custom property with
+  `--tblr-`, which would rename Tailwind's `--tw-*` variables and break it. The theme lives
+  in `assets/tailwind/app.css` (CSS-first `@theme`, the default palette is switched off so only
+  brand colours exist) and compiles to `public/ui/app.css` (git-ignored). `npm run dev` and
+  `npm run build` run it after Encore; `npm run watch:tw` rebuilds on change, next to
+  `npm run watch`. Every layout loads it with `<link rel="stylesheet"
+  href="{{ asset('ui/app.css') }}">`. Write every Tailwind class out in full in the template
+  (the scanner cannot see concatenated names), and put repeated patterns in a component rather
+  than copying utilities. The `.si-*` classes (buttons, controls, labels, switches, input groups)
+  are component classes in that file, shared by the Twig components and the form theme.
+- **Components** live in `templates/components/Si/` as anonymous Twig components
+  (`<twig:Si:Button>`, `Card`, `Alert`, `Badge`, `Stat`, `Modal`, `Dropdown`, `Tabs`, ...). They
+  take already translated strings as props; they never hard-code user-facing text.
+- **Layouts.** All of them extend `@SolidInvoiceCore/Layout/document.html.twig` (the `<head>`):
+  `shell.html.twig` is the signed-in application (sidebar, top bar with company switcher, Create
+  menu and user menu, flash messages, footer); `focus.html.twig` is a centred single-purpose
+  page (company create/select, the installer, subscription states, the customer-facing quote and
+  invoice); `auth.html.twig` is a card over the sign-in photo (login, register-like screens, the
+  OAuth consent). The shell keeps the block names pages use (`page_title`,
+  `page_title_actions`, `content`, `stylesheets`, `javascripts`). Its sidebar is a KnpMenu
+  template, `@SolidInvoiceCore/Menu/sidebar.html.twig`. Platform injects the unverified-email
+  banner and SaaS the trial banner right after the shell's `<div class="page-wrapper">`: keep
+  that element.
+- **Forms** use the global theme `@SolidInvoiceCore/Form/tailwind.html.twig` (the list in
+  `config/packages/twig.php`); settings forms add `@SolidInvoiceSettings/Form/tailwind.html.twig`.
+  Field names, ids and `data-*` hooks are plain Symfony.
+- **Modals** are native `<dialog>` (`<twig:Si:Modal>`), opened with `data-si-modal-open="#id"`
+  and closed with `data-si-modal-close`; menus are `<twig:Si:Dropdown>`; tabs `<twig:Si:Tabs>`.
+  A component slot is compiled as its own template: inside one, `this`, `computed` and imported
+  macros are **not** the page's. Capture what a slot needs in a variable first.
+- **Tests address elements by `data-*` hooks**, not by styling classes: add a `data-…` attribute
+  rather than asserting on a utility class.
+- **A page rendered outside a layout** (a standalone preview, a print view) links
+  `{{ asset('ui/app.css') }}` and, if it needs the JavaScript, the `_platform_ui` and `app`
+  script entries. `src/SaasBundle/Resources/views/Settings/template_preview.html.twig` links the
+  stylesheet only.
+- **Design templates** (the company-chosen look of a customer-facing quote or invoice) keep
+  their own vocabulary: `assets/tailwind/design-templates.css` gives the Bootstrap-style
+  utility names they were written with a meaning inside `.invoice-template` /
+  `.quote-template`, and nowhere else. Application screens must not use those names.
 - Icons via `ux_icon('tabler:…')`; local icon set in `assets/icons/tabler`.
 
 Server-rendered Twig is the default. Interactivity is Stimulus controllers and Symfony UX
@@ -563,7 +636,10 @@ This section provides comprehensive guidelines for implementing consistent, mode
 
 ### Design Philosophy
 
-SolidInvoice follows a **Clean & Minimal** design aesthetic:
+SolidInvoice follows a **Clean & Minimal** design aesthetic with the **"Ledger"**
+identity: trust-blue primary, orange as a rare highlight, slate neutrals, a light compact
+sidebar, Plus Jakarta Sans, tabular figures. The full rationale, contrast numbers and
+do/don't rules are in [`DESIGN.md`](DESIGN.md); this section is the quick reference.
 
 - **Content-focused**: Reduce visual noise, let data speak
 - **Consistent spacing**: Use the 8px-based spacing scale
@@ -572,22 +648,24 @@ SolidInvoice follows a **Clean & Minimal** design aesthetic:
 
 ### Design Tokens
 
-All design values are defined as CSS custom properties with the `--tblr-` prefix in `/assets/scss/design-system/_tokens.scss`.
+The token values are defined once, in the `@theme` block of `assets/tailwind/app.css`, and used
+through Tailwind utilities (`bg-primary`, `text-fg-muted`, `rounded-lg`, ...). The default Tailwind
+palette is switched off, so a colour that is not a token does not exist.
 
 #### Color Palette
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--tblr-primary` | `#2e963a` | Main CTAs, links, active states |
-| `--tblr-primary-dark` | `#1f6c29` | Hover/active states |
-| `--tblr-primary-light` | `#e8f5e9` | Backgrounds, badges |
-| `--tblr-accent` | `#f0a015` | Accent color (use sparingly) |
-| `--tblr-success` | `#10b981` | Success states, confirmations |
-| `--tblr-danger` | `#ef4444` | Errors, destructive actions |
+| `--tblr-primary` | `#2563eb` | Main CTAs, links, active states (5.17:1 on white, safe as text) |
+| `--tblr-primary-dark` | `#1e40af` | Pressed state, text on the light tints |
+| `--tblr-primary-light` | `#dbeafe` | Backgrounds, badges |
+| `--tblr-accent` | `#ea580c` | Rare highlight, **fill only** (3.56:1); text uses `--tblr-accent-dark` |
+| `--tblr-success` | `#16a34a` | Success states, confirmations |
+| `--tblr-danger` | `#dc2626` | Errors, destructive actions |
 | `--tblr-warning` | `#f59e0b` | Warnings, cautions |
-| `--tblr-info` | `#3b82f6` | Informational content |
+| `--tblr-info` | `#0891b2` | Informational content; text uses `--tblr-info-dark` |
 
-**Gray Scale (Slate-based):**
+**Gray Scale (Slate):**
 - `--tblr-gray-50` to `--tblr-gray-900` for text and backgrounds
 - `--tblr-text-primary`, `--tblr-text-secondary`, `--tblr-text-muted` for text hierarchy
 
@@ -634,46 +712,31 @@ All design values are defined as CSS custom properties with the `--tblr-` prefix
 
 ---
 
-### Platform UI Components (REQUIRED)
+### UI components (REQUIRED)
 
-**Always use SolidWorx/Platform UI components when available.** These are Twig components that provide consistent, accessible UI elements.
+Build every screen with this repository's `<twig:Si:*>` Twig components
+(`templates/components/Si/`) and Tailwind utilities. Add a component there when a pattern
+repeats; do not copy-paste utility soup between templates. Express colour, radius and spacing
+through the Tailwind theme tokens, never raw hex values or arbitrary values when a token exists.
+Platform's `<twig:Ui:*>` components are Tabler markup and are not used.
 
-**Available Components:**
+| Component | Use |
+|-----------|-----|
+| `<twig:Si:Button>` | Buttons and button-looking links (`variant`, `size`, `href`) |
+| `<twig:Si:Card>` | A bordered surface with an optional header and footer |
+| `<twig:Si:Alert>` / `<twig:Si:Badge>` | Messages and status pills |
+| `<twig:Si:Stat>` | A KPI tile |
+| `<twig:Si:Modal>` | A native `<dialog>` |
+| `<twig:Si:Dropdown>` / `<twig:Si:MenuItem>` | Menus |
+| `<twig:Si:Tabs>` / `Tab` / `TabPanel` | Tabs, client-side or links |
+| `<twig:Si:FormSection>` / `FormActions` | A titled block of a form page, and its pinned action bar |
+| `<twig:Si:EmptyState>` | "Nothing here yet" |
 
-| Component | Location | Docs |
-|-----------|----------|------|
-| `<twig:Ui:Alert>` | `vendor/solidworx/platform/src/Bundle/Ui/templates/components/Alert.html.twig` | `vendor/solidworx/platform/src/Bundle/Ui/Docs/Alert.md` |
-| `<twig:Ui:Card>` | `vendor/solidworx/platform/src/Bundle/Ui/templates/components/Card.html.twig` | `vendor/solidworx/platform/src/Bundle/Ui/Docs/Card.md` |
-| `<twig:Ui:Modal>` | `vendor/solidworx/platform/src/Bundle/Ui/templates/components/Modal.html.twig` | `vendor/solidworx/platform/src/Bundle/Ui/Docs/Modal.md` |
+The list above is the quick reference; `templates/components/Si/` is the source and each file
+documents its props.
 
-**Usage Examples:**
+---
 
-```twig
-{# Card Component #}
-<twig:Ui:Card title="Invoice Details" subtitle="View and edit">
-    <p>Card body content here</p>
-
-    <twig:block name="footer">
-        <button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
-        <button class="btn btn-primary">{{ ux_icon('tabler:device-floppy') }} Save</button>
-    </twig:block>
-</twig:Ui:Card>
-
-{# Alert Component #}
-<twig:Ui:Alert type="success" icon="tabler:check" title="Saved!" :dismissible="true">
-    Your changes have been saved successfully.
-</twig:Ui:Alert>
-
-{# Modal Component #}
-<twig:Ui:Modal id="confirm-modal" title="Confirm Action" status="danger">
-    <p>Are you sure you want to proceed?</p>
-
-    <twig:block name="footer">
-        <button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
-        <button class="btn btn-danger">Confirm</button>
-    </twig:block>
-</twig:Ui:Modal>
-```
 ## 12. Dates and time
 
 `platform.yaml` sets `platform.doctrine.types.enable_utc_date: true` — Platform installs
@@ -771,6 +834,13 @@ gated. The bar below is the real one.
 
 ## 15. PR conventions
 
+The conventions below are the upstream project's (branch names, commit style, labels,
+changelog). Where they say "the founder" or "SolidWorx", read that as the upstream
+maintainers. In this fork the remotes are `origin` = the fork and `upstream` = the official
+repository. Work on a feature branch off `3.2.x` (never directly on it); to pick up upstream
+changes use `git fetch upstream && git merge upstream/3.2.x`. **Which repository a PR
+targets — the fork or upstream — is the user's decision; ask before opening one.**
+
 ### Branches
 
 Short, descriptive, usually prefixed. Real examples from merged PRs:
@@ -838,11 +908,11 @@ On a PR, expect: `CS` (ECS, composer-normalize, super-linter, lint:css, lint:js)
 ---
 ### Never merge a pull request
 
-Not your own, not anyone else's, on any SolidWorx repository, regardless of its size, its approval state, whether CI is green, or how obvious the change looks. This includes the merge button, `gh pr merge`, the merge API, squash, rebase, auto-merge, adding to a merge queue, and pushing merge commits to `main` or any release branch directly.
+Not your own, not anyone else's, on any SolidWorx repository **or on this fork**, regardless of its size, its approval state, whether CI is green, or how obvious the change looks. This includes the merge button, `gh pr merge`, the merge API, squash, rebase, auto-merge, adding to a merge queue, and pushing merge commits to `main` or any release branch directly.
 
-The single exception: the founder explicitly instructs you to merge a specific, named pull request, in writing, in that issue thread. A general approval of a plan is not a merge instruction. "Looks good" is not a merge instruction. An approving review on the PR is not a merge instruction. Silence is never a merge instruction.
+The single exception: the user (in this fork) or the upstream founder (on upstream) explicitly instructs you to merge a specific, named pull request, in writing. A general approval of a plan is not a merge instruction. "Looks good" is not a merge instruction. An approving review on the PR is not a merge instruction. Silence is never a merge instruction.
 
-When work is ready, you open the PR, fill in the description, link the issue, and stop. Post the PR link in the issue thread and set the issue to `in_review`. The merge is the founder's, always.
+When work is ready, you open the PR, fill in the description, link the issue, and stop. Post the PR link in the issue thread and set the issue to `in_review`. The merge is the owner's, always — the user's on this fork, the founder's on upstream.
 
 If you believe a merge is urgent — a broken build, a security fix, a release blocker — you still do not merge. You say so in the issue thread, mark it high priority, and wait.
 

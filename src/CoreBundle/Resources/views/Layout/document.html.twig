@@ -1,0 +1,53 @@
+{#
+# This file is part of SolidInvoice package.
+#
+# (c) Pierre du Plessis <open-source@solidworx.co>
+#
+# This source file is subject to the MIT license that is bundled
+# with this source code in the file LICENSE.
+#}
+
+{#
+    The HTML document every Tailwind layout (shell, focus, auth) is built on: head, assets and
+    the <body> wrapper, nothing else.
+
+    It loads only `ui/app.css`, never `_platform_ui` or the webpack `app` CSS: Tailwind's reset and
+    Tabler's styles cannot share a page. JavaScript is the same pair of entries every layout loads
+    (`_platform_ui` and `app`), in <head> and deferred; Platform's base layout explains why they
+    belong there (Turbo would re-run body scripts). Only their CSS is left out.
+
+    Blocks:
+        page_title      the page title (also the document title)
+        head_title      the whole <title> text
+        stylesheets     extra <link> tags (call parent())
+        javascripts     extra scripts (call parent())
+        body_class      classes on <body>
+        body            the page
+#}
+<!doctype html>
+<html lang="{{ app.request.locale|split('_')[0] }}">
+<head>
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <title>{% block head_title %}{% set head_title = block('page_title') is defined ? block('page_title')|striptags|trim : '' %}{{ (head_title is not empty ? head_title ~ ' · ' : '')|raw }}{{ ui_app_name|default('') }}{% endblock %}</title>
+
+        {% block favicon %}
+            <link rel="icon" href="{{ asset('/favicon.ico') }}" type="image/x-icon">
+        {% endblock favicon %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('_platform_ui') }}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock javascripts %}
+
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('ui/app.css') }}">
+        {% endblock stylesheets %}
+    {% endblock head %}
+</head>
+
+<body class="{% block body_class %}min-h-screen bg-canvas text-fg{% endblock %}">
+{% block body %}{% endblock body %}
+</body>
+</html>

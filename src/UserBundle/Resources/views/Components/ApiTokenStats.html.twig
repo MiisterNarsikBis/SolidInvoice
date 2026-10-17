@@ -1,97 +1,27 @@
-<div {{ attributes }} class="row row-deck row-cards mb-4">
-    {# Active Tokens #}
-    <div class="col-sm-6 col-lg-3">
-        <div class="card card-sm">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <span class="bg-primary text-white avatar">
-                            {{ ux_icon('tabler:key', {width: 24, height: 24}) }}
-                        </span>
-                    </div>
-                    <div class="col">
-                        <div class="fw-medium">
-                            {{ stats.activeTokens }}
-                        </div>
-                        <div class="text-secondary">
-                            {{ 'profile.api.stats.active_tokens'|trans }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
 
-    {# API Calls This Month #}
-    <div class="col-sm-6 col-lg-3">
-        <div class="card card-sm">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <span class="bg-info text-white avatar">
-                            {{ ux_icon('tabler:api', {width: 24, height: 24}) }}
-                        </span>
-                    </div>
-                    <div class="col">
-                        <div class="fw-medium">
-                            {{ stats.apiCallsThisMonth|number_format }}
-                        </div>
-                        <div class="text-secondary">
-                            {{ 'profile.api.stats.calls_month'|trans }}
-                        </div>
-                    </div>
-                </div>
+<div {{ attributes }} class="mb-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    {% for stat in [
+        {icon: 'tabler:key', tint: 'bg-primary-light text-primary-dark', label: 'profile.api.stats.active_tokens', value: stats.activeTokens},
+        {icon: 'tabler:api', tint: 'bg-info-light text-info-dark', label: 'profile.api.stats.calls_month', value: stats.apiCallsThisMonth|number_format},
+        {icon: 'tabler:clock', tint: 'bg-success-light text-success-dark', label: 'profile.api.stats.last_activity', value: stats.lastActivity ? stats.lastActivity|date('d M Y') : 'profile.api.tokens.used.never'|trans},
+        {icon: 'tabler:star', tint: 'bg-warning-light text-warning-dark', label: 'profile.api.stats.most_used', value: stats.mostUsedToken|default('-')|u.truncate(18, '...')},
+    ] %}
+        <div class="flex items-center gap-3.5 rounded-lg border border-line-light bg-surface p-4 shadow-sm">
+            <span class="flex size-10 shrink-0 items-center justify-center rounded-md {{ stat.tint }}">
+                {{ ux_icon(stat.icon, {class: 'size-5', 'aria-hidden': 'true'}) }}
+            </span>
+            <div class="min-w-0">
+                <div class="tabular truncate text-lg font-semibold leading-tight text-fg">{{ stat.value }}</div>
+                <div class="text-sm text-fg-secondary">{{ stat.label|trans }}</div>
             </div>
         </div>
-    </div>
-
-    {# Last Activity #}
-    <div class="col-sm-6 col-lg-3">
-        <div class="card card-sm">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <span class="bg-success text-white avatar">
-                            {{ ux_icon('tabler:clock', {width: 24, height: 24}) }}
-                        </span>
-                    </div>
-                    <div class="col">
-                        <div class="fw-medium">
-                            {% if stats.lastActivity %}
-                                {{ stats.lastActivity|date('d M Y') }}
-                            {% else %}
-                                {{ 'profile.api.tokens.used.never'|trans }}
-                            {% endif %}
-                        </div>
-                        <div class="text-secondary">
-                            {{ 'profile.api.stats.last_activity'|trans }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {# Most Used Token #}
-    <div class="col-sm-6 col-lg-3">
-        <div class="card card-sm">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <span class="bg-warning text-white avatar">
-                            {{ ux_icon('tabler:star', {width: 24, height: 24}) }}
-                        </span>
-                    </div>
-                    <div class="col">
-                        <div class="fw-medium">
-                            {{ stats.mostUsedToken|default('-')|u.truncate(18, '...') }}
-                        </div>
-                        <div class="text-secondary">
-                            {{ 'profile.api.stats.most_used'|trans }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 </div>

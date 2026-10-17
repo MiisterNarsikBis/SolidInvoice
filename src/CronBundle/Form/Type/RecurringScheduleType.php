@@ -76,7 +76,6 @@ final class RecurringScheduleType extends AbstractType
                         'multiple' => true,
                         'expanded' => false,
                         'label' => 'invoice.recurring.days_of_month',
-                        'attr' => ['class' => 'form-select'],
                     ]);
                     break;
                 case ScheduleRecurringType::YEARLY:
@@ -120,7 +119,6 @@ final class RecurringScheduleType extends AbstractType
                     'multiple' => false,
                     'expanded' => false,
                     'label' => 'invoice.recurring.day_of_month.label',
-                    'attr' => ['class' => 'form-select'],
                 ]);
             }
         });

@@ -8,6 +8,7 @@
  */
 
 import { Context, Controller } from '@hotwired/stimulus';
+import { setVisible } from '../lib/visibility';
 
 interface SearchResult {
     type: string;
@@ -93,10 +94,10 @@ const ICONS: Record<string, string> = {
 };
 
 const ICON_COLORS: Record<string, string> = {
-    clients: '#2e963a',
-    contacts: '#3b82f6',
-    invoices: '#f0a015',
-    recurring_invoices: '#8b5cf6',
+    clients: '#2563eb',
+    contacts: '#0891b2',
+    invoices: '#ea580c',
+    recurring_invoices: '#7c3aed',
     quotes: '#06b6d4',
     payments: '#ef4444',
 };
@@ -627,7 +628,7 @@ export default class GlobalSearchController extends Controller<HTMLElement> {
             if (result.status) {
                 const badge = document.createElement('span');
                 const colorClass = STATUS_COLORS[result.status] ?? 'secondary';
-                badge.className = `badge bg-${colorClass}-lt search-result-badge`;
+                badge.className = `badge bg-${colorClass}-lt search-result-badge search-result-badge--${colorClass}`;
                 badge.textContent = result.status;
                 aside.appendChild(badge);
             }
@@ -673,13 +674,13 @@ export default class GlobalSearchController extends Controller<HTMLElement> {
     }
 
     private showSpinner(): void {
-        this.spinnerTarget.classList.remove('d-none');
+        setVisible(this.spinnerTarget, true);
         this.resultsTarget.textContent = '';
         this.showDropdown();
     }
 
     private hideSpinner(): void {
-        this.spinnerTarget.classList.add('d-none');
+        setVisible(this.spinnerTarget, false);
     }
 
     private renderError(): void {

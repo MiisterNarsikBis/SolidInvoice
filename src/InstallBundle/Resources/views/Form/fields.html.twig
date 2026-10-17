@@ -1,225 +1,131 @@
+{#
+    The wizard's form theme. It is applied after the Tailwind form theme, so only what is
+    specific to the installer is spelled out here: the user-account and database steps, the
+    review step, the driver picker and the flow buttons.
+#}
 {% block user_account_step_widget %}
-    <div class="row">
-        <div class="col">
-            {{ form_row(form.locale) }}
-        </div>
+    <div class="grid gap-x-4 sm:grid-cols-2">
+        {% if form.locale is defined %}
+            <div class="sm:col-span-2">{{ form_row(form.locale) }}</div>
+        {% endif %}
+        {% if form.applicationUrl is defined %}
+            <div class="sm:col-span-2">{{ form_row(form.applicationUrl) }}</div>
+        {% endif %}
+        <div>{{ form_row(form.firstName) }}</div>
+        <div>{{ form_row(form.lastName) }}</div>
+        <div class="sm:col-span-2">{{ form_row(form.emailAddress) }}</div>
+        <div class="sm:col-span-2">{{ form_row(form.password) }}</div>
     </div>
-    <div class="row">
-        <div class="col">
-            {{ form_row(form.applicationUrl) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            {{ form_row(form.firstName) }}
-        </div>
-        <div class="col">
-            {{ form_row(form.lastName) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            {{ form_row(form.emailAddress) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            {{ form_row(form.password) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <label class="form-check">
-                {{ form_widget(form.telemetryEnabled, {attr: {class: 'form-check-input'}}) }}
-            </label>
-            <small class="form-hint d-block">
-                Help us improve SolidInvoice by sharing anonymous usage data. No personal or business information is ever collected.
-                <a href="#telemetry-details" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="telemetry-details">What do we collect?</a>
-            </small>
-            <div class="collapse mt-2" id="telemetry-details">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <p class="mb-2"><strong>What we send</strong> (anonymous, aggregate):</p>
-                        <ul class="mb-3">
-                            <li>A random installation ID (not linked to you or your data)</li>
-                            <li>SolidInvoice version and install type (manual, Docker, etc.)</li>
-                            <li>PHP version, operating system and OS version</li>
-                            <li>Database type and version, and the configured locale</li>
-                            <li>Anonymous feature events (e.g. "an invoice was created") — never their contents</li>
-                        </ul>
-                        <p class="mb-2"><strong>What we never send:</strong></p>
-                        <ul class="mb-0">
-                            <li>Invoices, quotes, clients, payment amounts or any business data</li>
-                            <li>Names, email addresses, IP addresses or any personally identifiable information</li>
-                        </ul>
-                    </div>
-                </div>
+
+    <div class="mt-2">
+        <label class="flex cursor-pointer items-start gap-2 text-fg">
+            {{ form_widget(form.telemetryEnabled) }}
+        </label>
+        <p class="mt-1 text-sm text-fg-muted">
+            Help us improve SolidInvoice by sharing anonymous usage data. No personal or business information is ever collected.
+        </p>
+        <details class="mt-2 rounded-md border border-line-light bg-canvas">
+            <summary class="cursor-pointer px-3 py-2 text-sm text-primary">What do we collect?</summary>
+            <div class="space-y-2 border-t border-line-light p-3 text-sm text-fg-secondary">
+                <p><strong>What we send</strong> (anonymous, aggregate):</p>
+                <ul class="list-disc pl-5">
+                    <li>A random installation ID (not linked to you or your data)</li>
+                    <li>SolidInvoice version and install type (manual, Docker, etc.)</li>
+                    <li>PHP version, operating system and OS version</li>
+                    <li>Database type and version, and the configured locale</li>
+                    <li>Anonymous feature events (e.g. "an invoice was created") — never their contents</li>
+                </ul>
+                <p><strong>What we never send:</strong></p>
+                <ul class="list-disc pl-5">
+                    <li>Invoices, quotes, clients, payment amounts or any business data</li>
+                    <li>Names, email addresses, IP addresses or any personally identifiable information</li>
+                </ul>
             </div>
-        </div>
+        </details>
     </div>
 {% endblock user_account_step_widget %}
 
 {% block _installation_review_widget %}
     {{ form_widget(form.token) }}
-    <div class="alert alert-info d-flex align-items-start mb-4">
-        <div class="me-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 9v4"></path>
-                <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"></path>
-                <path d="M12 16h.01"></path>
-            </svg>
-        </div>
-        <div>
-            <h4 class="alert-title">Review Your Installation Configuration</h4>
-            <div class="text-muted">Please review the information below. Once you proceed, the installation will begin using these settings.</div>
-        </div>
-    </div>
 
-    <div class="row g-4">
-        {# Database Configuration Section #}
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        {{ ux_icon('tabler:database', {width: 20, height: 20}) }}
-                        Database Configuration
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="datagrid">
-                        <div class="datagrid-item">
-                            <div>Driver</div>
-                            <div class="datagrid-content">
-                                <span class="badge bg-info-lt">{{ form.vars.data.databaseConfig.driver|upper }}</span>
-                            </div>
-                        </div>
-                        {% if form.vars.data.databaseConfig.driver != 'sqlite' %}
-                            {% if form.vars.data.databaseConfig.host %}
-                                <div class="datagrid-item">
-                                    <div>Host</div>
-                                    <div class="datagrid-content">
-                                        <code>{{ form.vars.data.databaseConfig.host }}{% if form.vars.data.databaseConfig.port %}:{{ form.vars.data.databaseConfig.port }}{% endif %}</code>
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if form.vars.data.databaseConfig.name %}
-                                <div class="datagrid-item">
-                                    <div>Database Name</div>
-                                    <div class="datagrid-content">
-                                        <code>{{ form.vars.data.databaseConfig.name }}</code>
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if form.vars.data.databaseConfig.user %}
-                                <div class="datagrid-item">
-                                    <div>Username</div>
-                                    <div class="datagrid-content">
-                                        <code>{{ form.vars.data.databaseConfig.user }}</code>
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if form.vars.data.databaseConfig.password %}
-                                <div class="datagrid-item">
-                                    <div>Password</div>
-                                    <div class="datagrid-content">
-                                        <span class="password-toggle-container">
-                                            <code class="password-masked" data-password="{{ form.vars.data.databaseConfig.password }}">••••••••</code>
-                                            <button type="button" class="btn btn-sm btn-ghost-secondary password-toggle ms-2" onclick="togglePassword(this)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-eye" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-                                                    <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
-                                                </svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-eye-off d-none" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"></path>
-                                                    <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87"></path>
-                                                    <path d="M3 3l18 18"></path>
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
+    <twig:Si:Alert type="info" class="mb-6">
+        <h4 class="mb-1 font-semibold">Review Your Installation Configuration</h4>
+        Please review the information below. Once you proceed, the installation will begin using these settings.
+    </twig:Si:Alert>
 
-        {# User Account Section #}
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        {{ ux_icon('tabler:user', {width: 20, height: 20}) }}
-                        Administrator Account
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="datagrid">
-                        {% if form.vars.data.userAccount.firstName or form.vars.data.userAccount.lastName %}
-                            <div class="datagrid-item">
-                                <div>Name</div>
-                                <div class="datagrid-content">
-                                    <strong>{{ form.vars.data.userAccount.firstName }} {{ form.vars.data.userAccount.lastName }}</strong>
-                                </div>
-                            </div>
-                        {% endif %}
-                        {% if form.vars.data.userAccount.emailAddress %}
-                            <div class="datagrid-item">
-                                <div>Email Address</div>
-                                <div class="datagrid-content">
-                                    <code>{{ form.vars.data.userAccount.emailAddress }}</code>
-                                </div>
-                            </div>
-                        {% endif %}
-                        {% if form.vars.data.userAccount.locale %}
-                            <div class="datagrid-item">
-                                <div>Language</div>
-                                <div class="datagrid-content">
-                                    <code>{{ form.vars.data.userAccount.locale|upper }}</code>
-                                </div>
-                            </div>
-                        {% endif %}
-                        {% if form.vars.data.userAccount.password %}
-                            <div class="datagrid-item">
-                                <div>Password</div>
-                                <div class="datagrid-content">
-                                    <span class="password-toggle-container">
-                                        <code class="password-masked" data-password="{{ form.vars.data.userAccount.password }}">••••••••</code>
-                                        <button type="button" class="btn btn-sm btn-ghost-secondary password-toggle ms-2" onclick="togglePassword(this)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-eye" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
-                                            </svg>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-eye-off d-none" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"></path>
-                                                <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87"></path>
-                                                <path d="M3 3l18 18"></path>
-                                            </svg>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                        {% endif %}
-                        <div class="datagrid-item">
-                            <div>Usage statistics</div>
-                            <div class="datagrid-content">
-                                {% if form.vars.data.telemetryEnabled %}
-                                    <span class="badge bg-success-lt">Enabled</span>
-                                {% else %}
-                                    <span class="badge bg-secondary-lt">Disabled</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    {% set db = form.vars.data.databaseConfig %}
+    {% set user = form.vars.data.userAccount %}
+
+    <div class="grid gap-6 lg:grid-cols-2">
+        {# Database #}
+        <section class="rounded-lg border border-line-light bg-surface">
+            <h3 class="flex items-center gap-2 border-b border-line-light px-4 py-3 text-base font-semibold text-fg">
+                {{ ux_icon('tabler:database', {class: 'size-5 text-fg-muted', 'aria-hidden': 'true'}) }}
+                Database Configuration
+            </h3>
+            <dl class="divide-y divide-line-light px-4">
+                {% set _value %}<twig:Si:Badge tone="info">{{ db.driver|upper }}</twig:Si:Badge>{% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Driver', value: _value} only %}
+                {% if db.driver != 'sqlite' %}
+                    {% if db.host %}
+                        {% set _value %}<code>{{ db.host }}{% if db.port %}:{{ db.port }}{% endif %}</code>{% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Host', value: _value} only %}
+                    {% endif %}
+                    {% if db.name %}
+                        {% set _value %}<code>{{ db.name }}</code>{% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Database Name', value: _value} only %}
+                    {% endif %}
+                    {% if db.user %}
+                        {% set _value %}<code>{{ db.user }}</code>{% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Username', value: _value} only %}
+                    {% endif %}
+                    {% if db.password %}
+                        {% set _value %}
+                            <span class="password-toggle-container inline-flex items-center gap-2">
+                                <code class="password-masked" data-password="{{ db.password }}">••••••••</code>
+                                <button type="button" class="si-btn si-btn--sm si-btn--ghost" onclick="togglePassword(this)" aria-label="Show password">
+                                    <span class="icon-eye">{{ ux_icon('tabler:eye', {class: 'size-4', 'aria-hidden': 'true'}) }}</span>
+                                    <span class="icon-eye-off hidden">{{ ux_icon('tabler:eye-off', {class: 'size-4', 'aria-hidden': 'true'}) }}</span>
+                                </button>
+                            </span>
+                        {% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Password', value: _value} only %}
+                    {% endif %}
+                {% endif %}
+            </dl>
+        </section>
+
+        {# Administrator #}
+        <section class="rounded-lg border border-line-light bg-surface">
+            <h3 class="flex items-center gap-2 border-b border-line-light px-4 py-3 text-base font-semibold text-fg">
+                {{ ux_icon('tabler:user', {class: 'size-5 text-fg-muted', 'aria-hidden': 'true'}) }}
+                Administrator Account
+            </h3>
+            <dl class="divide-y divide-line-light px-4">
+                {% if user.firstName or user.lastName %}
+                    {% set _value %}<strong>{{ user.firstName }} {{ user.lastName }}</strong>{% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Name', value: _value} only %}
+                {% endif %}
+                {% if user.emailAddress %}
+                    {% set _value %}<code>{{ user.emailAddress }}</code>{% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Email Address', value: _value} only %}
+                {% endif %}
+                {% if user.locale %}
+                    {% set _value %}<code>{{ user.locale|upper }}</code>{% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Language', value: _value} only %}
+                {% endif %}
+                {% if user.password %}
+                    {% set _value %}
+                        <span class="password-toggle-container inline-flex items-center gap-2">
+                            <code class="password-masked" data-password="{{ user.password }}">••••••••</code>
+                            <button type="button" class="si-btn si-btn--sm si-btn--ghost" onclick="togglePassword(this)" aria-label="Show password">
+                                <span class="icon-eye">{{ ux_icon('tabler:eye', {class: 'size-4', 'aria-hidden': 'true'}) }}</span>
+                                <span class="icon-eye-off hidden">{{ ux_icon('tabler:eye-off', {class: 'size-4', 'aria-hidden': 'true'}) }}</span>
+                            </button>
+                        </span>
+                    {% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Password', value: _value} only %}
+                {% endif %}
+                {% set _value %}
+                    {% if form.vars.data.telemetryEnabled %}
+                        <twig:Si:Badge tone="success">Enabled</twig:Si:Badge>
+                    {% else %}
+                        <twig:Si:Badge>Disabled</twig:Si:Badge>
+                    {% endif %}
+                {% endset %}{% include '@SolidInvoiceInstall/Form/_review_row.html.twig' with {label: 'Usage statistics', value: _value} only %}
+            </dl>
+        </section>
     </div>
 
     <script>
@@ -228,85 +134,53 @@
             const passwordElement = container.querySelector('.password-masked');
             const eyeIcon = button.querySelector('.icon-eye');
             const eyeOffIcon = button.querySelector('.icon-eye-off');
-            const actualPassword = passwordElement.getAttribute('data-password');
+            const masked = passwordElement.textContent === '••••••••';
 
-            if (passwordElement.textContent === '••••••••') {
-                passwordElement.textContent = actualPassword;
-                eyeIcon.classList.add('d-none');
-                eyeOffIcon.classList.remove('d-none');
-            } else {
-                passwordElement.textContent = '••••••••';
-                eyeIcon.classList.remove('d-none');
-                eyeOffIcon.classList.add('d-none');
-            }
+            passwordElement.textContent = masked ? passwordElement.getAttribute('data-password') : '••••••••';
+            eyeIcon.classList.toggle('hidden', masked);
+            eyeOffIcon.classList.toggle('hidden', !masked);
         }
     </script>
 {% endblock _installation_review_widget %}
 
 {% block _installation_database_config_driver_widget %}
     {% set childCount = form.children|length %}
-    {% set colClass = childCount == 1 ? 'col-12' : (childCount == 2 ? 'col-lg-6' : (childCount == 4 ? 'col-lg-6' : 'col-lg-4')) %}
+    {% set cols = childCount == 1 ? 'md:grid-cols-1' : (childCount == 2 or childCount == 4 ? 'md:grid-cols-2' : 'md:grid-cols-3') %}
 
-    <div class="alert alert-info d-flex align-items-start mb-4">
-        <div class="me-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 9v4"></path>
-                <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"></path>
-                <path d="M12 16h.01"></path>
-            </svg>
-        </div>
-        <div>
-            <h4 class="alert-title">Choose your database connection</h4>
-            <div class="text-muted">If you are unsure which database to use, we recommend <strong>SQLite</strong> for most users. It requires no additional setup or configuration and works perfectly for small to medium-sized businesses.</div>
-        </div>
-    </div>
+    <twig:Si:Alert type="info" class="mb-6">
+        <h4 class="mb-1 font-semibold">Choose your database connection</h4>
+        If you are unsure which database to use, we recommend <strong>SQLite</strong> for most users. It requires no additional setup or configuration and works perfectly for small to medium-sized businesses.
+    </twig:Si:Alert>
 
-    <div class="form-selectgroup-boxes row g-3 mb-4">
+    <div class="mb-6 grid gap-4 {{ cols }}">
         {% for child in form.children %}
             {% set isSqlite = child.vars.value|lower == 'sqlite' %}
-            <div class="{{ colClass }}">
-                <label class="form-selectgroup-item h-100 {{ isSqlite ? 'border-primary' : '' }}" style="{{ isSqlite ? 'box-shadow: 0 0 0 0.25rem rgba(var(--tblr-primary-rgb), 0.1);' : '' }}" data-testid="database-driver-{{ child.vars.value|lower }}">
-                    {{ form_widget(child, {'attr_class': 'form-selectgroup-input'}) }}
-                    <span class="form-selectgroup-label d-flex flex-column align-items-center justify-content-center p-4 text-center h-100 position-relative">
-
-                        <span class="form-selectgroup-check mb-3"></span>
-                        <span class="form-selectgroup-label-content w-100">
-                            <div class="mb-3">
-                                <img src="{{ asset("/img/" ~ child.vars.value|lower) }}-icon.png" alt="{{ child.vars.value }}" class="img-fluid" style="max-height: 60px;" />
-                            </div>
-                            <span class="form-selectgroup-title fw-bold d-block mb-2 fs-4">
-                                {{- form_label(child, null, {widget: ''}) -}}
-                            </span>
-                            {% if form_help(child) %}
-                                <span class="d-block text-muted small">
-                                    {{- form_help(child) -}}
-                                </span>
-                            {% endif %}
-                        </span>
-                        {% if isSqlite %}
-                            <span class="badge bg-primary-lt position-absolute bottom-0 end-0">{{ 'installation.database.recommended'|trans }}</span>
-                        {% endif %}
-                    </span>
-                </label>
-            </div>
+            <label class="relative block cursor-pointer" data-testid="database-driver-{{ child.vars.value|lower }}">
+                {{ form_widget(child, {'attr_class': 'peer sr-only'}) }}
+                <span class="relative flex h-full flex-col items-center justify-center rounded-lg border border-line bg-surface p-6 text-center transition-colors hover:border-primary-light peer-checked:border-primary peer-checked:bg-primary-lighter peer-checked:ring-4 peer-checked:ring-primary/10 peer-focus-visible:ring-2 peer-focus-visible:ring-primary/40">
+                    <img src="{{ asset("/img/" ~ child.vars.value|lower) }}-icon.png" alt="{{ child.vars.value }}" class="mb-3 max-h-14" />
+                    <span class="mb-1 block text-lg font-semibold text-fg">{{- form_label(child, null, {widget: ''}) -}}</span>
+                    {% if form_help(child) %}
+                        <span class="block text-sm text-fg-muted">{{- form_help(child) -}}</span>
+                    {% endif %}
+                    {% if isSqlite %}
+                        <span class="absolute right-2 bottom-2"><twig:Si:Badge tone="primary">{{ 'installation.database.recommended'|trans }}</twig:Si:Badge></span>
+                    {% endif %}
+                </span>
+            </label>
         {% endfor %}
     </div>
 {% endblock _installation_database_config_driver_widget %}
 
 {%- block _installation_database_config_driver_entry_widget -%}
     {%- set attr_class = attr_class|default(attr.class|default('')) -%}
-    {%- set row_class = '' -%}
-
     {%- set attr = attr|merge({class: attr_class|trim}) -%}
-    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
-
     <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}>
 {%- endblock _installation_database_config_driver_entry_widget %}
 
+{# The wizard's navigation buttons; `icon` is rendered inside the button. #}
 {% block button_flow_widget %}
     {% if icon is defined %}
-        {% set attr = attr|merge({class: attr.class ~ ' d-flex align-items-center gap-2'}) %}
         {% set label_html = true %}
         {% set label_text = label|default(name|humanize) %}
         {%- set label -%}
@@ -326,35 +200,25 @@
     </div>
 
     {% if form.host is defined %}
-        <div class="row g-3 mb-3">
-            <div class="col-md-8">
-                {{ form_row(form.host) }}
-            </div>
+        <div class="grid gap-x-4 md:grid-cols-3">
+            <div class="md:col-span-2">{{ form_row(form.host) }}</div>
             {% if form.port is defined %}
-                <div class="col-md-4">
-                    {{ form_row(form.port) }}
-                </div>
+                <div>{{ form_row(form.port) }}</div>
             {% endif %}
         </div>
     {% endif %}
 
     {% if form.user is defined %}
-        <div class="row g-3 mb-3">
-            <div class="col-md-6">
-                {{ form_row(form.user) }}
-            </div>
+        <div class="grid gap-x-4 md:grid-cols-2">
+            <div>{{ form_row(form.user) }}</div>
             {% if form.password is defined %}
-                <div class="col-md-6">
-                    {{ form_row(form.password) }}
-                </div>
+                <div>{{ form_row(form.password) }}</div>
             {% endif %}
         </div>
     {% endif %}
 
     {% if form.database_name is defined %}
-        <div class="mb-3">
-            {{ form_row(form.database_name) }}
-        </div>
+        {{ form_row(form.database_name) }}
     {% endif %}
 
     {{ form_rest(form) }}

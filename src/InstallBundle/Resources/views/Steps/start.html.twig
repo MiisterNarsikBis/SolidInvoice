@@ -1,110 +1,54 @@
 {% do form.start.setRendered() %}
 
-<div class="col bg-light rounded p-4">
-    <div class="d-flex flex-column h-100">
-        <div class="flex-grow-1">
-            <div class="card-body p-4 px-5 d-flex flex-column h-100">
-                <div class="flex-grow-1" style="min-height: 410px">
-                    {# Welcome Header #}
-                    <div class="text-center mb-5">
-                        <h2 class="fw-bold text-dark mb-1">{{ 'installation.start.welcome'|trans }}</h2>
-                        <h1 class="display-5 fw-bold text-primary mb-3">{{ app_logo(showDefault: true) }}{{ app_name }}</h1>
-                        <p class="lead text-muted">{{ 'installation.start.tagline'|trans }}</p>
-                    </div>
+<div class="min-w-0 flex-1 bg-canvas p-6 lg:px-12 lg:py-10">
+    <div class="min-h-[26rem]">
+        {# Welcome #}
+        <div class="mb-8 text-center">
+            <h2 class="mb-1 text-xl font-semibold text-fg">{{ 'installation.start.welcome'|trans }}</h2>
+            <h1 class="mb-3 flex items-center justify-center gap-3 text-4xl font-semibold text-primary">{{ app_logo(showDefault: true) }}{{ app_name }}</h1>
+            <p class="text-lg text-fg-muted">{{ 'installation.start.tagline'|trans }}</p>
+        </div>
 
-                    <hr class="border-secondary-subtle mb-5">
+        <hr class="mb-8 border-line">
 
-                    <div class="mb-5">
-                        <p class="fs-5 text-dark text-center">
-                            {{ 'installation.start.thank_you'|trans }}
-                            <br />
-                            {{ 'installation.start.intro'|trans }}
-                        </p>
-                    </div>
+        <p class="mb-8 text-center text-lg text-fg">
+            {{ 'installation.start.thank_you'|trans }}
+            <br />
+            {{ 'installation.start.intro'|trans }}
+        </p>
 
-                    <div class="row g-4 mb-5">
-                        <div class="col-md-6">
-                            <div class="d-flex gap-3">
-                                <div class="text-primary">
-                                    {{ ux_icon('tabler:file-invoice', {width: 32, height: 32}) }}
-                                </div>
-                                <div>
-                                    <h5 class="fw-bold mb-2">{{ 'installation.start.feature.invoicing.title'|trans }}</h5>
-                                    <p class="text-muted small mb-0">{{ 'installation.start.feature.invoicing.description'|trans }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex gap-3">
-                                <div class="text-success">
-                                    {{ ux_icon('tabler:credit-card', {width: 32, height: 32}) }}
-                                </div>
-                                <div>
-                                    <h5 class="fw-bold mb-2">{{ 'installation.start.feature.payments.title'|trans }}</h5>
-                                    <p class="text-muted small mb-0">{{ 'installation.start.feature.payments.description'|trans }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex gap-3">
-                                <div class="text-info">
-                                    {{ ux_icon('tabler:users', {width: 32, height: 32}) }}
-                                </div>
-                                <div>
-                                    <h5 class="fw-bold mb-2">{{ 'installation.start.feature.clients.title'|trans }}</h5>
-                                    <p class="text-muted small mb-0">{{ 'installation.start.feature.clients.description'|trans }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex gap-3">
-                                <div class="text-warning">
-                                    {{ ux_icon('tabler:chart-bar', {width: 32, height: 32}) }}
-                                </div>
-                                <div>
-                                    <h5 class="fw-bold mb-2">{{ 'installation.start.feature.insights.title'|trans }}</h5>
-                                    <p class="text-muted small mb-0">{{ 'installation.start.feature.insights.description'|trans }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# <div class="mb-5">
-                                    <div class="bg-white rounded shadow-sm p-4 text-center" style="min-height: 200px; border: 2px dashed #dee2e6;">
-                                        <div class="d-flex align-items-center justify-content-center h-100">
-                                            <div>
-                                                {{ ux_icon('tabler:photo', {width: 64, height: 64, class: 'text-muted mb-3'}) }}
-                                                <p class="text-muted mb-0">{{ 'installation.start.screenshot_placeholder'|trans }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> #}
-
-                    <div class="alert alert-info border-0 shadow-sm">
-                        <div class="d-flex gap-3">
-                            <div>
-                                {{ ux_icon('tabler:info-circle', {width: 24, height: 24}) }}
-                            </div>
-                            <div>
-                                <h4 class="fw-bold mb-2">{{ 'installation.start.setup.title'|trans }}</h4>
-                                <p class="mb-0 small">
-                                    {{ 'installation.start.setup.line1'|trans }}
-                                    <br />
-                                    {{ 'installation.start.setup.line2'|trans }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-5">
-                        <p class="text-muted mb-4">{{ 'installation.start.ready'|trans }}</p>
-                        {{ form_widget(form.navigator.next, {
-                            attr: {class: 'btn-primary btn-lg px-5'},
-                            label: 'installation.start.begin'|trans,
-                        }) }}
+        <div class="mb-8 grid gap-6 md:grid-cols-2">
+            {% for feature in [
+                {icon: 'file-invoice', tone: 'text-primary', key: 'invoicing'},
+                {icon: 'credit-card', tone: 'text-success-dark', key: 'payments'},
+                {icon: 'users', tone: 'text-info-dark', key: 'clients'},
+                {icon: 'chart-bar', tone: 'text-warning-dark', key: 'insights'},
+            ] %}
+                <div class="flex gap-3">
+                    <span class="{{ feature.tone }}">{{ ux_icon('tabler:' ~ feature.icon, {class: 'size-8', 'aria-hidden': 'true'}) }}</span>
+                    <div>
+                        <h5 class="mb-1 font-semibold text-fg">{{ ('installation.start.feature.' ~ feature.key ~ '.title')|trans }}</h5>
+                        <p class="text-sm text-fg-muted">{{ ('installation.start.feature.' ~ feature.key ~ '.description')|trans }}</p>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
+        </div>
+
+        <twig:Si:Alert type="info">
+            <h4 class="mb-1 font-semibold">{{ 'installation.start.setup.title'|trans }}</h4>
+            <p class="text-sm">
+                {{ 'installation.start.setup.line1'|trans }}
+                <br />
+                {{ 'installation.start.setup.line2'|trans }}
+            </p>
+        </twig:Si:Alert>
+
+        <div class="mt-8 text-center">
+            <p class="mb-4 text-fg-muted">{{ 'installation.start.ready'|trans }}</p>
+            {{ form_widget(form.navigator.next, {
+                attr: {class: 'si-btn si-btn--lg si-btn--primary px-8'},
+                label: 'installation.start.begin'|trans,
+            }) }}
         </div>
     </div>
 </div>

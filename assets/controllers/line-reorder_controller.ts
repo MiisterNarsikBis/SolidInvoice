@@ -124,7 +124,7 @@ export default class extends Controller<HTMLElement> {
     private createLiveRegion(): HTMLElement {
         const region = document.createElement('div');
 
-        region.className = 'visually-hidden';
+        region.className = 'sr-only';
         region.setAttribute('role', 'status');
         region.setAttribute('aria-live', 'polite');
         document.body.append(region);

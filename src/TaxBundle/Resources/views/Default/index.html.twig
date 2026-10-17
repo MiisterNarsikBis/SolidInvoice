@@ -7,22 +7,17 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
 
-{% block title %}
-    {{ ux_icon('tabler:receipt-tax', {width: 24, height: 24, class: 'me-2'}) }}
-    {{ 'tax.rates.title'|trans }}
-{% endblock title %}
+{% block page_title %}{{ 'tax.rates.title'|trans }}{% endblock %}
 
-{% block content %}
-    <twig:Ui:Card>
-        <twig:DataGrid name="tax_grid" />
-    </twig:Ui:Card>
+{% block page_title_actions %}
+    <twig:Si:Button href="{{ path('_tax_rates_add') }}">
+        {{ ux_icon('tabler:plus', {class: 'size-4', 'aria-hidden': 'true'}) }}
+        {{ 'tax.rates.add'|trans }}
+    </twig:Si:Button>
 {% endblock %}
 
-{% block heading %}
-    <a class="btn btn-primary" href="{{ path("_tax_rates_add") }}">
-        {{ ux_icon('tabler:plus', {width: 18, height: 18}) }}
-        {{ "tax.rates.add"|trans }}
-    </a>
+{% block content %}
+    <twig:DataGrid name="tax_grid" />
 {% endblock %}

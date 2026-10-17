@@ -35,8 +35,8 @@ final class AffiliatePromptTest extends WebTestCase
         $client->request(Request::METHOD_GET, '/dashboard');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorExists('.toast[data-controller="affiliate-prompt"]');
-        self::assertSelectorExists('.toast a[href="/affiliate/join/banner"][target="_blank"][rel="noopener"]');
+        self::assertSelectorExists('[data-controller="affiliate-prompt"][hidden]');
+        self::assertSelectorExists('[data-controller="affiliate-prompt"] a[href="/affiliate/join/banner"][target="_blank"][rel="noopener"]');
         self::assertSelectorExists('a[href="/profile/refer-and-earn?source=dashboard"]');
     }
 

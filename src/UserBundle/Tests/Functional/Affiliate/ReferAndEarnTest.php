@@ -37,9 +37,9 @@ final class ReferAndEarnTest extends WebTestCase
         $client->request(Request::METHOD_GET, '/profile/refer-and-earn');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('.card-title', 'Earn up to $93 a year for every customer you refer');
+        self::assertSelectorTextContains('main h2', 'Earn up to $93 a year for every customer you refer');
         self::assertSelectorExists('a[href="/affiliate/join/page"][target="_blank"][rel="noopener"]');
-        self::assertSelectorExists('.swp-settings-nav a.active[href="/profile/refer-and-earn"]');
+        self::assertSelectorExists('nav a[aria-current="page"][href="/profile/refer-and-earn"]');
         self::assertSelectorExists('a[href="/profile/refer-and-earn?source=footer"]');
     }
 

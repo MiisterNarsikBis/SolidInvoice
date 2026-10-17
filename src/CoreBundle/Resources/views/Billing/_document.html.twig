@@ -1,0 +1,257 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    The default rendering of a quote or an invoice as a document: the parties, the lines, the
+    totals, the custom fields and the terms. It is what the app and the customer-facing page show
+    when no design template is picked (a design template replaces it).
+
+    Variables:
+        doc       the Quote or Invoice
+        type      'quote' | 'invoice' (the translation prefix)
+        currency  the document's currency
+        target    the CustomFieldTarget of the document
+        external  true on the customer-facing page: adds the logo / number header, shows only the
+                  custom fields the client may see, and hides the internal notes
+#}
+{% import (type == 'quote' ? '@SolidInvoiceQuote/Templates/_macros.html.twig' : '@SolidInvoiceInvoice/Templates/_macros.html.twig') as macros %}
+{% set label_class = 'text-xs font-semibold tracking-wide text-fg-muted uppercase' %}
+{% set _tb = tax_breakdown(doc) %}
+{% set isInvoice = type == 'invoice' %}
+{# A recurring invoice has no payments of its own #}
+{% set hasOutstandingBalance = isInvoice and doc.payments is defined and doc.payments|length > 0 and not doc.balance.isZero %}
+{% set captured = isInvoice ? enum('SolidInvoice\\PaymentBundle\\Enum\\PaymentStatus').Captured : null %}
+
+<article class="rounded-lg border border-line-light bg-surface p-6 shadow-sm md:p-8 print:border-0 print:p-0 print:shadow-none">
+    {% if external|default(false) %}
+        {# Who is sending it, and which document this is #}
+        <header class="mb-8 flex flex-wrap items-start justify-between gap-6">
+            <div>
+                {% if app_logo() is not empty %}
+                    <div class="mb-3">{{ app_logo(80) }}</div>
+                {% endif %}
+                <h2 class="text-xl font-semibold text-fg">{{ company_name() }}</h2>
+                {% for identifier in tax_identifiers() %}
+                    <div class="text-sm text-fg-secondary">{{ identifier.label }}: {{ identifier.value }}</div>
+                {% endfor %}
+            </div>
+            <div class="text-right">
+                <div class="{{ label_class }} mb-1">{{ (type ~ '.title')|trans({'%id%': ''}) }}</div>
+                <h1 class="mb-2 text-3xl font-semibold text-fg">#{{ isInvoice ? doc.invoiceId : doc.quoteId }}</h1>
+                {{ isInvoice ? invoice_label(doc.status) : quote_label(doc.status) }}
+            </div>
+        </header>
+
+        <dl class="mb-8 grid gap-4 rounded-lg bg-canvas p-5 sm:grid-cols-2">
+            <div>
+                <dt class="{{ label_class }} mb-1">{{ (isInvoice ? 'invoice.date' : 'quote.pdf.date')|trans }}</dt>
+                <dd class="font-medium text-fg">{{ (isInvoice ? doc.invoiceDate : doc.created)|date('M d, Y') }}</dd>
+            </div>
+            <div>
+                <dt class="{{ label_class }} mb-1">{{ (hasOutstandingBalance ? 'invoice.balance' : type ~ '.total')|trans }}</dt>
+                <dd class="tabular text-xl font-semibold text-fg">{{ (hasOutstandingBalance ? doc.balance : doc.total)|formatCurrency(currency) }}</dd>
+            </div>
+            {% if isInvoice and doc.due is not empty %}
+                <div>
+                    <dt class="{{ label_class }} mb-1">{{ 'invoice.due_date'|trans }}</dt>
+                    <dd class="font-medium text-fg">{{ doc.due|date('M d, Y') }}</dd>
+                </div>
+            {% endif %}
+        </dl>
+    {% endif %}
+
+    {# From / to #}
+    <div class="grid gap-8 sm:grid-cols-2">
+        <div>
+            <div class="{{ label_class }} mb-2">{{ (type ~ '.from')|trans }}</div>
+            <h3 class="mb-2 text-lg font-semibold text-fg">{{ company_name() }}</h3>
+            <div class="space-y-1 text-sm text-fg-secondary">
+                {% if not external|default(false) %}
+                    {% for identifier in tax_identifiers() %}
+                        <div><span class="text-fg-muted">{{ identifier.label }}</span> {{ identifier.value }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                {% set email = setting('system/company/contact_details/email') %}
+                {% if email is not empty %}
+                    <div class="flex items-center gap-1.5">{{ ux_icon('tabler:mail', {class: 'size-3.5 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}<span>{{ email }}</span></div>
+                {% endif %}
+
+                {% set phoneNumber = setting('system/company/contact_details/phone_number') %}
+                {% if phoneNumber is not empty %}
+                    <div class="flex items-center gap-1.5">{{ ux_icon('tabler:phone', {class: 'size-3.5 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}<span>{{ phoneNumber }}</span></div>
+                {% endif %}
+
+                {% set address = setting('system/company/contact_details/address', null, true) %}
+                {% if address is not null and address|filter(v => v) is not empty %}
+                    <div class="flex items-start gap-1.5">{{ ux_icon('tabler:map-pin', {class: 'mt-0.5 size-3.5 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}<span>{{ address(address)|replace({"\n": ", "}) }}</span></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div>
+            <div class="{{ label_class }} mb-2">{{ (type ~ '.to')|trans }}</div>
+            <h3 class="mb-2 text-lg font-semibold text-fg">{{ doc.client }}</h3>
+            <div class="space-y-1 text-sm text-fg-secondary">
+                {% if doc.client.website is not empty and not external|default(false) %}
+                    {% set website_url = doc.client.website starts with 'http://' or doc.client.website starts with 'https://' ? doc.client.website : 'https://' ~ doc.client.website %}
+                    <div class="flex items-center gap-1.5">
+                        {{ ux_icon('tabler:world', {class: 'size-3.5 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}
+                        <a href="{{ website_url }}" class="inline-flex items-center gap-1 text-primary hover:underline" rel="external noreferrer noopener" target="_blank">
+                            <span>{{ doc.client.website }}</span>
+                            {{ ux_icon('tabler:external-link', {class: 'size-3', 'aria-hidden': 'true'}) }}
+                        </a>
+                    </div>
+                {% endif %}
+
+                {% for identifier in tax_identifiers(doc.client) %}
+                    <div><span class="text-fg-muted">{{ identifier.label }}</span> {{ identifier.value }}</div>
+                {% endfor %}
+
+                {% for clientAddress in doc.client.addresses %}
+                    <div class="flex items-start gap-1.5">{{ ux_icon('tabler:map-pin', {class: 'mt-0.5 size-3.5 shrink-0 text-fg-muted', 'aria-hidden': 'true'}) }}<span>{{ clientAddress|replace({"\n": ", "}) }}</span></div>
+                {% endfor %}
+
+                {% if external|default(false) and doc.users|length > 0 %}
+                    <div class="pt-1">
+                        {% for user in doc.users %}
+                            <div>{{ user }}</div>
+                            <div class="text-fg-muted">{{ user.email }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# Lines #}
+    <div class="mt-8 overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-line text-left">
+                    <th class="{{ label_class }} py-2 pr-3">{{ (type ~ '.item.heading.description')|trans }}</th>
+                    <th class="{{ label_class }} px-3 py-2 text-right">{{ (type ~ '.item.heading.price')|trans }}</th>
+                    <th class="{{ label_class }} px-3 py-2 text-right">{{ (type ~ '.item.heading.qty')|trans }}</th>
+                    {% if doc.tax.positive %}
+                        <th class="{{ label_class }} px-3 py-2">{{ (type ~ '.item.heading.tax')|trans }}</th>
+                    {% endif %}
+                    <th class="{{ label_class }} py-2 pl-3 text-right">{{ (type ~ '.item.heading.total')|trans }}</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-line-light">
+                {% for item in doc.lines %}
+                    <tr class="align-top">
+                        <td class="py-3 pr-3 text-fg">{{ item.name }}{{ macros.line_description(item, external|default(false) ? true : false) }}</td>
+                        <td class="tabular px-3 py-3 text-right text-fg-secondary">{{ item.price|formatCurrency(currency) }}</td>
+                        <td class="tabular px-3 py-3 text-right text-fg-secondary">{{ item.qty }}</td>
+                        {% if doc.tax.positive %}
+                            <td class="px-3 py-3 text-fg-secondary">
+                                {% for lineTax in item.taxes %}{{ lineTax.nameSnapshot }} ({{ lineTax.rateSnapshot }}%){% if not loop.last %}, {% endif %}{% endfor %}
+                            </td>
+                        {% endif %}
+                        <td class="tabular py-3 pl-3 text-right font-semibold text-fg">{{ item.total|formatCurrency(currency) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# Totals #}
+    <div class="mt-6 flex justify-end">
+        <dl class="w-full space-y-1.5 text-sm sm:w-80">
+            <div class="flex justify-between">
+                <dt class="text-fg-secondary">{{ (type ~ '.subtotal')|trans }}</dt>
+                <dd class="tabular text-fg">{{ doc.baseTotal|formatCurrency(currency) }}</dd>
+            </div>
+
+            {% if doc.tax.positive %}
+                <div class="flex justify-between">
+                    <dt class="text-fg-secondary">{{ (type ~ '.line_tax')|trans }}</dt>
+                    <dd class="tabular text-fg">{{ doc.tax|formatCurrency(currency) }}</dd>
+                </div>
+                {% for row in _tb.lineTaxRows %}
+                    <div class="flex justify-between pl-4 text-fg-muted">
+                        <dt>{{ row.name }} ({{ row.rate }}%)</dt>
+                        <dd class="tabular">{{ row.amount|formatCurrency(currency) }}</dd>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% for row in _tb.additiveRows %}
+                <div class="flex justify-between">
+                    <dt class="text-fg-secondary">{{ row.name }} ({{ row.rate }}%)</dt>
+                    <dd class="tabular text-fg">{{ row.amount|formatCurrency(currency) }}</dd>
+                </div>
+            {% endfor %}
+            {% for row in _tb.informationalRows %}
+                <div class="flex justify-between pl-4 text-fg-muted">
+                    <dt>{{ row.name }} ({{ row.rate }}%){% if row.note %} — {{ row.note }}{% endif %}</dt>
+                    <dd>{{ (type ~ '.invoice_taxes.informational')|trans }}</dd>
+                </div>
+            {% endfor %}
+
+            {% if discount(doc).isPositive() %}
+                <div class="flex justify-between text-success-dark">
+                    <dt>{{ (type ~ '.discount')|trans }}</dt>
+                    <dd class="tabular">-{{ discount(doc)|formatCurrency(currency) }}</dd>
+                </div>
+            {% endif %}
+
+            {% if hasOutstandingBalance %}
+                {% for payment in doc.payments|filter((v) => v.status == captured) %}
+                    <div class="flex justify-between text-fg-secondary">
+                        <dt>{{ 'invoice.payment.label'|trans }}: {{ payment.method.name }}</dt>
+                        <dd class="tabular">-{{ payment.amount.amount|formatCurrency(currency) }}</dd>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="flex justify-between border-t border-line pt-2 text-base font-semibold text-fg">
+                <dt>{{ (hasOutstandingBalance ? 'invoice.balance' : type ~ '.total')|trans }}</dt>
+                <dd class="tabular">{{ (hasOutstandingBalance ? doc.balance : doc.total)|formatCurrency(currency) }}</dd>
+            </div>
+
+            {% if doc.withholdingAmount.positive %}
+                <div class="flex justify-between text-fg-secondary">
+                    <dt>{{ (type ~ '.withholding')|trans }}</dt>
+                    <dd class="tabular">-{{ doc.withholdingAmount|formatCurrency(currency) }}</dd>
+                </div>
+                <div class="flex justify-between border-t border-line pt-2 text-base font-semibold text-fg">
+                    <dt>{{ (type ~ '.amount_payable')|trans }}</dt>
+                    <dd class="tabular">{{ payable_amount(doc)|formatCurrency(currency) }}</dd>
+                </div>
+            {% endif %}
+        </dl>
+    </div>
+
+    {# Custom fields: the client sees only the ones marked visible, staff see them all #}
+    {% if external|default(false) %}
+        <twig:CustomFieldsListPdf :target="target" :recordId="doc.id" :visibility="enum('SolidInvoice\\CoreBundle\\Enum\\CustomFieldVisibility').CLIENT_VISIBLE" />
+    {% else %}
+        <twig:CustomFieldsList :target="target" :recordId="doc.id" />
+    {% endif %}
+
+    {# Terms and notes #}
+    {% if doc.terms is not empty or (doc.notes is not empty and not external|default(false)) %}
+        <div class="mt-6 space-y-4 border-t border-line-light pt-6">
+            {% if doc.terms is not empty %}
+                <section>
+                    <h4 class="mb-1 font-semibold text-fg">{{ (type ~ '.terms')|trans }}</h4>
+                    <p class="text-fg-secondary">{{ doc.terms|nl2br }}</p>
+                </section>
+            {% endif %}
+
+            {% if doc.notes is not empty and not external|default(false) %}
+                <section class="print:hidden">
+                    <h4 class="mb-1 font-semibold text-fg">{{ (type ~ '.notes')|trans }}</h4>
+                    <p class="text-fg-secondary">{{ doc.notes|nl2br }}</p>
+                </section>
+            {% endif %}
+        </div>
+    {% endif %}
+</article>

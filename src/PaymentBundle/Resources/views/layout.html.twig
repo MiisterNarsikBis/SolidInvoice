@@ -1,8 +1,7 @@
-{% extends "@SolidInvoiceCore/Layout/default_no_nav.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/focus.html.twig" %}
 
-{% block title %}
-    {{ 'payment.action.pay'|trans }}
-{% endblock title %}
+{# The page a payment gateway renders its own checkout into (the Payum layout). #}
+{% block page_title %}{{ 'payment.action.pay'|trans }}{% endblock page_title %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -10,7 +9,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <div class="widget">
+    <div class="rounded-lg border border-line-light bg-surface p-6 shadow-sm">
         {{ block('payum_body') is defined ? block('payum_body') }}
     </div>
 {% endblock content %}

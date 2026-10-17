@@ -23,7 +23,7 @@ return App::config([
         ],
         'form_themes' => [
             '@SolidInvoiceNotification/Form/fields.html.twig',
-            '@SolidInvoiceCore/Form/fields.html.twig',
+            '@SolidInvoiceCore/Form/tailwind.html.twig',
             '@SolidInvoiceDataGrid/Form/fields.html.twig',
         ],
     ],

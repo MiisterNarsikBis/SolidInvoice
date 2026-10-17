@@ -577,6 +577,10 @@ email_verification:
         send_invoice: 'Please verify your email address before sending invoices. Check your inbox for the verification link.'
         send_quote: 'Please verify your email address before sending quotes. Check your inbox for the verification link.'
         send_reminder: 'Please verify your email address before sending payment reminders. Check your inbox for the verification link.'
+    profile:
+        description: 'Your email address is not verified yet. Did not get the email? Send another one.'
+        title: 'Email verification'
+    resend: 'Resend verification email'
 exception:
     403:
         text: "You don't have permission to view this page."
@@ -1179,12 +1183,15 @@ layout:
     api_keys: 'API Keys'
     aria:
         logo: Tabler
+        main_navigation: 'Main navigation'
+        open_company_menu: 'Open company menu'
         open_create_menu: 'Open create menu'
         open_user_menu: 'Open user menu'
         toggle_navigation: 'Toggle navigation'
     data_export: 'Data Export'
     feedback: 'Share feedback'
     profile: Profile
+    skip_to_content: 'Skip to main content'
     unsplash_credit: 'Download free do whatever you want high-resolution photos from Julian Zett'
     user_image: 'User Image'
 mcp:
@@ -1654,6 +1661,7 @@ profile:
                 ip: 'IP Address'
                 resource: Resource
                 user_agent: 'User Agent'
+            notice: 'Showing API requests made with this token.'
             title: 'API History'
         stats:
             active_tokens: 'Active Tokens'

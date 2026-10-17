@@ -7,86 +7,58 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends '@SolidInvoiceCore/Layout/default_no_nav.html.twig' %}
+{% extends '@SolidInvoiceCore/Layout/focus.html.twig' %}
+
+{% block page_title %}{{ 'saas.paused.title'|trans }}{% endblock %}
+
+{% block page_heading %}{% endblock %}
+
+{% block container_class %}max-w-2xl{% endblock %}
 
 {% block content %}
     {% set availableCompanies = app.user.companies|filter(v => v.id != company_id()) %}
 
-    <div class="subscription-page subscription-paused-page">
-        <div class="subscription-container">
-            {# Hero Icon #}
-            <div class="subscription-icon subscription-icon-paused">
-                {{ ux_icon('tabler:player-pause', {width: 32, height: 32}) }}
-            </div>
+    <div class="subscription-paused-page text-center">
+        {% include '@SolidInvoiceSaas/subscription/_hero.html.twig' with {
+            icon: 'tabler:player-pause',
+            tone: 'warning',
+            title: 'saas.paused.title'|trans,
+            subtitle: 'saas.paused.subtitle'|trans({'%price%': subscription.plan.price|formatCurrency('USD')}),
+        } only %}
 
-            {# Headline #}
-            <h1 class="subscription-title">{{ 'saas.paused.title'|trans }}</h1>
-            <p class="subscription-subtitle">
-                {{ 'saas.paused.subtitle'|trans({'%price%': subscription.plan.price|formatCurrency('USD')}) }}
-            </p>
+        <twig:Si:Alert type="info" class="mb-6 text-left">
+            <strong class="block">{{ 'saas.paused.while_paused'|trans }}</strong>
+            {{ 'saas.paused.while_paused_message'|trans }}
+        </twig:Si:Alert>
 
-            {# Paused Status Info #}
-            <twig:Ui:Alert type="info" class="mb-6 text-start">
-                <div class="d-flex align-items-start gap-2">
-                    {{ ux_icon('tabler:info-circle', {width: 20, height: 20}) }}
-                    <div>
-                        <strong>{{ 'saas.paused.while_paused'|trans }}</strong><br>
-                        {{ 'saas.paused.while_paused_message'|trans }}
-                    </div>
-                </div>
-            </twig:Ui:Alert>
+        {% include '@SolidInvoiceSaas/subscription/_benefits.html.twig' with {
+            heading: 'saas.paused.features_heading'|trans,
+            items: [
+                'saas.paused.feature_invoices'|trans,
+                'saas.paused.feature_payments'|trans,
+                'saas.paused.feature_clients'|trans,
+                'saas.paused.feature_reports'|trans,
+                'saas.paused.feature_recurring'|trans,
+            ],
+        } only %}
 
-            {# Features Available After Resume #}
-            <div class="subscription-benefits">
-                <h3>{{ 'saas.paused.features_heading'|trans }}</h3>
-                <ul>
-                    <li>
-                        {{ ux_icon('tabler:lock', {width: 20, height: 20}) }}
-                        {{ 'saas.paused.feature_invoices'|trans }}
-                    </li>
-                    <li>
-                        {{ ux_icon('tabler:lock', {width: 20, height: 20}) }}
-                        {{ 'saas.paused.feature_payments'|trans }}
-                    </li>
-                    <li>
-                        {{ ux_icon('tabler:lock', {width: 20, height: 20}) }}
-                        {{ 'saas.paused.feature_clients'|trans }}
-                    </li>
-                    <li>
-                        {{ ux_icon('tabler:lock', {width: 20, height: 20}) }}
-                        {{ 'saas.paused.feature_reports'|trans }}
-                    </li>
-                    <li>
-                        {{ ux_icon('tabler:lock', {width: 20, height: 20}) }}
-                        {{ 'saas.paused.feature_recurring'|trans }}
-                    </li>
-                </ul>
-            </div>
-
-            {# Primary CTA #}
-            <div class="subscription-actions">
-                <a href="{{ path('billing_index') }}" class="btn btn-primary btn-lg">
-                    {{ ux_icon('tabler:player-play', {width: 20, height: 20}) }} {{ 'saas.paused.resume'|trans }}
-                </a>
-                <a href="https://solidinvoice.co/contact" class="btn btn-ghost" target="_blank" rel="external noreferrer noopener">
-                    {{ ux_icon('tabler:help', {width: 18, height: 18}) }} {{ 'saas.action.contact_support'|trans }}
-                </a>
-            </div>
-
-            {# Info Alert for Multiple Companies #}
-            {% if availableCompanies|length > 0 %}
-                <twig:Ui:Alert type="info" class="mt-4 text-start">
-                    <div class="d-flex align-items-center gap-2">
-                        {{ ux_icon('tabler:building', {width: 20, height: 20}) }}
-                        <div>
-                            {{ 'saas.company.access_other'|trans }}
-                            <a href="{{ path('_switch_company', {'id': availableCompanies|first.id}) }}" class="alert-link">
-                                {{ 'saas.company.switch_to'|trans({'%company%': availableCompanies|first}) }}
-                            </a>
-                        </div>
-                    </div>
-                </twig:Ui:Alert>
-            {% endif %}
+        <div class="flex flex-wrap justify-center gap-3">
+            <twig:Si:Button size="lg" href="{{ path('billing_index') }}">
+                {{ ux_icon('tabler:player-play', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                {{ 'saas.paused.resume'|trans }}
+            </twig:Si:Button>
+            <twig:Si:Button variant="ghost" size="lg" href="https://solidinvoice.co/contact" target="_blank" rel="external noreferrer noopener">
+                {{ ux_icon('tabler:help', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                {{ 'saas.action.contact_support'|trans }}
+            </twig:Si:Button>
         </div>
+
+        {% if availableCompanies|length > 0 %}
+            {% include '@SolidInvoiceSaas/subscription/_switch_company.html.twig' with {
+                message: 'saas.company.access_other'|trans,
+                linkLabel: 'saas.company.switch_to'|trans({'%company%': availableCompanies|first}),
+                companyId: (availableCompanies|first).id,
+            } only %}
+        {% endif %}
     </div>
 {% endblock content %}

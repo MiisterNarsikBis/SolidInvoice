@@ -1,0 +1,31 @@
+{#
+    A pill with a status dot. The label is always present: colour is never the only signal.
+
+        <twig:Si:Badge tone="danger">{{ 'invoice.status.overdue'|trans }}</twig:Si:Badge>
+
+    tone: neutral | primary | success | danger | warning | info
+    Text uses the -dark step on the -light tint (all AA); the dot uses the fill colour.
+#}
+{% props tone = 'neutral' %}
+
+{%- set tones = {
+    neutral: 'bg-ink-100 text-fg-secondary',
+    primary: 'bg-primary-light text-primary-dark',
+    success: 'bg-success-light text-success-dark',
+    danger: 'bg-danger-light text-danger-dark',
+    warning: 'bg-warning-light text-warning-dark',
+    info: 'bg-info-light text-info-dark',
+} -%}
+{%- set dots = {
+    neutral: 'bg-ink-400',
+    primary: 'bg-primary',
+    success: 'bg-success',
+    danger: 'bg-danger',
+    warning: 'bg-warning',
+    info: 'bg-info',
+} -%}
+
+<span {{ attributes.defaults({class: 'inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold ' ~ tones[tone]}) }}>
+    <span class="size-1.5 rounded-full {{ dots[tone] }}" aria-hidden="true"></span>
+    {% block content %}{% endblock %}
+</span>

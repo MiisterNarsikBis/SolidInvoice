@@ -1,44 +1,32 @@
 {#
-# This file is part of SolidInvoice package.
-#
-# (c) Pierre du Plessis <open-source@solidworx.co>
-#
-# This source file is subject to the MIT license that is bundled
-# with this source code in the file LICENSE.
-#}
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
 
-{% extends "@SolidInvoiceCore/Layout/default_no_nav.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/auth.html.twig" %}
 
-{% block title %}{{ 'forgot_password.reset.title'|trans }}{% endblock title %}
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
 
-{% block content %}
-    <div class="container-tight py-4">
-        <div class="text-center mb-4">
-            <span class="navbar-brand navbar-brand-autodark h1">
-                {{ app_logo(showDefault: true, showOnlyAppIcon: true) }} {{ app_name }}
-            </span>
+{% block page_title %}{{ 'forgot_password.reset.title'|trans }}{% endblock page_title %}
+
+{% block contents %}
+    <h1 class="mb-6 text-center text-xl font-semibold text-fg">{{ 'forgot_password.reset.heading'|trans }}</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form) }}
+        <div class="flex gap-2">
+            <twig:Si:Button type="submit" size="lg" class="flex-1">
+                {{ ux_icon('tabler:lock', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                {{ 'forgot_password.request.submit'|trans }}
+            </twig:Si:Button>
+            <twig:Si:Button variant="ghost" size="lg" href="{{ path('_login_main') }}">
+                {{ ux_icon('tabler:arrow-left', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                {{ 'security.login.login'|trans }}
+            </twig:Si:Button>
         </div>
-
-        {% include "@SolidInvoiceCore/flash.html.twig" %}
-
-        <div class="card card-md">
-            <div class="card-body">
-                <h2 class="h2 text-center mb-4">{{ 'forgot_password.reset.heading'|trans }}</h2>
-
-                {{ form_start(form) }}
-                    {{ form_row(form) }}
-                    <div class="form-footer d-flex gap-2">
-                        <button type="submit" class="btn btn-primary flex-fill">
-                            {{ ux_icon('tabler:lock', {width: 20, height: 20}) }}
-                            {{ 'forgot_password.request.submit'|trans }}
-                        </button>
-                        <a href="{{ path('_login_main') }}" class="btn btn-ghost">
-                            {{ ux_icon('tabler:arrow-left', {width: 20, height: 20}) }}
-                            {{ 'security.login.login'|trans }}
-                        </a>
-                    </div>
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
-{% endblock %}
+    {{ form_end(form) }}
+{% endblock contents %}

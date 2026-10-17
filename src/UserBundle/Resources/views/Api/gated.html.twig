@@ -1,4 +1,4 @@
-{##
+{#
  # This file is part of SolidInvoice package.
  #
  # (c) Pierre du Plessis <open-source@solidworx.co>
@@ -11,7 +11,7 @@
 
 {% extends "@SolidInvoiceUser/Layout/profile.html.twig" %}
 
-{% block title %}{{ ux_icon('tabler:key', {width: 24, height: 24, class: 'me-2'}) }}{{ "profile.api.title"|trans }}{% endblock title %}
+{% block title %}{{ "profile.api.title"|trans }}{% endblock title %}
 
 {% block profile_content %}
     {% include '@SolidInvoiceCore/Feature/_gated_page.html.twig' with {

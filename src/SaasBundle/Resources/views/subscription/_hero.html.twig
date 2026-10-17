@@ -1,0 +1,24 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    The head of a subscription status page: a round icon, the title and a sentence under it.
+
+    Variables: icon (tabler icon), tone (info | warning | success), title, subtitle (translated).
+#}
+{% set tones = {
+    info: 'bg-info-light text-info-dark',
+    warning: 'bg-warning-light text-warning-dark',
+    success: 'bg-success-light text-success-dark',
+} %}
+<span class="mx-auto mb-5 flex size-16 items-center justify-center rounded-full {{ tones[tone|default('info')] }}">
+    {{ ux_icon(icon, {class: 'size-8', 'aria-hidden': 'true'}) }}
+</span>
+<h1 class="mb-2 text-center text-3xl font-semibold tracking-tight text-fg">{{ title }}</h1>
+<p class="mx-auto mb-6 max-w-xl text-center text-lg text-fg-secondary">{{ subtitle }}</p>

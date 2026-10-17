@@ -10,9 +10,7 @@
 {% extends '@SolidInvoiceInstall/layout.html.twig' %}
 
 {% block content %}
-    <div class="w-75 mx-auto">
-        <div class="card shadow-lg">
-            <twig:SystemInstallation :form="form" />
-        </div>
+    <div class="overflow-hidden rounded-xl border border-line-light bg-surface shadow-lg">
+        <twig:SystemInstallation :form="form" />
     </div>
 {% endblock %}

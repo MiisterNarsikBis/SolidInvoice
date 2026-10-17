@@ -7,48 +7,38 @@
 # with this source code in the file LICENSE.
 #}
 
-{% extends '@SolidInvoiceCore/Layout/base.html.twig' %}
+{% extends '@SolidInvoiceCore/Layout/document.html.twig' %}
 
+{# The error pages (403, 404, 500): a code, a title, a message and a way back. #}
 {% block body %}
-    <div class="page page-center">
-        <div class="container container-tight py-4">
+    <div class="flex min-h-screen flex-col items-center justify-center px-4 py-12">
+        <div class="mb-8">{{ app_logo(showDefault: true) }}</div>
 
-            <div class="text-center mb-5">
-                {{ app_logo(showDefault: true) }}
+        <div class="max-w-md text-center">
+            <div class="mb-3 text-[8rem] leading-none font-semibold text-fg/15" aria-hidden="true">{% block error_code %}{% endblock %}</div>
+
+            <h1 class="mb-2 text-2xl font-semibold text-fg">{% block error_title %}{% endblock %}</h1>
+            <p class="mb-6 text-fg-muted">{% block error_message %}{% endblock %}</p>
+
+            <div class="flex flex-wrap justify-center gap-2">
+                <button type="button" onclick="history.back()" class="si-btn si-btn--ghost si-btn--md">
+                    {{ ux_icon('tabler:arrow-left', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                    {{ 'exception.action.back'|trans }}
+                </button>
+                {% if app.user is not null %}
+                    <a href="{{ path('_dashboard') }}" class="si-btn si-btn--primary si-btn--md">
+                        {{ 'exception.action.dashboard'|trans }}
+                        {{ ux_icon('tabler:arrow-right', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                    </a>
+                {% else %}
+                    <a href="{{ path('_login_main') }}" class="si-btn si-btn--primary si-btn--md">
+                        {{ 'exception.action.sign_in'|trans }}
+                        {{ ux_icon('tabler:arrow-right', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                    </a>
+                {% endif %}
             </div>
-
-            <div class="text-center">
-                <div class="display-1 fw-bold text-muted mb-3 lh-1" style="font-size: 8rem; opacity: 0.15;">
-                    {% block error_code %}{% endblock %}
-                </div>
-
-                <h1 class="h2 mb-2">{% block error_title %}{% endblock %}</h1>
-
-                <p class="text-muted mb-4">{% block error_message %}{% endblock %}</p>
-
-                <div class="d-flex gap-2 justify-content-center flex-wrap">
-                    <button type="button" onclick="history.back()" class="btn btn-ghost">
-                        {{ ux_icon('tabler:arrow-left') }}
-                        {{ 'exception.action.back'|trans }}
-                    </button>
-                    {% if app.user is not null %}
-                        <a href="{{ path('_dashboard') }}" class="btn btn-primary">
-                            {{ 'exception.action.dashboard'|trans }}
-                            {{ ux_icon('tabler:arrow-right') }}
-                        </a>
-                    {% else %}
-                        <a href="{{ path('_login_main') }}" class="btn btn-primary">
-                            {{ 'exception.action.sign_in'|trans }}
-                            {{ ux_icon('tabler:arrow-right') }}
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="text-center text-muted mt-5">
-                <small>{{ 'powered_by'|trans }} <a href="https://solidinvoice.co">{{ app_name }}</a>{% if app_version %} - {{ app_version }}{% endif %}</small>
-            </div>
-
         </div>
+
+        <p class="mt-10 text-sm text-fg-muted">{{ 'powered_by'|trans }} <a href="https://solidinvoice.co" class="text-fg-secondary hover:text-primary hover:underline">{{ app_name }}</a>{% if app_version %} - {{ app_version }}{% endif %}</p>
     </div>
 {% endblock body %}

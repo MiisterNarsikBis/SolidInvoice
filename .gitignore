@@ -64,3 +64,6 @@ yarn-error.log
 .context
 .gstack/
 .impeccable
+
+# Tailwind output (built by `npm run dev` / `npm run build`)
+/public/ui/

@@ -1,0 +1,36 @@
+{#
+    A provider card for a marketplace grid (notification and payment integrations): icon, name, an
+    optional "configured" tick, a description and a call-to-action link.
+
+        <twig:Si:IntegrationCard icon="..." name="Twilio" description="..." :configured="true"
+            href="{{ path('...') }}" label="{{ 'notification.marketplace.configure'|trans }}" />
+
+    All text is already translated. `icon` is a `tabler:` / app icon name.
+#}
+{% props name, description = '', icon = null, configured = false, href, label, configuredLabel = '' %}
+
+<div {{ attributes.defaults({class: 'flex flex-col gap-3 rounded-lg border bg-surface p-4 shadow-xs ' ~ (configured ? 'border-success/40' : 'border-line')}) }}>
+    <div class="flex items-start gap-3">
+        {% if icon %}
+            <span class="flex size-11 shrink-0 items-center justify-center rounded-md bg-ink-100 text-fg-secondary" data-integration-icon>
+                {{ ux_icon(icon, {class: 'size-6', 'aria-hidden': 'true'}) }}
+            </span>
+        {% endif %}
+        <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2">
+                <h3 class="truncate font-semibold text-fg">{{ name }}</h3>
+                {% if configured %}
+                    <span class="inline-flex items-center rounded-full bg-success-light p-0.5 text-success-dark" title="{{ configuredLabel }}">
+                        {{ ux_icon('tabler:check', {class: 'size-3', 'aria-hidden': 'true'}) }}
+                        <span class="sr-only">{{ configuredLabel }}</span>
+                    </span>
+                {% endif %}
+            </div>
+            {% if description %}<p class="mt-0.5 line-clamp-2 text-sm text-fg-muted">{{ description }}</p>{% endif %}
+        </div>
+    </div>
+    <a href="{{ href }}" class="si-btn si-btn--sm si-btn--outline w-full">
+        {{ ux_icon('tabler:plus', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+        {{ label }}
+    </a>
+</div>

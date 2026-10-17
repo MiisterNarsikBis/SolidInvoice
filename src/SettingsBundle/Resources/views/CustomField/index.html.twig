@@ -7,113 +7,87 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends '@SolidInvoiceCore/Layout/default.html.twig' %}
+{% extends '@SolidInvoiceCore/Layout/shell.html.twig' %}
 
-{% block title %}{{ ux_icon('tabler:forms', {width: 24, height: 24, class: 'me-2'}) }}{{ 'custom_field.title'|trans }}{% endblock %}
+{% block page_title %}{{ 'custom_field.title'|trans }}{% endblock %}
 
-{% block heading %}
-    <a href="{{ path('_settings_custom_fields_create') }}" class="btn btn-primary">
-        {{ ux_icon('tabler:plus', {width: 18, height: 18}) }}
+{% block page_title_actions %}
+    <twig:Si:Button href="{{ path('_settings_custom_fields_create') }}">
+        {{ ux_icon('tabler:plus', {class: 'size-4', 'aria-hidden': 'true'}) }}
         {{ 'custom_field.add'|trans }}
-    </a>
+    </twig:Si:Button>
 {% endblock %}
 
 {% block content %}
-    <ul class="nav nav-underline" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="#tab-client" role="tab" aria-controls="tab-client">
-                <span class="nav-link-icon d-none d-sm-inline-block">
-                    {{ ux_icon('tabler:building', {width: 16, height: 16}) }}
-                </span>
-                <span>{{ 'custom_field.tab.client'|trans }}</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#tab-contact" role="tab" aria-controls="tab-contact">
-                <span class="nav-link-icon d-none d-sm-inline-block">
-                    {{ ux_icon('tabler:user', {width: 16, height: 16}) }}
-                </span>
-                <span>{{ 'custom_field.tab.contact'|trans }}</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#tab-invoice" role="tab" aria-controls="tab-invoice">
-                <span class="nav-link-icon d-none d-sm-inline-block">
-                    {{ ux_icon('tabler:file-invoice', {width: 16, height: 16}) }}
-                </span>
-                <span>{{ 'custom_field.tab.invoice'|trans }}</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#tab-quote" role="tab" aria-controls="tab-quote">
-                <span class="nav-link-icon d-none d-sm-inline-block">
-                    {{ ux_icon('tabler:file-text', {width: 16, height: 16}) }}
-                </span>
-                <span>{{ 'custom_field.tab.quote'|trans }}</span>
-            </a>
-        </li>
-    </ul>
+    {% set groups = {'client': client, 'contact': contact, 'invoice': invoice, 'quote': quote} %}
+    {% set icons = {'client': 'tabler:building', 'contact': 'tabler:user', 'invoice': 'tabler:file-invoice', 'quote': 'tabler:file-text'} %}
 
-    <div class="card mt-3">
-        <div class="tab-content">
-            {% for tabId, rows in {'client': client, 'contact': contact, 'invoice': invoice, 'quote': quote} %}
-                <div class="tab-pane{% if loop.first %} active show{% endif %}" id="tab-{{ tabId }}">
+    <twig:Si:Tabs>
+        <twig:block name="tabs">
+            {% for tabId in groups|keys %}
+                <twig:Si:Tab target="tab-{{ tabId }}" :active="loop.first" icon="{{ icons[tabId] }}">{{ ('custom_field.tab.' ~ tabId)|trans }}</twig:Si:Tab>
+            {% endfor %}
+        </twig:block>
+
+        <div class="mt-4 max-w-4xl rounded-lg border border-line-light bg-surface shadow-sm">
+            {% for tabId, rows in groups %}
+                <twig:Si:TabPanel id="tab-{{ tabId }}" :active="loop.first">
                     {% if rows is empty %}
-                        <div class="card-body text-center text-muted">
-                            {{ 'custom_field.empty'|trans }}
-                        </div>
+                        <p class="px-5 py-8 text-center text-fg-muted">{{ 'custom_field.empty'|trans }}</p>
                     {% else %}
-                        <div class="list-group list-group-flush custom-field-list"
-                             {{ stimulus_controller('custom-field-reorder', {
-                                 url: path('_settings_custom_fields_reorder'),
-                                 csrfToken: csrf_token('custom_field_reorder'),
-                             }) }}>
+                        <ul class="divide-y divide-line-light"
+                            {{ stimulus_controller('custom-field-reorder', {
+                                url: path('_settings_custom_fields_reorder'),
+                                csrfToken: csrf_token('custom_field_reorder'),
+                            }) }}>
                             {% for row in rows %}
-                                <div class="list-group-item d-flex align-items-center custom-field-row" data-id="{{ row.field.id }}">
-                                    <span class="custom-field-handle me-3" data-handle title="{{ 'custom_field.reorder.handle'|trans }}" aria-label="{{ 'custom_field.reorder.handle'|trans }}">
-                                        {{ ux_icon('tabler:grip-vertical', {width: 18, height: 18}) }}
+                                <li class="flex items-center gap-3 px-4 py-3" data-id="{{ row.field.id }}">
+                                    <span class="cursor-grab text-fg-muted hover:text-fg-secondary" data-handle title="{{ 'custom_field.reorder.handle'|trans }}" aria-label="{{ 'custom_field.reorder.handle'|trans }}">
+                                        {{ ux_icon('tabler:grip-vertical', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
                                     </span>
-                                    <div class="flex-fill">
-                                        <strong>{{ row.field.label }}</strong>
-                                        <span class="badge bg-secondary-lt ms-2">{{ row.field.type.label }}</span>
-                                        {% if row.field.required %}<span class="badge bg-yellow-lt ms-1">{{ 'label.required'|trans }}</span>{% endif %}
-                                        {% if row.field.visibility is not null %}
-                                            {% if row.field.visibility.value == 'CLIENT_VISIBLE' %}
-                                                <span class="badge bg-blue-lt ms-1">{{ 'custom_field.badge.client_visible'|trans }}</span>
-                                            {% else %}
-                                                <span class="badge bg-secondary-lt ms-1">{{ 'custom_field.badge.internal'|trans }}</span>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex flex-wrap items-center gap-1.5">
+                                            <strong class="font-semibold text-fg">{{ row.field.label }}</strong>
+                                            <twig:Si:Badge>{{ row.field.type.label }}</twig:Si:Badge>
+                                            {% if row.field.required %}<twig:Si:Badge tone="warning">{{ 'label.required'|trans }}</twig:Si:Badge>{% endif %}
+                                            {% if row.field.visibility is not null %}
+                                                {% if row.field.visibility.value == 'CLIENT_VISIBLE' %}
+                                                    <twig:Si:Badge tone="info">{{ 'custom_field.badge.client_visible'|trans }}</twig:Si:Badge>
+                                                {% else %}
+                                                    <twig:Si:Badge>{{ 'custom_field.badge.internal'|trans }}</twig:Si:Badge>
+                                                {% endif %}
                                             {% endif %}
-                                        {% endif %}
-                                        <div class="text-muted small">{{ row.count }} {{ 'custom_field.values'|trans }}</div>
+                                        </div>
+                                        <div class="mt-0.5 text-sm text-fg-muted">{{ row.count }} {{ 'custom_field.values'|trans }}</div>
                                     </div>
-                                    <div class="d-flex gap-1">
+                                    <div class="flex items-center gap-1">
                                         <a href="{{ path('_settings_custom_fields_edit', {id: row.field.id}) }}"
-                                           class="btn btn-ghost-secondary btn-icon btn-icon-sm"
+                                           class="si-btn si-btn--sm si-btn--ghost"
                                            title="{{ 'action.edit'|trans }}"
                                            aria-label="{{ 'action.edit'|trans }}">
-                                            {{ ux_icon('tabler:pencil', {width: 16, height: 16}) }}
+                                            {{ ux_icon('tabler:pencil', {class: 'size-4', 'aria-hidden': 'true'}) }}
                                         </a>
-                                        <form method="post" action="{{ path('_settings_custom_fields_delete', {id: row.field.id}) }}" class="d-inline" onsubmit="return confirm('{{ 'custom_field.delete_confirm'|trans({'%label%': row.field.label, '%count%': row.count}) }}')">
+                                        <form method="post" action="{{ path('_settings_custom_fields_delete', {id: row.field.id}) }}" onsubmit="return confirm('{{ 'custom_field.delete_confirm'|trans({'%label%': row.field.label, '%count%': row.count})|e('js') }}')">
                                             <input type="hidden" name="_token" value="{{ csrf_token('cf_delete_' ~ row.field.id) }}">
-                                            <button class="btn btn-ghost-danger btn-icon btn-icon-sm" type="submit"
+                                            <button class="si-btn si-btn--sm si-btn--danger-ghost" type="submit"
                                                     title="{{ 'action.delete'|trans }}"
                                                     aria-label="{{ 'action.delete'|trans }}">
-                                                {{ ux_icon('tabler:trash', {width: 16, height: 16}) }}
+                                                {{ ux_icon('tabler:trash', {class: 'size-4', 'aria-hidden': 'true'}) }}
                                             </button>
                                         </form>
                                     </div>
-                                </div>
+                                </li>
                             {% endfor %}
-                        </div>
+                        </ul>
                         {% if rows|length > 1 %}
-                            <div class="px-3 py-2 text-muted small d-flex align-items-center gap-2">
-                                {{ ux_icon('tabler:arrows-sort', {width: 16, height: 16}) }}
+                            <div class="flex items-center gap-2 border-t border-line-light px-4 py-2 text-sm text-fg-muted">
+                                {{ ux_icon('tabler:arrows-sort', {class: 'size-4', 'aria-hidden': 'true'}) }}
                                 {{ 'custom_field.reorder.hint'|trans }}
                             </div>
                         {% endif %}
                     {% endif %}
-                </div>
+                </twig:Si:TabPanel>
             {% endfor %}
         </div>
-    </div>
+    </twig:Si:Tabs>
 {% endblock %}

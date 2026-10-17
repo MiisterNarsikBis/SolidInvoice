@@ -6,454 +6,180 @@
  # This source file is subject to the MIT license that is bundled
  # with this source code in the file LICENSE.
  #}
-{% extends "@SolidInvoiceCore/Layout/default.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/shell.html.twig" %}
 
-{% block page_title %}
-    {{ "quote.title"|trans({"%id%" : quote.quoteId}) }}
-{% endblock page_title %}
+{% block page_title %}{{ "quote.title"|trans({"%id%" : quote.quoteId}) }}{% endblock page_title %}
 
-{% block content %}
-{% import '@SolidInvoiceQuote/Templates/_macros.html.twig' as q %}
-{% import '@SolidInvoiceInvoice/Default/_send_gate.html.twig' as send_gate %}
-{% set currency = quote.currency %}
-{% set gated = is_email_verification_gated() %}
-<div class="doc-view-page">
-    {# ═══════════════════════════════════════════════════════════════════════
-       PAGE HEADER - Quote Title, Status, and Actions
-    ═══════════════════════════════════════════════════════════════════════ #}
-    <div class="doc-view-header no-print">
-        <div class="doc-view-header-left">
-            <div class="doc-view-icon">
-                {{ ux_icon('tabler:file-text', {width: 32, height: 32}) }}
-            </div>
-            <div class="doc-view-title-group">
-                <h1 class="doc-view-title">{{ "quote.title"|trans({"%id%" : quote.quoteId}) }}</h1>
-                <div class="doc-view-meta">
-                    {{ quote_label(quote.status) }}
-                    <span class="doc-view-meta-item">
-                        {{ ux_icon('tabler:calendar', {width: 14, height: 14}) }}
-                        {{ 'quote.created'|trans }}: {{ quote.created|date('M d, Y') }}
-                    </span>
-                </div>
-            </div>
-        </div>
+{% block page_title_actions %}
+    {% import '@SolidInvoiceInvoice/Default/_send_gate.html.twig' as send_gate %}
+    {% set gated = is_email_verification_gated() %}
+    {% set QuoteStatus = enum('SolidInvoice\\QuoteBundle\\Enum\\QuoteStatus') %}
 
-        <div class="doc-view-header-actions">
-            {# Always available actions #}
-            <div class="doc-view-utility-actions">
-                <button type="button" onclick="window.print()" class="btn btn-ghost btn-icon" title="{{ 'quote.action.print'|trans }}">
-                    {{ ux_icon('tabler:printer', {width: 20, height: 20}) }}
-                </button>
-                {% if can_print_pdf() %}
-                    <a href="{{ path('_quotes_view', {'id': quote.id, '_format': 'pdf'}) }}" target="_blank" class="btn btn-ghost btn-icon" title="{{ 'quote.action.pdf'|trans }}">
-                        {{ ux_icon('tabler:file-type-pdf', {width: 20, height: 20}) }}
-                    </a>
-                {% endif %}
+    {# Always available #}
+    <button type="button" onclick="window.print()" class="si-btn si-btn--ghost si-btn--md" title="{{ 'quote.action.print'|trans }}" aria-label="{{ 'quote.action.print'|trans }}">
+        {{ ux_icon('tabler:printer', {class: 'size-5', 'aria-hidden': 'true'}) }}
+    </button>
+    {% if can_print_pdf() %}
+        <a href="{{ path('_quotes_view', {'id': quote.id, '_format': 'pdf'}) }}" target="_blank" class="si-btn si-btn--ghost si-btn--md" title="{{ 'quote.action.pdf'|trans }}" aria-label="{{ 'quote.action.pdf'|trans }}">
+            {{ ux_icon('tabler:file-type-pdf', {class: 'size-5', 'aria-hidden': 'true'}) }}
+        </a>
+    {% endif %}
 
-                {# More Actions Dropdown #}
-                <div class="dropdown">
-                    <button class="btn btn-ghost btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ 'quote.view.toolbar.more_actions'|trans }}">
-                        {{ ux_icon('tabler:dots-vertical', {width: 20, height: 20}) }}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        {% if quote.invoice is not null %}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('_invoices_view', {'id' : quote.invoice.id}) }}">
-                                    {{ ux_icon('tabler:file-invoice', {width: 16, height: 16}) }}
-                                    {{ "quote.view.toolbar.view_invoice"|trans }}
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                        {% endif %}
+    <twig:Si:Dropdown label="{{ 'quote.view.toolbar.more_actions'|trans }}" triggerClass="si-btn si-btn--ghost si-btn--md">
+        <twig:block name="trigger">{{ ux_icon('tabler:dots-vertical', {class: 'size-5', 'aria-hidden': 'true'}) }}</twig:block>
+        {% if quote.invoice is not null %}
+            <twig:Si:MenuItem href="{{ path('_invoices_view', {'id' : quote.invoice.id}) }}" icon="tabler:file-invoice">{{ "quote.view.toolbar.view_invoice"|trans }}</twig:Si:MenuItem>
+            <div class="my-1 h-px bg-line-light" role="separator"></div>
+        {% endif %}
 
-                        <li>
-                            <a class="dropdown-item" href="{{ path('_quotes_clone', {'id' : quote.id}) }}">
-                                {{ ux_icon('tabler:copy', {width: 16, height: 16}) }}
-                                {{ "quote.view.toolbar.clone"|trans }}
-                            </a>
-                        </li>
+        <twig:Si:MenuItem href="{{ path('_quotes_clone', {'id' : quote.id}) }}" icon="tabler:copy">{{ "quote.view.toolbar.clone"|trans }}</twig:Si:MenuItem>
 
-                        {% if quote.status != enum('SolidInvoice\\QuoteBundle\\Enum\\QuoteStatus').Accepted %}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('_quotes_edit', {'id' : quote.id}) }}">
-                                    {{ ux_icon('tabler:pencil', {width: 16, height: 16}) }}
-                                    {{ "quote.view.toolbar.edit"|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
+        {% if quote.status != QuoteStatus.Accepted %}
+            <twig:Si:MenuItem href="{{ path('_quotes_edit', {'id' : quote.id}) }}" icon="tabler:pencil">{{ "quote.view.toolbar.edit"|trans }}</twig:Si:MenuItem>
+        {% endif %}
 
-                        {% if workflow_can(quote, 'reopen') %}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('_transition_quote', {'action': 'reopen', 'id' : quote.id}) }}">
-                                    {{ ux_icon('tabler:refresh', {width: 16, height: 16}) }}
-                                    {{ "quote.view.toolbar.reopen"|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
+        {% if workflow_can(quote, 'reopen') %}
+            <twig:Si:MenuItem href="{{ path('_transition_quote', {'action': 'reopen', 'id' : quote.id}) }}" icon="tabler:refresh">{{ "quote.view.toolbar.reopen"|trans }}</twig:Si:MenuItem>
+        {% endif %}
 
-                        {% if workflow_can(quote, 'archive') %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('_transition_quote', {'action' : 'archive', 'id' : quote.id}) }}">
-                                    {{ ux_icon('tabler:archive', {width: 16, height: 16}) }}
-                                    {{ "quote.view.toolbar.archive"|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
+        {% if workflow_can(quote, 'archive') %}
+            <div class="my-1 h-px bg-line-light" role="separator"></div>
+            <twig:Si:MenuItem href="{{ path('_transition_quote', {'action' : 'archive', 'id' : quote.id}) }}" icon="tabler:archive">{{ "quote.view.toolbar.archive"|trans }}</twig:Si:MenuItem>
+        {% endif %}
 
-                        {% if workflow_can(quote, 'cancel') %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="{{ path('_transition_quote', {'action': 'cancel', 'id' : quote.id}) }}">
-                                    {{ ux_icon('tabler:x', {width: 16, height: 16}) }}
-                                    {{ "quote.view.toolbar.cancel"|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
+        {% if workflow_can(quote, 'cancel') %}
+            <div class="my-1 h-px bg-line-light" role="separator"></div>
+            <twig:Si:MenuItem href="{{ path('_transition_quote', {'action': 'cancel', 'id' : quote.id}) }}" icon="tabler:x" class="text-danger-dark">{{ "quote.view.toolbar.cancel"|trans }}</twig:Si:MenuItem>
+        {% endif %}
+    </twig:Si:Dropdown>
 
-            {# Hero Actions - Changes based on quote state #}
-            {% if workflow_can(quote, 'accept') %}
-                {# Pending state: Accept + Decline buttons #}
-                <a href="{{ path('_transition_quote', {'action': 'decline', 'id' : quote.id}) }}" class="btn btn-outline-danger">
-                    {{ ux_icon('tabler:x', {width: 18, height: 18}) }}
-                    {{ "quote.view.toolbar.decline"|trans }}
-                </a>
-                <a href="{{ path('_transition_quote', {'action' : 'accept', 'id' : quote.id}) }}" class="btn btn-success btn-hero">
-                    {{ ux_icon('tabler:check', {width: 18, height: 18}) }}
-                    {{ "quote.view.toolbar.accept"|trans }}
-                </a>
+    {# The main action depends on where the quote is in its life #}
+    {% if workflow_can(quote, 'accept') %}
+        <twig:Si:Button variant="danger-ghost" href="{{ path('_transition_quote', {'action': 'decline', 'id' : quote.id}) }}">
+            {{ ux_icon('tabler:x', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+            {{ "quote.view.toolbar.decline"|trans }}
+        </twig:Si:Button>
+        <a href="{{ path('_transition_quote', {'action' : 'accept', 'id' : quote.id}) }}" class="si-btn si-btn--md bg-success text-white hover:bg-success-dark">
+            {{ ux_icon('tabler:check', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+            {{ "quote.view.toolbar.accept"|trans }}
+        </a>
+        {% if gated %}
+            {{ send_gate.hint('quote.send.verify_hint') }}
+            <twig:Si:Button type="button" disabled aria-describedby="send-gated-hint">
+                {{ ux_icon('tabler:send', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                {{ "quote.view.toolbar.send"|trans }}
+            </twig:Si:Button>
+        {% else %}
+            <twig:Si:Button href="{{ path('_send_quote', {'id' : quote.id}) }}">
+                {{ ux_icon('tabler:send', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                {{ "quote.view.toolbar.send"|trans }}
+            </twig:Si:Button>
+        {% endif %}
+    {% elseif workflow_can(quote, 'publish') %}
+        {% if gated %}
+            {{ send_gate.hint('quote.send.verify_hint') }}
+        {% endif %}
+        <div class="inline-flex">
+            <a href="{{ path('_transition_quote', {'action' : 'publish', 'id' : quote.id}) }}" class="si-btn si-btn--primary si-btn--md rounded-r-none">
+                {{ ux_icon('tabler:check', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                {{ 'quote.save.publish'|trans }}
+            </a>
+            <twig:Si:Dropdown label="{{ 'quote.view.toolbar.toggle_dropdown'|trans }}" triggerClass="si-btn si-btn--primary si-btn--md rounded-l-none border-l border-white/30 px-2">
+                <twig:block name="trigger">{{ ux_icon('tabler:chevron-down', {class: 'size-4', 'aria-hidden': 'true'}) }}</twig:block>
                 {% if gated %}
-                    {{ send_gate.hint('quote.send.verify_hint') }}
-                    <button type="button" class="btn btn-primary btn-hero" disabled aria-describedby="send-gated-hint">
-                        {{ ux_icon('tabler:send', {width: 18, height: 18}) }}
-                        {{ "quote.view.toolbar.send"|trans }}
+                    <button type="button" role="menuitem" class="flex w-full items-center gap-2 px-2.5 py-1.5 text-left text-base text-fg-muted" disabled aria-describedby="send-gated-hint">
+                        {{ ux_icon('tabler:send', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                        {{ 'quote.view.toolbar.publish_and_send'|trans }}
                     </button>
                 {% else %}
-                    <a href="{{ path('_send_quote', {'id' : quote.id}) }}" class="btn btn-primary btn-hero">
-                        {{ ux_icon('tabler:send', {width: 18, height: 18}) }}
-                        {{ "quote.view.toolbar.send"|trans }}
-                    </a>
+                    <twig:Si:MenuItem href="{{ path('_send_quote', {'id' : quote.id}) }}" icon="tabler:send">{{ 'quote.view.toolbar.publish_and_send'|trans }}</twig:Si:MenuItem>
                 {% endif %}
-            {% elseif workflow_can(quote, 'publish') %}
-                {# Draft state: Publish button #}
-                {% if gated %}
-                    {{ send_gate.hint('quote.send.verify_hint') }}
-                {% endif %}
-                <div class="btn-group">
-                    <a href="{{ path('_transition_quote', {'action' : 'publish', 'id' : quote.id}) }}" class="btn btn-primary btn-hero">
-                        {{ ux_icon('tabler:check', {width: 18, height: 18}) }}
-                        {{ 'quote.save.publish'|trans }}
-                    </a>
-                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">{{ 'quote.view.toolbar.toggle_dropdown'|trans }}</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            {% if gated %}
-                                <button type="button" class="dropdown-item" disabled aria-describedby="send-gated-hint">
-                                    {{ ux_icon('tabler:send', {width: 16, height: 16}) }}
-                                    {{ 'quote.view.toolbar.publish_and_send'|trans }}
-                                </button>
-                            {% else %}
-                                <a class="dropdown-item" href="{{ path('_send_quote', {'id' : quote.id}) }}">
-                                    {{ ux_icon('tabler:send', {width: 16, height: 16}) }}
-                                    {{ 'quote.view.toolbar.publish_and_send'|trans }}
-                                </a>
-                            {% endif %}
-                        </li>
-                    </ul>
-                </div>
-            {% elseif quote.status == enum('SolidInvoice\\QuoteBundle\\Enum\\QuoteStatus').Accepted and quote.invoice is not null %}
-                {# Accepted: View Invoice button #}
-                <a href="{{ path('_invoices_view', {'id' : quote.invoice.id}) }}" class="btn btn-primary btn-hero">
-                    {{ ux_icon('tabler:file-invoice', {width: 18, height: 18}) }}
-                    {{ "quote.view.toolbar.view_invoice"|trans }}
-                </a>
-            {% endif %}
+            </twig:Si:Dropdown>
         </div>
+    {% elseif quote.status == QuoteStatus.Accepted and quote.invoice is not null %}
+        <twig:Si:Button href="{{ path('_invoices_view', {'id' : quote.invoice.id}) }}">
+            {{ ux_icon('tabler:file-invoice', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+            {{ "quote.view.toolbar.view_invoice"|trans }}
+        </twig:Si:Button>
+    {% endif %}
+{% endblock page_title_actions %}
+
+{% block content %}
+    {% import '@SolidInvoiceInvoice/Default/_send_gate.html.twig' as send_gate %}
+    {% set currency = quote.currency %}
+
+    <div class="-mt-2 mb-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-fg-secondary print:hidden">
+        {{ quote_label(quote.status) }}
+        <span class="inline-flex items-center gap-1.5">
+            {{ ux_icon('tabler:calendar', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+            {{ 'quote.created'|trans }}: {{ quote.created|date('M d, Y') }}
+        </span>
     </div>
 
-    {# ═══════════════════════════════════════════════════════════════════════
-       MAIN CONTENT - Quote Document + Sidebar
-    ═══════════════════════════════════════════════════════════════════════ #}
-    <div class="doc-view-content">
-        {# Quote Document (Main Area) #}
-        <div class="doc-view-document">
+    <div class="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
+        <div class="min-w-0">
             {% if documentTemplate|default(null) is not empty %}
                 {% include documentTemplate %}
             {% else %}
-            <div class="doc-card">
-                {# Document Header - From/To #}
-                <div class="doc-header-from-to">
-                    <div class="doc-party doc-party-from">
-                        <div class="doc-party-label">{{ 'quote.from'|trans }}</div>
-                        <h3 class="doc-party-name">{{ company_name() }}</h3>
-
-                        {% for identifier in tax_identifiers() %}
-                            <div class="doc-party-detail">
-                                <span class="detail-label">{{ identifier.label }}</span>
-                                <span class="detail-value">{{ identifier.value }}</span>
-                            </div>
-                        {% endfor %}
-
-                        {% set email = setting('system/company/contact_details/email') %}
-                        {% if email is not empty %}
-                            <div class="doc-party-detail">
-                                {{ ux_icon('tabler:mail', {width: 14, height: 14}) }}
-                                <span class="detail-value">{{ email }}</span>
-                            </div>
-                        {% endif %}
-
-                        {% set phoneNumber = setting('system/company/contact_details/phone_number') %}
-                        {% if phoneNumber is not empty %}
-                            <div class="doc-party-detail">
-                                {{ ux_icon('tabler:phone', {width: 14, height: 14}) }}
-                                <span class="detail-value">{{ phoneNumber }}</span>
-                            </div>
-                        {% endif %}
-
-                        {% set address = setting('system/company/contact_details/address', null, true) %}
-                        {% if address is not null and address|filter(v => v) is not empty %}
-                            <div class="doc-party-detail">
-                                {{ ux_icon('tabler:map-pin', {width: 14, height: 14}) }}
-                                <span class="detail-value">{{ address(address)|replace({"\n": ", "}) }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="doc-party doc-party-to">
-                        <div class="doc-party-label">{{ 'quote.to'|trans }}</div>
-                        <h3 class="doc-party-name">{{ quote.client }}</h3>
-
-                        {% if quote.client.website is not empty %}
-                            <div class="doc-party-detail">
-                                {% set website_url = quote.client.website starts with 'http://' or quote.client.website starts with 'https://' ? quote.client.website : 'https://' ~ quote.client.website %}
-                                {{ ux_icon('tabler:world', {width: 16, height: 16}) }}
-                                <a href="{{ website_url }}" class="detail-value" rel="external noreferrer noopener" target="_blank">
-                                    <span>{{ quote.client.website }}</span>
-                                    {{ ux_icon('tabler:external-link', {width: 14, height: 14}) }}
-                                </a>
-                            </div>
-                        {% endif %}
-
-                        {% for identifier in tax_identifiers(quote.client) %}
-                            <div class="doc-party-detail">
-                                <span class="detail-label">{{ identifier.label }}</span>
-                                <span class="detail-value">{{ identifier.value }}</span>
-                            </div>
-                        {% endfor %}
-
-                        {% for address in quote.client.addresses %}
-                            <div class="doc-party-detail">
-                                {{ ux_icon('tabler:map-pin', {width: 14, height: 14}) }}
-                                <span class="detail-value">{{ address|replace({"\n": ", "}) }}</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                {# Line Items Table #}
-                <div class="doc-items">
-                    <table class="doc-items-table">
-                        <thead>
-                            <tr>
-                                <th class="column-description">{{ 'quote.item.heading.description'|trans }}</th>
-                                <th class="column-price">{{ 'quote.item.heading.price'|trans }}</th>
-                                <th class="column-qty">{{ 'quote.item.heading.qty'|trans }}</th>
-                                {% if quote.tax.positive %}
-                                    <th class="column-tax">{{ 'quote.item.heading.tax'|trans }}</th>
-                                {% endif %}
-                                <th class="column-total">{{ 'quote.item.heading.total'|trans }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in quote.lines %}
-                                <tr>
-                                    <td class="column-description" data-label="{{ 'quote.item.heading.description'|trans }}">{{ item.name }}{{ q.line_description(item, false) }}</td>
-                                    <td class="column-price" data-label="{{ 'quote.item.heading.price'|trans }}">{{ item.price|formatCurrency(currency) }}</td>
-                                    <td class="column-qty" data-label="{{ 'quote.item.heading.qty'|trans }}">{{ item.qty }}</td>
-                                    {% if quote.tax.positive %}
-                                        <td class="column-tax" data-label="{{ 'quote.item.heading.tax'|trans }}">
-                                            {% for lineTax in item.taxes %}{{ lineTax.nameSnapshot }} ({{ lineTax.rateSnapshot }}%){% if not loop.last %}, {% endif %}{% endfor %}
-                                        </td>
-                                    {% endif %}
-                                    <td class="column-total" data-label="{{ 'quote.item.heading.total'|trans }}">{{ item.total|formatCurrency(currency) }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                {# Totals Section #}
-                <div class="doc-totals">
-                    <div class="doc-totals-grid">
-                        <div class="totals-row">
-                            <span class="totals-label">{{ 'quote.subtotal'|trans }}</span>
-                            <span class="totals-value">{{ quote.baseTotal|formatCurrency(currency) }}</span>
-                        </div>
-
-                        {% set _tb = tax_breakdown(quote) %}
-                        {% if quote.tax.positive %}
-                            <div class="totals-row">
-                                <span class="totals-label">{{ 'quote.line_tax'|trans }}</span>
-                                <span class="totals-value">{{ quote.tax|formatCurrency(currency) }}</span>
-                            </div>
-                            {% for row in _tb.lineTaxRows %}
-                                <div class="totals-row totals-row-tax-breakdown">
-                                    <span class="totals-label totals-label-sub">{{ row.name }} ({{ row.rate }}%)</span>
-                                    <span class="totals-value">{{ row.amount|formatCurrency(currency) }}</span>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                        {% for row in _tb.additiveRows %}
-                            <div class="totals-row">
-                                <span class="totals-label">{{ row.name }} ({{ row.rate }}%)</span>
-                                <span class="totals-value">{{ row.amount|formatCurrency(currency) }}</span>
-                            </div>
-                        {% endfor %}
-                        {% for row in _tb.informationalRows %}
-                            <div class="totals-row totals-row-tax-breakdown">
-                                <span class="totals-label totals-label-sub">{{ row.name }} ({{ row.rate }}%){% if row.note %} — {{ row.note }}{% endif %}</span>
-                                <span class="totals-value text-muted">{{ 'quote.invoice_taxes.informational'|trans }}</span>
-                            </div>
-                        {% endfor %}
-
-                        {% if discount(quote).isPositive() %}
-                            <div class="totals-row totals-row-discount">
-                                <span class="totals-label">{{ 'quote.discount'|trans }}</span>
-                                <span class="totals-value">-{{ discount(quote)|formatCurrency(currency) }}</span>
-                            </div>
-                        {% endif %}
-
-                        <div class="totals-row totals-row-final">
-                            <span class="totals-label">{{ 'quote.total'|trans }}</span>
-                            <span class="totals-value">{{ quote.total|formatCurrency(currency) }}</span>
-                        </div>
-                        {% if quote.withholdingAmount.positive %}
-                            <div class="totals-row">
-                                <span class="totals-label">{{ 'quote.withholding'|trans }}</span>
-                                <span class="totals-value">-{{ quote.withholdingAmount|formatCurrency(currency) }}</span>
-                            </div>
-                            <div class="totals-row totals-row-final">
-                                <span class="totals-label">{{ 'quote.amount_payable'|trans }}</span>
-                                <span class="totals-value">{{ payable_amount(quote)|formatCurrency(currency) }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                {# Custom Fields (admin view shows ALL fields) #}
-                <twig:CustomFieldsList :target="enum('SolidInvoice\\CoreBundle\\Enum\\CustomFieldTarget').QUOTE" :recordId="quote.id" />
-
-                {# Terms & Notes #}
-                {% if quote.terms is not empty or quote.notes is not empty %}
-                    <div class="doc-footer">
-                        {% if quote.terms is not empty %}
-                            <div class="doc-footer-section">
-                                <h4 class="doc-footer-title">{{ 'quote.terms'|trans }}</h4>
-                                <p class="doc-footer-text">{{ quote.terms|nl2br }}</p>
-                            </div>
-                        {% endif %}
-
-                        {% if quote.notes is not empty %}
-                            <div class="doc-footer-section no-print">
-                                <h4 class="doc-footer-title">{{ 'quote.notes'|trans }}</h4>
-                                <p class="doc-footer-text">{{ quote.notes|nl2br }}</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            </div>
+                {% include '@SolidInvoiceCore/Billing/_document.html.twig' with {
+                    doc: quote,
+                    type: 'quote',
+                    currency: currency,
+                    target: enum('SolidInvoice\\CoreBundle\\Enum\\CustomFieldTarget').QUOTE,
+                } only %}
             {% endif %}
         </div>
 
         {# Sidebar #}
-        <div class="doc-view-sidebar no-print">
-            {# Client Card #}
-            <div class="doc-sidebar-card">
-                <div class="doc-sidebar-card-header">
-                    <div class="doc-sidebar-card-icon">
-                        {{ ux_icon('tabler:building', {width: 18, height: 18}) }}
-                    </div>
-                    <h3 class="doc-sidebar-card-title">{{ 'quote.client.title'|trans }}</h3>
-                </div>
-                <div class="doc-sidebar-card-body">
-                    <div class="client-info">
-                        <a href="{{ path('_clients_view', {'id': quote.client.id}) }}" class="client-name">
-                            {{ quote.client }}
-                        </a>
+        <div class="space-y-4 print:hidden">
+            <twig:Si:Card title="{{ 'quote.client.title'|trans }}" icon="tabler:building" iconColor="primary" :padded="true">
+                <a href="{{ path('_clients_view', {'id': quote.client.id}) }}" class="font-semibold text-primary hover:underline">{{ quote.client }}</a>
 
-                        {% if quote.users|length > 0 %}
-                            <div class="client-contacts">
-                                {% for user in quote.users %}
-                                    <div class="client-contact">
-                                        <div class="contact-name">{{ user }}</div>
-                                        <div class="contact-email">
-                                            {{ ux_icon('tabler:mail', {width: 12, height: 12}) }}
-                                            {{ user.email }}
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+                {% if quote.users|length > 0 %}
+                    <ul class="mt-3 space-y-2">
+                        {% for user in quote.users %}
+                            <li class="text-sm">
+                                <div class="text-fg">{{ user }}</div>
+                                <div class="flex items-center gap-1 text-fg-muted">
+                                    {{ ux_icon('tabler:mail', {class: 'size-3', 'aria-hidden': 'true'}) }}
+                                    {{ user.email }}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </twig:Si:Card>
 
-            {# Quote Summary Card #}
-            <div class="doc-sidebar-card">
-                <div class="doc-sidebar-card-header">
-                    <div class="doc-sidebar-card-icon">
-                        {{ ux_icon('tabler:receipt', {width: 18, height: 18}) }}
+            <twig:Si:Card title="{{ 'quote.summary'|trans }}" icon="tabler:receipt" iconColor="primary" :padded="true">
+                <dl class="space-y-3 text-sm">
+                    <div class="flex items-center justify-between gap-3">
+                        <dt class="text-fg-secondary">{{ 'label.status'|trans }}</dt>
+                        <dd>{{ quote_label(quote.status) }}</dd>
                     </div>
-                    <h3 class="doc-sidebar-card-title">{{ 'quote.summary'|trans }}</h3>
-                </div>
-                <div class="doc-sidebar-card-body">
-                    <div class="doc-summary-grid">
-                        <div class="summary-item">
-                            <span class="summary-label">{{ 'label.status'|trans }}</span>
-                            <span class="summary-value">{{ quote_label(quote.status) }}</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="summary-label">{{ 'quote.total'|trans }}</span>
-                            <span class="summary-value summary-value-amount">{{ quote.total|formatCurrency(currency) }}</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="summary-label">{{ 'quote.created'|trans }}</span>
-                            <span class="summary-value">{{ quote.created|date('M d, Y') }}</span>
-                        </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <dt class="text-fg-secondary">{{ 'quote.total'|trans }}</dt>
+                        <dd class="tabular text-base font-semibold text-fg">{{ quote.total|formatCurrency(currency) }}</dd>
                     </div>
-                </div>
-            </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <dt class="text-fg-secondary">{{ 'quote.created'|trans }}</dt>
+                        <dd class="text-fg">{{ quote.created|date('M d, Y') }}</dd>
+                    </div>
+                </dl>
+            </twig:Si:Card>
 
-            {# Related Invoice Card (if accepted) #}
             {% if quote.invoice is not null %}
-                <div class="doc-sidebar-card doc-sidebar-card-success">
-                    <div class="doc-sidebar-card-header">
-                        <div class="doc-sidebar-card-icon">
-                            {{ ux_icon('tabler:file-invoice', {width: 18, height: 18}) }}
-                        </div>
-                        <h3 class="doc-sidebar-card-title">{{ 'quote.view.related_invoice'|trans }}</h3>
-                    </div>
-                    <div class="doc-sidebar-card-body">
-                        <a href="{{ path('_invoices_view', {'id' : quote.invoice.id}) }}" class="related-invoice-link">
-                            {{ ux_icon('tabler:external-link', {width: 14, height: 14}) }}
-                            {{ 'invoice.title'|trans({'%id%': quote.invoice.invoiceId}) }}
-                        </a>
-                        <div class="related-invoice-status">
-                            {{ invoice_label(quote.invoice.status) }}
-                        </div>
-                    </div>
-                </div>
+                <twig:Si:Card title="{{ 'quote.view.related_invoice'|trans }}" icon="tabler:file-invoice" iconColor="success" status="success" :padded="true">
+                    <a href="{{ path('_invoices_view', {'id' : quote.invoice.id}) }}" class="inline-flex items-center gap-1 font-medium text-primary hover:underline">
+                        {{ ux_icon('tabler:external-link', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+                        {{ 'invoice.title'|trans({'%id%': quote.invoice.invoiceId}) }}
+                    </a>
+                    <div class="mt-2">{{ invoice_label(quote.invoice.status) }}</div>
+                </twig:Si:Card>
             {% endif %}
         </div>
     </div>
 
-    {% if gated %}
+    {% if is_email_verification_gated() %}
         {{ send_gate.resend_form() }}
     {% endif %}
-</div>
 {% endblock content %}

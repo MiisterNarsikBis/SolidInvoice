@@ -1,0 +1,8 @@
+{#
+    The panel a <twig:Si:Tab target="..."> switches to. `id` must match the tab's `target`; only the
+    `active` panel starts visible.
+#}
+{% props id, active = false %}
+<div {{ attributes }} id="{{ id }}" role="tabpanel" data-si-tabs-target="panel"{% if not active %} hidden{% endif %}>
+    {% block content %}{% endblock %}
+</div>

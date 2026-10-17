@@ -1,42 +1,29 @@
 import { Controller } from '@hotwired/stimulus';
-import { Modal } from '@tabler/core';
+import { closeModal, openModal } from '../lib/modal';
 
+/**
+ * The "delete company" confirmation: the user has to type the company's name before the delete
+ * button is enabled. The dialog is a <twig:Si:Modal> (a native <dialog>), the `modal` target.
+ */
 /* stimulusFetch: 'lazy' */
 export default class extends Controller<HTMLElement> {
     static targets = ['modal', 'companyNameInput', 'confirmButton'];
     static values = { companyName: String };
 
-    declare readonly modalTarget: HTMLElement;
+    declare readonly modalTarget: HTMLDialogElement;
     declare readonly companyNameInputTarget: HTMLInputElement;
     declare readonly confirmButtonTarget: HTMLButtonElement;
     declare readonly companyNameValue: string;
 
-    private modalInstance: Modal | null = null;
-
-    connect() {
-        if (this.modalTarget) {
-            this.modalInstance = Modal.getOrCreateInstance(this.modalTarget) as Modal;
-        }
-    }
-
-    disconnect() {
-        if (this.modalInstance) {
-            this.modalInstance.dispose();
-        }
-    }
-
     showModal() {
-        if (this.modalInstance) {
-            this.modalInstance.show();
-        }
         this.companyNameInputTarget.value = '';
         this.updateConfirmButton();
+        openModal(this.modalTarget);
+        this.companyNameInputTarget.focus();
     }
 
     hideModal() {
-        if (this.modalInstance) {
-            this.modalInstance.hide();
-        }
+        closeModal(this.modalTarget);
     }
 
     validateInput() {

@@ -1,0 +1,26 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    A boxed list of what the account has or is missing.
+
+    Variables: heading (translated), items (list of translated strings), icon (default tabler:lock),
+    tone (text colour class for the icon).
+#}
+<div class="mb-6 rounded-lg border border-line-light bg-canvas p-5 text-left">
+    <h3 class="mb-3 font-semibold text-fg">{{ heading }}</h3>
+    <ul class="space-y-2">
+        {% for item in items %}
+            <li class="flex items-start gap-2 text-fg-secondary">
+                {{ ux_icon(icon|default('tabler:lock'), {class: 'mt-0.5 size-5 shrink-0 ' ~ tone|default('text-fg-muted'), 'aria-hidden': 'true'}) }}
+                {{ item }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>

@@ -109,11 +109,11 @@ final class CustomFieldDefinitionType extends AbstractType
                 'label' => false,
                 'button_add_options' => [
                     'label' => 'custom_field.form.option.add',
-                    'attr' => ['class' => 'btn btn-sm btn-outline-primary'],
+                    'attr' => ['class' => 'si-btn si-btn--sm si-btn--outline'],
                 ],
                 'button_delete_options' => [
                     'label' => false,
-                    'attr' => ['class' => 'btn btn-link text-danger btn-icon btn-icon-sm'],
+                    'attr' => ['class' => 'si-btn si-btn--sm si-btn--danger-ghost'],
                 ],
             ]);
         });

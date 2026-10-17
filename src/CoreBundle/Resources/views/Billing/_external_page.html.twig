@@ -1,0 +1,76 @@
+{#
+ # This file is part of SolidInvoice package.
+ #
+ # (c) Pierre du Plessis <open-source@solidworx.co>
+ #
+ # This source file is subject to the MIT license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+
+{#
+    The customer-facing page around a quote or an invoice: the app's branding, an action bar
+    (print, PDF, and what the document allows, such as paying), the document, and a footer. Embed it:
+
+        {% embed '@SolidInvoiceCore/Billing/_external_page.html.twig' with {type: 'invoice', pdfUrl: path(...)} %}
+            {% block actions %}...{% endblock %}
+            {% block document %}...{% endblock %}
+        {% endembed %}
+
+    Variables: type ('quote' | 'invoice', the translation prefix), pdfUrl.
+    Blocks: actions (right of the print / PDF buttons), document.
+
+    This is the customer's page, so the surrounding chrome is the app's; the document inside takes
+    its look from the design template the company picked.
+#}
+{% set branded = setting('system/general/hide_powered_by') is not same as('1') or not feature_enabled('custom_branding') %}
+
+<div class="space-y-4">
+    {% if branded %}
+        <div class="flex items-center gap-3 print:hidden">
+            {% if app_logo() is not empty %}
+                {{ app_logo(40, showDefault: true, showOnlyAppIcon: true) }}
+            {% endif %}
+            <span class="text-xl font-semibold text-fg">{{ constant('SolidInvoice\\CoreBundle\\SolidInvoiceCoreBundle::APP_NAME') }}</span>
+        </div>
+    {% endif %}
+
+    <div class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-line-light bg-surface px-4 py-3 shadow-sm print:hidden">
+        <div class="flex flex-wrap gap-2">
+            <twig:Si:Button type="button" variant="outline" onclick="window.print()">
+                {{ ux_icon('tabler:printer', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                {{ (type ~ '.action.print')|trans }}
+            </twig:Si:Button>
+            {% if can_print_pdf() %}
+                <twig:Si:Button variant="outline" href="{{ pdfUrl }}" target="_blank">
+                    {{ ux_icon('tabler:file-type-pdf', {class: 'size-[1.125rem]', 'aria-hidden': 'true'}) }}
+                    {{ (type ~ '.action.pdf')|trans }}
+                </twig:Si:Button>
+            {% endif %}
+        </div>
+        {% block actions %}{% endblock actions %}
+    </div>
+
+    {% block document %}{% endblock document %}
+
+    {% if branded %}
+        <footer class="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-line-light bg-surface px-5 py-4 shadow-sm print:hidden" data-powered-by>
+            <div>
+                <div class="flex items-center gap-2 text-fg-secondary">
+                    {{ app_logo(24, showDefault: true, showOnlyAppIcon: true) }}
+                    <span>{{ (type ~ '.external.footer.powered_by')|trans }} <strong class="text-primary">{{ constant('SolidInvoice\\CoreBundle\\SolidInvoiceCoreBundle::APP_NAME') }}</strong></span>
+                </div>
+                <p class="mt-1 text-sm text-fg-muted">{{ (type ~ '.external.footer.description')|trans }}</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <twig:Si:Button size="sm" href="https://solidinvoice.co" target="_blank" rel="noopener">
+                    {{ ux_icon('tabler:world', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                    {{ (type ~ '.external.footer.visit_website')|trans }}
+                </twig:Si:Button>
+                <twig:Si:Button size="sm" variant="outline" href="https://github.com/SolidInvoice/SolidInvoice" target="_blank" rel="noopener">
+                    {{ ux_icon('tabler:brand-github', {class: 'size-4', 'aria-hidden': 'true'}) }}
+                    {{ (type ~ '.external.footer.github')|trans }}
+                </twig:Si:Button>
+            </div>
+        </footer>
+    {% endif %}
+</div>

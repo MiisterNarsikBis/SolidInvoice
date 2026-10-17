@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { setVisible } from '../lib/visibility';
 
 /* stimulusFetch: 'lazy' */
 export default class CapturePaymentController extends Controller<HTMLDivElement> {
@@ -14,16 +15,16 @@ export default class CapturePaymentController extends Controller<HTMLDivElement>
             return;
         }
 
-        this.captureOnlineTarget.classList.add('d-none');
+        setVisible(this.captureOnlineTarget, false);
 
         this.paymentMethodTarget.addEventListener('change', (e: Event): void => {
 
             const selectedOption: HTMLOptionElement|null = (e.target as HTMLSelectElement).querySelector('option:checked');
 
             if (selectedOption?.dataset.offline === undefined) {
-                this.captureOnlineTarget.classList.remove('d-none');
+                setVisible(this.captureOnlineTarget, true);
             } else {
-                this.captureOnlineTarget.classList.add('d-none');
+                setVisible(this.captureOnlineTarget, false);
             }
         });
     }

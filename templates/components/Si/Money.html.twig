@@ -1,0 +1,32 @@
+{#
+    A money amount: a quiet currency code next to a tabular figure.
+
+        <twig:Si:Money :amount="invoice.total" :currency="invoice.currency" tone="overdue" />
+
+    amount    minor units (cents), same contract as the `formatCurrencyAmount` filter
+    currency  ISO code, a Money\Currency, or empty to fall back to the system currency
+    tone      neutral (default) | paid | overdue | muted
+    size      md (default) | lg | xl
+
+    The Money-Colour Rule (DESIGN.md section 2): `paid` and `overdue` are only valid next to a
+    visible label that says so. A green total with no "Paid" beside it is a bug.
+#}
+{% props amount, currency = null, tone = 'neutral', size = 'md' %}
+
+{%- set tones = {
+    neutral: 'text-fg',
+    muted: 'text-fg-secondary',
+    paid: 'text-success-dark',
+    overdue: 'text-danger-dark',
+} -%}
+{%- set sizes = {
+    md: '',
+    lg: 'text-lg',
+    xl: 'text-2xl',
+} -%}
+{%- set code = currency is empty ? '' : currency|trim -%}
+
+<span {{ attributes.defaults({class: 'tabular inline-flex items-baseline gap-1 ' ~ tones[tone] ~ ' ' ~ sizes[size]}) }}>
+    <span class="text-[0.75em] font-medium text-fg-secondary">{{ code ?: currencyFormatter().getCurrencySymbol(null, true) }}</span>
+    <strong class="font-semibold">{{ amount|formatCurrencyAmount(code ?: null) }}</strong>
+</span>

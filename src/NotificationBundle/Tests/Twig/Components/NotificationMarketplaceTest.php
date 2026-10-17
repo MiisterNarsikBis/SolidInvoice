@@ -240,7 +240,7 @@ final class NotificationMarketplaceTest extends LiveComponentTest
 
         // Verify SMS integrations are present with icons
         self::assertStringContainsString('Twilio', $rendered);
-        self::assertStringContainsString('integration-card-icon', $rendered);
+        self::assertStringContainsString('data-integration-icon', $rendered);
         self::assertStringContainsString('<svg', $rendered);
 
         // Test Chat integrations have icons
@@ -256,7 +256,7 @@ final class NotificationMarketplaceTest extends LiveComponentTest
 
         // Verify Chat integrations are present with icons
         self::assertStringContainsString('Slack', $rendered);
-        self::assertStringContainsString('integration-card-icon', $rendered);
+        self::assertStringContainsString('data-integration-icon', $rendered);
         self::assertStringContainsString('<svg', $rendered);
     }
 

@@ -1,23 +1,25 @@
-<div {{ attributes }} class="d-flex align-items-center justify-content-between gap-3">
-    <div class="client-credit-amount" id="client-credit-value">
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
+
+<div {{ attributes }} class="flex items-center justify-between gap-3">
+    <div class="tabular text-2xl font-semibold text-fg" id="client-credit-value">
         {{ client.credit|formatCurrency(client.currency) }}
     </div>
-    <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#add-client-credit">
-        {{ ux_icon('tabler:plus', {width: 14, height: 14}) }}
+    <twig:Si:Button type="button" variant="outline" size="sm" data-si-modal-open="#add-client-credit">
+        {{ ux_icon('tabler:plus', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
         {{ 'client.view.actions.add_credit'|trans }}
-    </button>
+    </twig:Si:Button>
 
     {{ form_start(form, {attr: {'data-action': 'live#action:prevent', 'data-live-action-param': 'save'}}) }}
-    <twig:Ui:Modal id="add-client-credit" title="{{ 'client.modal.add_credit'|trans }}">
+    <twig:Si:Modal id="add-client-credit" title="{{ 'client.modal.add_credit'|trans }}">
         {{ form_row(form) }}
 
         <twig:block name="footer">
-            <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">{{ 'action.cancel'|trans }}</button>
-            <button type="submit" class="btn btn-primary">
-                {{ ux_icon('tabler:device-floppy', {width: 16, height: 16}) }}
+            <twig:Si:Button type="button" variant="ghost" data-si-modal-close>{{ 'action.cancel'|trans }}</twig:Si:Button>
+            <twig:Si:Button type="submit">
+                {{ ux_icon('tabler:device-floppy', {class: 'size-4', 'aria-hidden': 'true'}) }}
                 {{ 'action.save'|trans }}
-            </button>
+            </twig:Si:Button>
         </twig:block>
-    </twig:Ui:Modal>
+    </twig:Si:Modal>
     {{ form_end(form) }}
 </div>

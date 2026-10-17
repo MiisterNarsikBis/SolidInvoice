@@ -1,0 +1,70 @@
+{#
+    A paper-like surface: white, 12px radius, hairline border, soft shadow. The Tailwind
+    counterpart of Platform's <twig:Ui:Card>.
+
+        <twig:Si:Card class="p-8"> ... </twig:Si:Card>
+
+        <twig:Si:Card title="{{ 'dashboard.attention.title'|trans }}" subtitle="..." icon="tabler:bell" :padded="true">
+            <twig:block name="actions"><a ...>View all</a></twig:block>
+            ...
+            <twig:block name="footer"><twig:Si:Button>Save</twig:Si:Button></twig:block>
+        </twig:Si:Card>
+
+    title, subtitle   already translated. With a `title` the card gets a ruled header
+    icon, iconColor   a `tabler:` icon beside the title; colour is neutral | primary | success |
+                      danger | warning | info
+    status            primary | success | danger | warning | info: a coloured bar on the top edge
+    padded            pad the body (p-5). Leave it off to hold a table or list edge to edge, or
+                      pass padding in `class` for a header-less card
+
+    Blocks: `header` (replaces the whole header), `actions` (right side of the header), `body` /
+    default content, `footer` (a ruled bar for form actions).
+#}
+{% props title = null, subtitle = null, icon = null, iconColor = 'neutral', status = '', padded = false %}
+
+{%- set iconTones = {
+    neutral: 'text-fg-muted',
+    primary: 'text-primary',
+    success: 'text-success-dark',
+    danger: 'text-danger-dark',
+    warning: 'text-warning-dark',
+    info: 'text-info-dark',
+} -%}
+{%- set bars = {
+    primary: 'bg-primary',
+    success: 'bg-success',
+    danger: 'bg-danger',
+    warning: 'bg-warning',
+    info: 'bg-info',
+} -%}
+
+<div {{ attributes.defaults({class: 'rounded-lg border border-line-light bg-surface shadow-sm'}) }}>
+    {% if status is not empty %}
+        <div class="h-1 rounded-t-lg {{ bars[status]|default('bg-primary') }}" aria-hidden="true"></div>
+    {% endif %}
+
+    {% block header %}
+        {% if title %}
+            <div class="flex items-center justify-between gap-3 border-b border-line-light px-5 py-3.5">
+                <div class="flex min-w-0 items-center gap-2">
+                    {% if icon %}{{ ux_icon(icon, {class: 'size-5 shrink-0 ' ~ iconTones[iconColor]|default('text-fg-muted'), 'aria-hidden': 'true'}) }}{% endif %}
+                    <div class="min-w-0">
+                        <h2 class="truncate text-lg font-semibold text-fg">{{ title }}</h2>
+                        {% if subtitle %}<p class="text-sm text-fg-muted">{{ subtitle }}</p>{% endif %}
+                    </div>
+                </div>
+                {% block actions %}{% endblock %}
+            </div>
+        {% endif %}
+    {% endblock header %}
+
+    {% if padded %}<div class="p-5">{% endif %}
+    {% block body %}{% block content %}{% endblock %}{% endblock %}
+    {% if padded %}</div>{% endif %}
+
+    {% if block('footer') is defined and block('footer') is not empty %}
+        <div class="flex items-center justify-end gap-2 border-t border-line-light px-5 py-3">
+            {% block footer %}{% endblock %}
+        </div>
+    {% endif %}
+</div>

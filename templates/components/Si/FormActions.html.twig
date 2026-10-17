@@ -1,0 +1,23 @@
+{#
+    The action bar at the foot of a form page: Cancel on the left, the primary action on the right,
+    pinned to the bottom of the viewport while the form scrolls. The Tailwind counterpart of the
+    `form-page-actions` markup.
+
+        <twig:Si:FormActions>
+            <twig:Si:Button variant="ghost" href="{{ path('_tax_rates') }}">{{ 'tax.rates.cancel'|trans }}</twig:Si:Button>
+            <twig:Si:Button type="submit">{{ 'tax.rates.save'|trans }}</twig:Si:Button>
+        </twig:Si:FormActions>
+
+    The bar spans the page padding; `width` sets the inner column so the buttons line up with the
+    form above (default `max-w-3xl`, left-aligned like the page title). `bleed` extends the bar over
+    the page padding (right for a full-width page); pass `:bleed="false"` inside a narrower column,
+    such as the profile pages. Cancel first, primary last, so the primary action is always
+    on the right.
+#}
+{% props width = 'max-w-3xl', bleed = true %}
+
+<div {{ attributes.defaults({'data-form-actions': true, class: 'sticky bottom-0 z-10 mt-6 border-t border-line bg-surface/95 py-3 backdrop-blur print:hidden ' ~ (bleed ? '-mx-4 px-4 lg:-mx-8 lg:px-8' : '')}) }}>
+    <div class="flex items-center justify-between gap-3 {{ width }}">
+        {% block content %}{% endblock %}
+    </div>
+</div>

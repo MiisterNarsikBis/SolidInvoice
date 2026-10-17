@@ -1,4 +1,4 @@
-{##
+{#
  # This file is part of SolidInvoice package.
  #
  # (c) Pierre du Plessis <open-source@solidworx.co>
@@ -7,159 +7,105 @@
  # with this source code in the file LICENSE.
  #}
 
-{% extends "@SolidInvoiceCore/Layout/default_no_nav.html.twig" %}
+{% extends "@SolidInvoiceCore/Layout/focus.html.twig" %}
+
+{% form_theme form '@SolidInvoiceCore/Form/tailwind.html.twig' %}
+
+{% block page_title %}{{ 'company.create.title'|trans }}{% endblock page_title %}
+
+{% block container_class %}max-w-2xl{% endblock %}
 
 {% block content %}
-    <div class="company-create-page">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-12 col-lg-8 col-xl-7">
-                    {# Header Section #}
-                    <div class="company-page-intro text-center mb-5">
-                        <div class="d-flex align-items-center justify-content-center gap-3 mb-2">
-                            <span class="avatar avatar-md rounded-circle bg-primary-lt">
-                                {{ ux_icon('tabler:building', {width: 24, height: 24, class: 'text-primary'}) }}
-                            </span>
-                            <h2 class="h3 mb-0">{{ 'company.create.title'|trans }}</h2>
-                        </div>
-                        <p class="text-secondary mb-0">{{ 'company.create.subtitle'|trans }}</p>
-                    </div>
+    <p class="-mt-3 mb-6 text-center text-fg-muted">{{ 'company.create.subtitle'|trans }}</p>
 
-                    {{ form_start(form, {'attr': {'class': 'form-smooth'}}) }}
-                        <twig:Ui:Card>
-                            <div class="card-body p-4 p-md-5">
-                                {# Form Fields #}
-                                <div class="mb-4">
-                                    <div class="row g-4">
-                                        <div class="col-12">
-                                            {{ form_row(form.name, {
-                                                'attr': {
-                                                    'class': 'form-control-lg',
-                                                    'placeholder': 'company.create.name_placeholder'|trans,
-                                                    'autofocus': 'autofocus'
-                                                }
-                                            }) }}
-                                            <div class="form-hint mt-2">
-                                                {{ ux_icon('tabler:info-circle', {width: 14, height: 14, class: 'me-1'}) }}
-                                                {{ 'company.create.name_help'|trans }}
-                                            </div>
-                                        </div>
+    {{ form_start(form) }}
+        <twig:Si:Card>
+            <div class="p-6 md:p-8">
+                {{ form_row(form.name, {
+                    'attr': {
+                        'class': 'si-control h-11 text-lg',
+                        'placeholder': 'company.create.name_placeholder'|trans,
+                        'autofocus': 'autofocus'
+                    },
+                    'help': 'company.create.name_help'|trans,
+                    'help_translation_domain': false,
+                }) }}
 
-                                        <div class="col-12">
-                                            {{ form_row(form.currency, {
-                                                'attr': {
-                                                    'class': 'form-select-lg'
-                                                }
-                                            }) }}
-                                            <div class="form-hint mt-2">
-                                                {{ ux_icon('tabler:currency-dollar', {width: 14, height: 14, class: 'me-1'}) }}
-                                                {{ 'company.create.currency_help'|trans }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                {{ form_row(form.currency, {
+                    'help': 'company.create.currency_help'|trans,
+                    'help_translation_domain': false,
+                }) }}
 
-                                {# Divider #}
-                                <hr class="my-4">
+                <hr class="my-6 border-line-light">
 
-                                {# Pricing Information #}
-                                {% toggle 'saas_enabled' %}
-                                    {% set paidTrial = toggle('saas_paid_trial') %}
-                                    {% if not userHasTrial and planHasTrial %}
-                                        <div class="alert alert-info d-flex align-items-start" role="alert">
-                                            <div class="me-3">
-                                                {{ ux_icon(paidTrial ? 'tabler:credit-card' : 'tabler:gift', {width: 24, height: 24}) }}
-                                            </div>
-                                            <div class="flex-fill">
-                                                <div class="alert-title fw-semibold">
-                                                    {{ (paidTrial ? 'company.create.trial_title_paid' : 'company.create.trial_title')|trans }}
-                                                </div>
-                                                <div class="text-secondary mb-2">
-                                                    {% set trial_label -%}
-                                                        {% if trialDuration.y > 0 %}{{ '{1} %count% year|]1,Inf[ %count% years'|trans({'%count%': trialDuration.y}, count=trialDuration.y) }} {% endif %}
-                                                        {% if trialDuration.m > 0 %}{{ '{1} %count% month|]1,Inf[ %count% months'|trans({'%count%': trialDuration.m}, count=trialDuration.m) }} {% endif %}
-                                                        {% if trialDuration.d > 0 %}{{ '{1} %count% day|]1,Inf[ %count% days'|trans({'%count%': trialDuration.d}, count=trialDuration.d) }}{% endif %}
-                                                    {%- endset %}
-                                                    {% if paidTrial %}
-                                                        {% trans with {'%duration%': trial_label|trim} %}Get full access for %duration%. We'll ask for your payment details to begin — cancel any time before the trial ends and you won't be charged.{% endtrans %}
-                                                    {% else %}
-                                                        {% trans with {'%duration%': trial_label|trim} %}Get full access for %duration%, completely free. No credit card required.{% endtrans %}
-                                                    {% endif %}
-                                                </div>
-                                                {% if planPrice %}
-                                                    <div class="d-flex align-items-center gap-2 mt-2">
-                                                        <span class="badge bg-info-lt">{{ 'company.create.then'|trans }} {{ planPrice }}/{{ 'company.create.month'|trans }}</span>
-                                                        <span class="text-muted small">{{ 'company.create.cancel_anytime'|trans }}</span>
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    {% else %}
-                                        <div class="alert alert-warning d-flex align-items-start" role="alert">
-                                            <div class="me-3">
-                                                {{ ux_icon('tabler:credit-card', {width: 24, height: 24}) }}
-                                            </div>
-                                            <div class="flex-fill">
-                                                <div class="alert-title fw-semibold">{{ 'company.create.payment_required_title'|trans }}</div>
-                                                <div class="text-secondary">
-                                                    {% if userHasTrial %}
-                                                        {{ 'company.create.trial_used'|trans }}
-                                                        {{ 'company.create.checkout_after_create'|trans }}
-                                                    {% else %}
-                                                        {{ 'company.create.payment_after_create'|trans }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endif %}
+                {# What the account costs #}
+                {% toggle 'saas_enabled' %}
+                    {% set paidTrial = toggle('saas_paid_trial') %}
+                    {% if not userHasTrial and planHasTrial %}
+                        <twig:Si:Alert type="info">
+                            <p class="font-semibold">{{ (paidTrial ? 'company.create.trial_title_paid' : 'company.create.trial_title')|trans }}</p>
+                            <p class="mt-1">
+                                {% set trial_label -%}
+                                    {% if trialDuration.y > 0 %}{{ '{1} %count% year|]1,Inf[ %count% years'|trans({'%count%': trialDuration.y}, count=trialDuration.y) }} {% endif %}
+                                    {% if trialDuration.m > 0 %}{{ '{1} %count% month|]1,Inf[ %count% months'|trans({'%count%': trialDuration.m}, count=trialDuration.m) }} {% endif %}
+                                    {% if trialDuration.d > 0 %}{{ '{1} %count% day|]1,Inf[ %count% days'|trans({'%count%': trialDuration.d}, count=trialDuration.d) }}{% endif %}
+                                {%- endset %}
+                                {% if paidTrial %}
+                                    {% trans with {'%duration%': trial_label|trim} %}Get full access for %duration%. We'll ask for your payment details to begin — cancel any time before the trial ends and you won't be charged.{% endtrans %}
                                 {% else %}
-                                    <div class="alert alert-success d-flex align-items-start" role="alert">
-                                        <div class="me-3">
-                                            {{ ux_icon('tabler:infinity', {width: 24, height: 24}) }}
-                                        </div>
-                                        <div class="flex-fill">
-                                            <div class="alert-title fw-semibold">{{ 'company.create.self_hosted_title'|trans }}</div>
-                                            <div class="text-secondary">
-                                                {{ 'company.create.self_hosted_text'|trans }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endtoggle %}
-                            </div>
-
-                            <twig:block name="footer">
-                                <div class="card-footer bg-transparent p-4">
-                                    <div class="d-flex justify-content-between">
-                                        {% if allowCancel %}
-                                            <a href="{{ path('_dashboard') }}" class="btn btn-ghost btn-lg">
-                                                {{ ux_icon('tabler:arrow-left', {width: 24, height: 24}) }} {{ 'company.create.back'|trans }}
-                                            </a>
-
-                                        {% endif %}
-
-                                        <button type="submit" class="btn btn-primary btn-lg px-5 ms-auto">
-                                            {{ ux_icon('tabler:rocket') }} {{ 'company.create.create_button'|trans }}
-                                        </button>
-                                    </div>
-                                </div>
-                            </twig:block>
-                        </twig:Ui:Card>
-                    {{ form_end(form) }}
-
-                    {# Help Section #}
-                    <div class="text-center mt-4">
-                        <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
-                            <span class="text-secondary">
-                                {{ ux_icon('tabler:help-circle', {width: 16, height: 16}) }}
-                                {{ 'company.create.need_help'|trans }}
-                            </span>
-                            <a href="https://solidinvoice.co/docs" target="_blank" class="link-primary text-decoration-none">
-                                {{ 'company.create.view_docs'|trans }} {{ ux_icon('tabler:external-link', {width: 14, height: 14}) }}
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                                    {% trans with {'%duration%': trial_label|trim} %}Get full access for %duration%, completely free. No credit card required.{% endtrans %}
+                                {% endif %}
+                            </p>
+                            {% if planPrice %}
+                                <p class="mt-2 flex flex-wrap items-center gap-2">
+                                    <twig:Si:Badge tone="info">{{ 'company.create.then'|trans }} {{ planPrice }}/{{ 'company.create.month'|trans }}</twig:Si:Badge>
+                                    <span class="text-xs">{{ 'company.create.cancel_anytime'|trans }}</span>
+                                </p>
+                            {% endif %}
+                        </twig:Si:Alert>
+                    {% else %}
+                        <twig:Si:Alert type="warning">
+                            <p class="font-semibold">{{ 'company.create.payment_required_title'|trans }}</p>
+                            <p class="mt-1">
+                                {% if userHasTrial %}
+                                    {{ 'company.create.trial_used'|trans }}
+                                    {{ 'company.create.checkout_after_create'|trans }}
+                                {% else %}
+                                    {{ 'company.create.payment_after_create'|trans }}
+                                {% endif %}
+                            </p>
+                        </twig:Si:Alert>
+                    {% endif %}
+                {% else %}
+                    <twig:Si:Alert type="success">
+                        <p class="font-semibold">{{ 'company.create.self_hosted_title'|trans }}</p>
+                        <p class="mt-1">{{ 'company.create.self_hosted_text'|trans }}</p>
+                    </twig:Si:Alert>
+                {% endtoggle %}
             </div>
-        </div>
-    </div>
+
+            <twig:block name="footer">
+                {% if allowCancel %}
+                    <twig:Si:Button variant="ghost" size="lg" href="{{ path('_dashboard') }}" class="mr-auto">
+                        {{ ux_icon('tabler:arrow-left', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                        {{ 'company.create.back'|trans }}
+                    </twig:Si:Button>
+                {% endif %}
+                <twig:Si:Button type="submit" size="lg">
+                    {{ ux_icon('tabler:rocket', {class: 'size-5', 'aria-hidden': 'true'}) }}
+                    {{ 'company.create.create_button'|trans }}
+                </twig:Si:Button>
+            </twig:block>
+        </twig:Si:Card>
+    {{ form_end(form) }}
+
+    <p class="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-fg-secondary">
+        <span class="inline-flex items-center gap-1.5">
+            {{ ux_icon('tabler:help-circle', {class: 'size-4', 'aria-hidden': 'true'}) }}
+            {{ 'company.create.need_help'|trans }}
+        </span>
+        <a href="https://solidinvoice.co/docs" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-primary hover:underline">
+            {{ 'company.create.view_docs'|trans }} {{ ux_icon('tabler:external-link', {class: 'size-3.5', 'aria-hidden': 'true'}) }}
+        </a>
+    </p>
 {% endblock %}
