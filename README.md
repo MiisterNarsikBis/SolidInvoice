@@ -32,7 +32,7 @@ Send beautiful quotes and invoices, accept online payments, automate recurring b
   <a href="https://billing.solidinvoice.co/affiliates"><img src="https://img.shields.io/badge/Join%20the-Affiliate%20Program-8B5CF6?style=for-the-badge" alt="Join the Affiliate Program" /></a>
 </p>
 
-<img src="docs/static/img/dashboard.png" alt="SolidInvoice Dashboard" width="100%" />
+<img src="docs/static/img/readme/dashboard.jpg" alt="SolidInvoice Dashboard" width="100%" />
 
 </div>
 
@@ -41,6 +41,20 @@ Send beautiful quotes and invoices, accept online payments, automate recurring b
 ## Why SolidInvoice?
 
 Most invoicing tools force a trade-off: easy to use *or* respectful of your data. SolidInvoice gives you both. It's a mature, production-ready billing platform you can run on your own server for free, or let us host for a flat **$8/month** — no per-client limits, no surprise tiers, no lock-in. Built on Symfony 7 and PHP 8.4, it's designed to be extended, integrated, and trusted.
+
+---
+
+## 🖼️ A look at the interface
+
+The interface is built on Tailwind CSS with the "Ledger" visual identity (see [`DESIGN.md`](DESIGN.md)), and is available in English and French.
+
+| Invoices | Create an invoice |
+|---|---|
+| <img src="docs/static/img/readme/invoices.jpg" alt="Invoice list" /> | <img src="docs/static/img/readme/invoice-create.jpg" alt="Invoice creation form" /> |
+
+| Clients |
+|---|
+| <img src="docs/static/img/readme/clients.jpg" alt="Client list" /> |
 
 ---
 
