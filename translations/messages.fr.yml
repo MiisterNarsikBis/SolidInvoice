@@ -1,0 +1,2536 @@
+action:
+    add: Ajouter
+    back: Retour
+    cancel: Annuler
+    close: Fermer
+    confirm: Confirmer
+    create: Créer
+    delete: Supprimer
+    edit: Modifier
+    save: Enregistrer
+    submit: Valider
+    update: Mettre à jour
+active_clients: 'Clients actifs'
+add_client: 'Ajouter un client'
+add_info: 'Ajouter une info'
+address: Adresse
+affiliate:
+    card:
+        text: 'Gagnez jusqu’à %earnings% par an pour chaque client que vous parrainez.'
+        title: 'Parrainez et gagnez'
+    footer_link: 'Parrainez et gagnez'
+    page:
+        details:
+            commission:
+                text: 'Vous gagnez %commission% de chaque paiement qu’un client parrainé effectue sur SolidInvoice Cloud, pas seulement le premier. Cela représente jusqu’à %earnings% par an et par client sur l’offre Business. Les inscriptions qui ne paient jamais ne comptent pas.'
+                title: 'Ce que vous gagnez'
+            payout:
+                text: 'Lemon Squeezy gère le programme pour nous. Ils suivent vos parrainages, affichent vos gains dans leur tableau de bord d’affiliation et vous paient.'
+                title: 'Comment vous êtes payé'
+            terms:
+                link: 'Lire les conditions d’affiliation'
+            title: 'Comment fonctionne le programme'
+            who:
+                text: 'Tout le monde, que vous utilisiez SolidInvoice Cloud ou que vous hébergiez SolidInvoice vous-même.'
+                title: 'Qui peut participer'
+    pitch:
+        cta: 'Rejoindre le programme d’affiliation'
+        lead: 'Parrainez de nouveaux clients sur SolidInvoice Cloud et gagnez %commission% de chaque paiement qu’ils effectuent, mois après mois. Les utilisateurs auto-hébergés peuvent aussi participer.'
+        steps:
+            earn: 'Gagnez %commission% de chaque paiement qu’ils effectuent'
+            join: 'Rejoignez le programme d’affiliation'
+            share: 'Partagez votre lien de parrainage'
+        title: 'Gagnez jusqu’à %earnings% par an pour chaque client que vous parrainez'
+    prompt:
+        not_now: 'Pas maintenant'
+all_clients: 'Tous les clients'
+billing:
+    discount: Remise
+    due_date: 'Date d’échéance'
+    notes_help: 'Les notes ne seront pas visibles par le client'
+    subtotal: Sous-total
+    tax: Taxe
+    total: Total
+    withholding: 'Retenues et ajustements'
+change: Modifier
+change_password:
+    form:
+        confirm_password: 'Confirmer le nouveau mot de passe'
+        current_password: 'Mot de passe actuel'
+        new_password: 'Nouveau mot de passe'
+        repeat_password: 'Répéter le mot de passe'
+    requirements:
+        breach: 'Évitez les mots de passe compromis lors de fuites de données'
+        length: 'Au moins 8 caractères'
+        mix: 'Mélangez lettres, chiffres et symboles pour plus de sécurité'
+        title: 'Exigences du mot de passe'
+    section:
+        description: 'Saisissez votre mot de passe actuel et choisissez-en un nouveau'
+        title: 'Mettre à jour votre mot de passe'
+    submit: Enregistrer
+    subtitle: 'Mettez à jour votre mot de passe pour sécuriser votre compte'
+client:
+    address:
+        add: 'Ajouter une adresse'
+        city: Ville
+        country:
+            label: Pays
+            select: 'Sélectionner un pays'
+        delete: 'Supprimer l’adresse'
+        delete_confirm: 'Voulez-vous vraiment supprimer cette adresse ?'
+        delete_confirm_inline: 'Voulez-vous vraiment supprimer l’adresse ?'
+        edit: 'Modifier l’adresse'
+        empty_hint: 'Aucune adresse pour l’instant. Cliquez sur le bouton ci-dessous pour en ajouter une.'
+        info: 'Informations d’adresse'
+        label: Adresse
+        state: 'Région'
+        street1: 'Adresse ligne 1'
+        street2: 'Adresse ligne 2'
+        view_map: 'Voir la carte'
+        zip: 'Code postal'
+    addresses:
+        empty:
+            description: 'Ajoutez une adresse pour la facturation ou la livraison de ce client.'
+            title: 'Aucune adresse'
+    archive:
+        success: 'Client archivé avec succès'
+    cancel: Annuler
+    confirm_delete: 'Voulez-vous vraiment supprimer ce client ?'
+    contact:
+        add: 'Ajouter un contact'
+        at_least_1: 'Ce client doit avoir au moins 1 contact'
+        delete: 'Supprimer le contact'
+        delete_confirm: 'Voulez-vous vraiment supprimer ce contact ?'
+        delete_confirm_inline: 'Voulez-vous vraiment supprimer le contact ?'
+        details:
+            choose: Choisir
+            email: E-mail
+            extra: 'Coordonnées supplémentaires'
+        email:
+            label: E-mail
+        empty_hint: 'Cliquez sur le bouton ci-dessous pour ajouter votre premier contact'
+        firstName:
+            label: Prénom
+            placeholder: Jean
+        info: 'Informations du contact'
+        label: Contact
+        lastName:
+            label: Nom
+            placeholder: Dupont
+    contacts:
+        empty:
+            description: 'Ajoutez des contacts pour leur envoyer les factures et devis de ce client.'
+            title: 'Aucun contact'
+        info:
+            list: 'Sélectionnez les contacts à qui envoyer %type%'
+    create:
+        success: 'Client enregistré avec succès !'
+    custom_fields: 'Champs personnalisés'
+    delete:
+        confirm:
+            message: 'Cela supprimera définitivement ce client et toutes les données associées, y compris les factures, devis et paiements. Cette action est irréversible.'
+            title: 'Supprimer %name% ?'
+    delete_success: 'Le client a été supprimé avec succès'
+    form:
+        address_description: 'Ajoutez des adresses de facturation ou de livraison pour ce client'
+        contact_description: 'Ajoutez au moins une personne de contact pour ce client'
+        currency:
+            empty_value: 'Valeur par défaut du système'
+        currency_code:
+            label: 'Code de devise'
+        feature_gated:
+            generic: 'Cette fonctionnalité nécessite une offre supérieure. Passez à l’offre supérieure pour la débloquer.'
+            upgrade: 'Mettre à niveau'
+            with_plan: 'Cette fonctionnalité est disponible avec l’offre %plan%. Passez à cette offre pour la débloquer.'
+        info_description: 'Informations de base sur l’entreprise de votre client'
+        name:
+            label: Nom
+            placeholder: 'Société Dupont'
+        payment_terms:
+            help: 'Définit la date d’échéance des nouvelles factures de ce client.'
+            label: 'Conditions de paiement'
+            placeholder: 'Valeur par défaut de l’entreprise (%terms%)'
+        subtitle: 'Ajoutez un client pour commencer à créer des factures et des devis'
+        tax_identifiers_description: 'Les numéros d’immatriculation fiscale du client (TVA, GSTIN, TIN, ABN, etc.). Ils apparaissent sur les factures et devis émis pour ce client.'
+        website:
+            label: 'Site web'
+    grid:
+        actions:
+            delete: Supprimer
+            edit: Modifier
+            view: Voir
+        create: 'Créer un client'
+        currency: Devise
+        outstanding_balance: 'Solde restant dû'
+        total_balance: 'Solde total'
+    heading:
+        addresses: Adresses
+        contacts: Contacts
+        payments: Paiements
+    info: 'Informations client'
+    invoices:
+        empty:
+            description: 'Créez une facture quand vous êtes prêt à facturer ce client.'
+            title: 'Aucune facture'
+    menu:
+        add: 'Ajouter un client'
+        create:
+            invoice: 'Créer une facture'
+            quote: 'Créer un devis'
+        list: 'Lister les clients'
+        main: Clients
+        view: 'Voir le client'
+    modal:
+        action:
+            close: Fermer
+            save: Enregistrer
+        add_contact: 'Ajouter un contact'
+        add_credit: 'Ajouter un crédit'
+        credit:
+            amount: Montant
+            tip: "<strong>Astuce :</strong> pour soustraire un montant, ajoutez un « - » devant le montant, par ex. <code>%amount%</code>"
+        edit_address: 'Modifier l’adresse'
+        edit_contact: 'Modifier le contact'
+    name: 'Nom du client'
+    quotes:
+        empty:
+            description: 'Créez un devis pour proposer un tarif à ce client.'
+            title: 'Aucun devis'
+    restore:
+        success: 'Client restauré avec succès'
+    save: 'Enregistrer le client'
+    stats:
+        active_clients: 'Clients actifs'
+        archived_clients: 'Clients archivés'
+        credit: 'Solde créditeur'
+        income: 'Revenus totaux'
+        invoices: Factures
+        number_invoices: '{0} Factures|{1} Facture|]1,Inf] Factures'
+        number_quotes: '{0} Devis|{1} Devis|]1,Inf] Devis'
+        outstanding: 'En attente'
+        outstanding_balance: 'Solde restant dû'
+        outstanding_invoices: 'Factures impayées'
+        paid_invoices: 'Factures payées'
+        quotes: Devis
+        tooltip:
+            total_invoices: 'Total des factures de ce client'
+            total_outstanding: 'Nombre total de factures impayées de ce client'
+            total_paid: 'Nombre total de factures payées de ce client'
+            total_quotes: 'Total des devis de ce client'
+        total_contacts: 'Total des contacts'
+    tabs:
+        active: Actifs
+        archived: Archivés
+    tax_identifiers:
+        add: 'Ajouter un identifiant fiscal'
+        empty_hint: 'Aucun identifiant fiscal pour l’instant. Ajoutez-en un si ce client a un numéro de TVA, de GST ou un autre numéro fiscal enregistré.'
+        info: 'Identifiants fiscaux'
+        remove: 'Supprimer l’identifiant fiscal'
+    view:
+        actions:
+            add_contact: 'Ajouter un contact'
+            add_credit: 'Ajouter un crédit'
+            create_invoice: 'Créer une facture'
+            create_quote: 'Créer un devis'
+            delete: Supprimer
+            edit: Modifier
+        currency: 'Devise :'
+        more_actions: 'Plus d’actions'
+        tabs:
+            info: Infos
+            invoices: Factures
+            payments: Paiements
+            quotes: Devis
+client_create: 'Créer un client'
+clients: Clients
+close: Fermer
+company:
+    create:
+        back: Retour
+        cancel_anytime: 'Résiliable à tout moment'
+        checkout_after_create: 'Après la création de cette entreprise, vous choisirez une offre et passerez au paiement.'
+        create_button: 'Créer l’entreprise'
+        currency_help: 'Toutes les factures et tous les paiements utiliseront cette devise'
+        month: mois
+        name_help: 'Ce nom sera affiché sur vos factures et devis'
+        name_placeholder: 'ex. : Société Dupont'
+        need_help: 'Besoin d’aide ?'
+        payment_after_create: 'La création de cette entreprise nécessitera un paiement.'
+        payment_required_title: 'Paiement requis'
+        self_hosted_text: 'Créez autant d’entreprises que vous voulez sans frais supplémentaires. Vos données, votre contrôle.'
+        self_hosted_title: 'La liberté de l’auto-hébergement'
+        subtitle: 'Configurez votre espace et gérez votre activité en quelques minutes'
+        then: Ensuite
+        title: 'Créer votre entreprise'
+        trial_title: 'Démarrer votre essai gratuit'
+        trial_title_paid: 'Démarrer votre essai'
+        trial_used: 'Vous avez déjà utilisé votre essai gratuit.'
+        view_docs: 'Voir la documentation'
+    select:
+        click_to_access: 'Cliquez pour accéder'
+        create_button: 'Créer l’entreprise'
+        create_new: 'Créer une nouvelle entreprise'
+        create_new_help: 'Configurez un autre espace pour gérer une autre activité'
+        subtitle: 'Sélectionnez une entreprise pour continuer'
+        welcome_back: 'Bon retour %name%'
+contact:
+    email: E-mail
+    firstName: Prénom
+    lastName: Nom
+contact_delete: 'Supprimer le contact'
+contact_delete_success: 'Le contact a été supprimé avec succès'
+contact_details: 'Coordonnées'
+contact_edit: 'Modifier le contact'
+contact_saved: 'Le contact a été enregistré avec succès'
+create_new: 'Créer'
+create_now: 'Créez-en un maintenant.'
+created: Créé
+custom_field:
+    add: 'Ajouter un champ'
+    badge:
+        client_visible: 'Visible par le client'
+        internal: Interne
+    delete_confirm: 'Supprimer %label% ? %count% enregistrements ont une valeur pour ce champ. Ces valeurs seront définitivement supprimées.'
+    empty: 'Aucun champ personnalisé — cliquez sur Ajouter un champ pour en créer un.'
+    flash:
+        created: 'Champ personnalisé créé.'
+        deleted: 'Champ personnalisé supprimé.'
+        updated: 'Champ personnalisé mis à jour.'
+    form:
+        default_value:
+            help: 'Facultatif — pré-remplit les nouveaux enregistrements. Laissez vide pour aucune valeur par défaut.'
+            label: 'Valeur par défaut'
+            placeholder: 'Aucune valeur par défaut'
+        field_label:
+            label: Libellé
+        option:
+            add: 'Ajouter une option'
+            delete: 'Supprimer l’option'
+            hint: '(utilisé pour les listes à choix unique ou multiple)'
+            placeholder: 'Libellé de l’option'
+        required:
+            label: Obligatoire
+        target:
+            help: 'Choisissez où ce champ doit apparaître.'
+            label: 'S’applique à'
+        type:
+            label: Type
+            locked: 'Ce champ contient %count% valeurs ; le type ne peut pas être modifié. Supprimez-le et recréez-le pour changer de type.'
+        visibility:
+            help: 'Les champs internes n’apparaissent que dans les vues d’administration. Les champs visibles par le client apparaissent aussi sur le PDF et dans les vues en ligne.'
+            label: Visibilité
+    reorder:
+        handle: 'Glisser pour réordonner'
+        hint: 'Faites glisser la poignée à gauche de chaque ligne pour réordonner les champs.'
+    tab:
+        client: 'Champs client'
+        contact: 'Champs contact'
+        invoice: 'Champs facture'
+        quote: 'Champs devis'
+    title: 'Champs personnalisés'
+    values: valeurs
+custom_fields:
+    label: 'Champs personnalisés'
+dashboard:
+    actions:
+        add_client: 'Ajouter un client'
+        create_invoice: 'Nouvelle facture'
+        create_quote: 'Nouveau devis'
+        title: 'Actions rapides'
+        view_payments: Paiements
+    active_clients: 'Clients actifs'
+    activity:
+        generated_from_recurring: 'générée automatiquement'
+        invoice_created: 'créée pour'
+        invoice_sent: 'envoyée à'
+        label:
+            invoice: Facture
+            payment: Paiement
+            quote: Devis
+            recurring: Récurrente
+        no_activity: 'Aucune activité récente'
+        payment_for_invoice: 'reçu pour'
+        payment_received: 'Paiement de %client%'
+        quote_accepted: 'accepté par'
+        quote_declined: 'refusé par'
+        recurring_generated: 'générée depuis la récurrente'
+        sent_to_client: 'envoyé au client'
+        title: 'Activité récente'
+        view_all: 'Tout voir'
+        view_invoice: 'Voir la facture'
+        view_quote: 'Voir le devis'
+        was_accepted: 'a été accepté'
+        was_created: 'a été créé'
+        was_declined: 'a été refusé'
+    attention:
+        draft_invoices: 'Factures brouillon'
+        draft_label: Brouillon
+        no_items: 'Tout est à jour ! Rien ne demande votre attention.'
+        overdue_invoices: 'Factures en retard'
+        pending_quotes: 'Devis en attente'
+        showing: '%shown% sur %total%'
+        title: 'À traiter'
+        upcoming_recurring: 'Récurrentes à venir'
+        view_all: 'Tout voir'
+    charts:
+        distribution_title: 'Statut des factures'
+        invoices: Factures
+        no_data: 'Pas encore de données de revenus'
+        no_data_hint: 'Les paiements apparaîtront ici une fois reçus'
+        no_invoices: 'Aucune facture'
+        revenue_subtitle: '12 derniers mois'
+        revenue_title: 'Évolution des revenus'
+    checklist:
+        action_required: 'Action requise'
+        activate_subscription:
+            description: 'Choisissez une offre pour garder votre compte actif'
+            name: 'Activer votre abonnement'
+        add_tax_rate:
+            description: 'Configurez les taux de taxe de vos factures'
+            name: 'Ajouter un taux de taxe'
+        all_complete_message: 'Configuration terminée ! Vous êtes prêt.'
+        banner_description: 'Ces étapes configurent les informations de votre entreprise, votre logo, vos taux de taxe et vos moyens de paiement. Vous pouvez en ignorer et y revenir plus tard.'
+        banner_title: 'Quelques éléments à configurer'
+        complete: Terminé
+        completed: Terminé
+        configure_payment_gateway:
+            description: 'Acceptez les paiements en ligne de vos clients'
+            name: 'Configurer la passerelle de paiement'
+        create_client:
+            description: 'Ajoutez un client pour commencer à facturer'
+            name: 'Créer votre premier client'
+        create_company:
+            description: 'Les informations de votre entreprise sont enregistrées'
+            name: 'Créer votre entreprise'
+        customize_settings:
+            description: 'Configurez les informations et préférences de votre entreprise'
+            name: 'Personnaliser les paramètres de l’entreprise'
+        dismiss: 'Masquer la liste'
+        dismiss_confirm: 'Cela masque la liste définitivement, elle ne reviendra pas. Les pages de configuration restent dans vos paramètres si vous en avez besoin plus tard.'
+        dismiss_confirm_title: 'Masquer la liste de configuration ?'
+        dismissed_message: 'Liste de configuration masquée.'
+        items_title: 'Tâches de configuration'
+        percent_complete: '%percentage% pour cent terminé'
+        remaining: Restant
+        send_invoice:
+            description: 'Créez et envoyez une facture à un client'
+            name: 'Envoyer votre première facture'
+        status:
+            completed: Terminé
+            not_started: 'Non commencé'
+        subtitle: '%completed% tâches sur %total% terminées'
+        success_message: 'Tout est configuré. Vos informations sont enregistrées, il ne reste plus qu’à facturer.'
+        success_title: 'Tout est prêt'
+        tasks_remaining: '{1} %count% étape restante, quand vous avez une minute|]1,Inf] %count% étapes restantes, quand vous avez une minute'
+        title: 'Bien démarrer avec SolidInvoice'
+        upload_logo:
+            description: 'Ajoutez votre logo à vos factures et devis'
+            name: 'Importer le logo de l’entreprise'
+        view_checklist: 'Voir la liste de configuration'
+        view_progress: 'Voir la progression'
+        view_tasks: 'Voir les tâches'
+    client:
+        actions:
+            create:
+                invoice: 'Créer une facture'
+                quote: 'Créer un devis'
+            created: 'Créé le :'
+            edit: Modifier
+            view: Voir
+        create: 'Créer un nouveau client'
+        empty: 'Aucun client disponible'
+        recent: 'Clients récents'
+        view_all: 'Voir tous les clients'
+    create:
+        client: Client
+        invoice: Facture
+        new: 'Créer'
+        quote: Devis
+    distribution:
+        status:
+            cancelled: Annulée
+            draft: Brouillon
+            overdue: 'En retard'
+            paid: Payée
+            pending: 'En attente'
+    error:
+        body: 'Nous n’avons pas pu charger ces données, les chiffres affichés ici sont donc incomplets. Vos factures et paiements sont en sécurité. Réessayez dans un instant ; si l’échec persiste, les journaux de votre serveur contiendront les détails.'
+        retry: 'Réessayer'
+        title: 'Ce contenu ne s’est pas chargé'
+    hero:
+        currency_breakdown: '{1} dans 1 devise|]1,Inf] affiché séparément, une ligne par devise'
+        outstanding: 'En attente'
+        overdue: 'En retard'
+        this_month: 'Ce mois-ci'
+        total_revenue: 'Revenus totaux'
+    income_received: 'Revenus encaissés'
+    invoice:
+        actions:
+            created: 'Créée le :'
+            edit: Modifier
+            pay: 'Payer maintenant'
+            view: Voir
+        create: 'Créer une nouvelle facture'
+        empty: 'Aucune facture disponible'
+        recent: 'Factures récentes'
+        view_all: 'Voir toutes les factures'
+    outstanding_invoices: 'Factures impayées'
+    payment:
+        actions:
+            created: 'Créé le :'
+            invoice: 'Facture :'
+        no_payments: 'Aucun paiement récent disponible'
+        recent: 'Paiements récents'
+        view_all: 'Voir tous les paiements'
+    pending_quotes: 'Devis en attente'
+    quick_nav:
+        clients: Clients
+        invoices: Factures
+        profile: Profil
+        quotes: Devis
+        settings: Paramètres
+        title: 'Navigation rapide'
+    quote:
+        actions:
+            created: 'Créé le :'
+            edit: Modifier
+            view: Voir
+        create: 'Créer un nouveau devis'
+        empty: 'Aucun devis disponible'
+        recent: 'Devis récents'
+        view_all: 'Voir tous les devis'
+    title: 'Tableau de bord'
+datagrid:
+    actions: Actions
+    all: Tous
+    apply: Appliquer
+    bulk_actions: 'Actions groupées'
+    clear: Effacer
+    clear_selection: 'Effacer la sélection'
+    columns:
+        label: Colonnes
+        reset: 'Rétablir les valeurs par défaut'
+        toggle: 'Afficher/masquer les colonnes'
+    confirm:
+        batch: 'Voulez-vous vraiment effectuer cette action sur les éléments sélectionnés ?'
+        single: 'Voulez-vous vraiment effectuer cette action ?'
+    expand: Développer
+    expand_row: 'Développer la ligne'
+    export:
+        format:
+            csv:
+                hint: 'Adapté aux tableurs'
+                label: CSV
+            json:
+                hint: 'Lisible par une machine'
+                label: JSON
+            xml:
+                hint: 'Balisage structuré'
+                label: XML
+        label: Exporter
+        subtitle: 'Choisissez un format pour télécharger les résultats filtrés.'
+    filter:
+        remove: 'Cliquez pour retirer'
+    filters: Filtres
+    flash:
+        not_found: 'Action introuvable.'
+        not_implemented: 'Action non implémentée.'
+        select_one: 'Veuillez sélectionner au moins un élément.'
+        success: Succès
+    empty:
+        client:
+            title: 'Aucun client'
+            description: 'Ajoutez les personnes et entreprises que vous facturez. Une fois un client créé, vous pouvez lui envoyer une facture ou un devis en quelques secondes.'
+        invoice:
+            title: 'Aucune facture'
+            description: 'Créez votre première facture et envoyez-la en moins d’une minute. Activez les paiements en ligne et vos clients pourront payer directement depuis la facture.'
+        quote:
+            title: 'Aucun devis'
+            description: 'Envoyez un devis soigné pour décrocher le travail. Quand un client l’accepte, il devient une facture en un clic.'
+        payment:
+            title: 'Aucun paiement'
+            description: 'Les paiements arrivent ici quand un client règle une facture. Envoyez une facture pour commencer à être payé.'
+            create: 'Créer une facture'
+    footer:
+        showing: 'Affichage de %start% à %end% sur %total% résultats'
+    items_per_page: 'Éléments par page'
+    more_actions: 'Plus d’actions'
+    no_results:
+        empty: 'Commencez en créant votre premier élément.'
+        filtered: 'Essayez de modifier votre recherche ou vos filtres pour trouver ce que vous cherchez.'
+        label: 'Aucun résultat'
+    per_page: Afficher
+    search:
+        label: Rechercher
+        placeholder: Rechercher...
+    select_all: 'Tout sélectionner'
+    select_row: 'Sélectionner la ligne'
+    selected: sélectionné(s)
+delete_client: 'Supprimer le client'
+edit_client: 'Modifier le client'
+email: E-mail
+email_verification:
+    banner:
+        message: 'Certaines fonctionnalités (envoi de factures, activation des factures récurrentes) sont désactivées tant que vous n’avez pas vérifié votre adresse e-mail. Consultez votre boîte de réception pour le lien de vérification.'
+        title: 'Vérifiez votre e-mail'
+    flash:
+        send_invoice: 'Veuillez vérifier votre adresse e-mail avant d’envoyer des factures. Consultez votre boîte de réception pour le lien de vérification.'
+        send_quote: 'Veuillez vérifier votre adresse e-mail avant d’envoyer des devis. Consultez votre boîte de réception pour le lien de vérification.'
+        send_reminder: 'Veuillez vérifier votre adresse e-mail avant d’envoyer des relances de paiement. Consultez votre boîte de réception pour le lien de vérification.'
+    profile:
+        description: 'Votre adresse e-mail n’est pas encore vérifiée. Vous n’avez pas reçu l’e-mail ? Demandez-en un autre.'
+        title: 'Vérification de l’e-mail'
+    resend: 'Renvoyer l’e-mail de vérification'
+exception:
+    403:
+        text: 'Vous n’avez pas la permission de voir cette page.'
+        title: 'Accès refusé'
+    404:
+        text: 'Nous n’avons pas trouvé la page que vous cherchiez.'
+        title: 'Page introuvable'
+    500:
+        text: 'Une erreur est survenue de notre côté. Veuillez réessayer dans un instant.'
+        title: 'Erreur interne du serveur'
+    action:
+        back: Retour
+        dashboard: 'Aller au tableau de bord'
+        sign_in: 'Se connecter'
+    error:
+        text: 'L’erreur suivante est survenue :'
+    generic:
+        text: 'Une erreur inattendue est survenue. Veuillez réessayer.'
+        title: 'Oups, une erreur est survenue'
+    not_found:
+        text: 'Désolé, la page que vous essayez de consulter n’existe pas.'
+exclusive: 'Hors taxe'
+export:
+    actions: Actions
+    completed: Terminé
+    download: Télécharger
+    email:
+        archive_size: 'Taille de l’archive'
+        auth_note: 'Ce lien de téléchargement nécessite d’être connecté en tant que l’utilisateur ayant demandé l’export.'
+        details: Détails
+        download_export: 'Télécharger l’export'
+        download_link: 'Télécharger votre export'
+        ready: 'Votre export de données est prêt'
+        ready_body: 'L’export complet de données que vous avez demandé est terminé. L’archive contient un fichier par type d’entité ainsi qu’un manifeste décrivant son contenu.'
+        ready_heading: 'Export prêt à être téléchargé'
+        requested: Demandé
+    empty: 'Vous n’avez encore demandé aucun export.'
+    format: Format
+    history_title: 'Historique des exports'
+    request_button: 'Demander un export'
+    request_help: 'Les exports s’exécutent en arrière-plan. Vous recevrez un e-mail avec un lien de téléchargement dès que l’archive sera prête.'
+    request_title: 'Demander un nouvel export'
+    requested: Demandé
+    size: Taille
+    status: Statut
+    title: 'Export de données'
+feature:
+    available_on_plan: 'Disponible à partir de l’offre %plan%.'
+    contact_admin: 'Contactez votre administrateur pour activer cette fonctionnalité.'
+    upgrade_required: 'Cette fonctionnalité nécessite une mise à niveau'
+    upgrade_to: 'Passer à %plan%'
+    view_all_plans: 'Voir toutes les offres'
+flash:
+    company_deleted: 'Entreprise supprimée avec succès.'
+forgot_password:
+    check_email:
+        content: "Un e-mail a été envoyé. Il contient un lien sur lequel vous devez cliquer pour réinitialiser votre mot de passe.\n\nSi vous ne recevez pas d’e-mail, vérifiez vos courriers indésirables ou réessayez.\n"
+        expiry: 'Ce lien expirera dans %tokenLifetime%'
+        heading: 'Consultez votre boîte mail'
+        title: 'E-mail envoyé'
+    request:
+        back_to_login: 'Retour à la connexion'
+        description: 'Mot de passe oublié ? Saisissez votre e-mail pour le réinitialiser.'
+        heading: 'Mot de passe oublié ?'
+        submit: 'Réinitialiser le mot de passe'
+        title: 'Mot de passe oublié ?'
+        username: 'Adresse e-mail'
+    reset:
+        flash:
+            success: 'Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter.'
+        heading: 'Réinitialisez votre mot de passe'
+        title: 'Réinitialiser le mot de passe'
+form:
+    address: Adresse
+    placeholder:
+        address_line: 'Appartement, étage, bâtiment, etc.'
+        choose: Choisir...
+        choose_currency: 'Choisir une devise'
+        city: Ville
+        postal_code: 'Code postal'
+        state_province: Région/Province
+        street: '12 rue de la Paix'
+        vat_example: 'ex. : FR12345678901'
+    validate: Valider
+    validate_vat: 'Valider le numéro de TVA (pays de l’UE uniquement)'
+id: Id
+inactive_clients: 'Clients inactifs'
+inclusive: 'TTC'
+installation:
+    action:
+        next: Suivant
+        previous: Précédent
+        refresh: Actualiser
+        restart: Recommencer
+        restart_process: 'Recommencer le processus d’installation'
+    already_installed: 'L’application est déjà installée'
+    config:
+        title:
+            database_config: 'Configuration de la base de données'
+            email_settings: 'Paramètres e-mail'
+            requirements_check: 'Vérification des prérequis système'
+    database:
+        name: 'Nom de la base de données'
+        recommended: Recommandé
+        select_driver: 'Sélectionner le pilote de base de données'
+        type: 'Type de base de données'
+    finish:
+        login: 'Se connecter maintenant'
+        success: Succès
+        success_message: 'Vous avez installé SolidInvoice avec succès !'
+    finish_page:
+        add_clients:
+            description: 'Commencez par ajouter vos clients et leurs coordonnées'
+            title: 'Ajouter des clients'
+        all_set: 'Tout est prêt ! Prêt à gérer vos factures ?'
+        configure_settings:
+            description: 'Personnalisez les informations et préférences de votre entreprise'
+            title: 'Configurer les paramètres'
+        create_invoice:
+            description: 'Générez votre première facture professionnelle en quelques secondes'
+            title: 'Créer une facture'
+        launch: 'Lancer SolidInvoice'
+        subtitle: 'Félicitations ! SolidInvoice a été installé et configuré avec succès.'
+        summary:
+            admin: 'Votre compte administrateur est prêt à l’emploi'
+            database: 'La base de données a été créée et configurée'
+            migrations: 'Toutes les migrations nécessaires ont été appliquées'
+            secret: 'L’application est protégée par une clé secrète unique'
+            title: 'Résumé de l’installation'
+        title: 'Installation terminée !'
+        whats_next: 'Et maintenant ?'
+    label: Installation
+    process:
+        step:
+            createdb: 'Création de la base de données'
+            migrations: 'Création du schéma de la base de données'
+        title:
+            busy: 'Installation en cours...'
+            done: Terminé
+    process_page:
+        retry: Réessayer
+        view_logs: 'Voir les journaux'
+    progress:
+        step:
+            config: 'Configuration de la base de données'
+            finish: Terminer
+            process: 'Processus d’installation'
+            setup: 'Configuration du système'
+            system_check: 'Vérification des prérequis'
+    progress_complete: '%progress%% terminé'
+    requirements:
+        all_met: 'Tous les prérequis système sont remplis'
+        all_met_message: 'Vous pouvez poursuivre l’installation.'
+        mandatory: Obligatoires
+        message: 'Veuillez vous assurer que votre système remplit les prérequis minimaux avant de continuer.'
+        not_met: 'Certains prérequis ne sont pas remplis'
+        optional: Recommandés
+    requirements_page:
+        cache_directory: 'Répertoire de cache'
+        config_directory: 'Répertoire de configuration'
+        current_user: 'Utilisateur actuel'
+        edit_config_hint: 'Modifiez ce fichier pour changer les paramètres PHP'
+        log_directory: 'Répertoire des journaux'
+        max_execution_time: 'Durée d’exécution maximale'
+        memory_limit: 'Limite de mémoire'
+        operating_system: 'Système d’exploitation'
+        php_config_file: 'Fichier de configuration PHP'
+        php_version: 'Version de PHP'
+        recommended: Recommandés
+        required: Obligatoires
+        status:
+            failed: Échec
+            passed: Réussi
+            warning: Avertissement
+        system_information: 'Informations système'
+        upload_max_size: 'Taille maximale d’envoi'
+        web_server: 'Serveur web'
+    setup:
+        notice: Remarque
+        title:
+            admin_user: 'Utilisateur administrateur'
+            system_settings: 'Paramètres système'
+        user_exists: 'La base de données contient déjà un utilisateur administrateur.'
+    start:
+        begin: 'Commencer l’installation'
+        feature:
+            clients:
+                description: 'Suivez vos clients, contacts et l’historique des échanges'
+                title: 'Gestion des clients'
+            insights:
+                description: 'Suivez paiements et dépenses, et obtenez des rapports financiers détaillés'
+                title: 'Analyses financières'
+            invoicing:
+                description: 'Créez de belles factures et devis personnalisés en quelques secondes'
+                title: 'Facturation professionnelle'
+            payments:
+                description: 'Acceptez les paiements en ligne avec plusieurs passerelles de paiement'
+                title: 'Paiements en ligne'
+        intro: 'Vous êtes sur le point de configurer une plateforme de facturation open source puissante qui vous aidera à gérer vos finances en toute simplicité.'
+        ready: 'Prêt à commencer ?'
+        screenshot_placeholder: '[Emplacement de capture d’écran - Aperçu du tableau de bord]'
+        setup:
+            line1: 'Cet assistant d’installation vous guidera tout au long de la configuration.'
+            line2: 'Il ne faut que quelques minutes pour configurer votre base de données, créer votre compte et démarrer avec SolidInvoice.'
+            title: 'Configuration rapide et simple'
+        tagline: 'Votre solution complète de facturation'
+        thank_you: 'Merci d’avoir choisi SolidInvoice !'
+        welcome: 'Bienvenue sur'
+    step:
+        database_configuration: 'Configuration de la base de données'
+        info:
+            company: 'Informations sur l’entreprise'
+            user: 'Informations sur l’administrateur'
+        license_agreement: 'Contrat de licence'
+        system_check: 'Vérification du système'
+        system_information: 'Informations système'
+    title: 'Installation de %app_name%'
+    user_account:
+        application_url: 'URL de l’application'
+        application_url_help: 'L’URL à laquelle cette instance de SolidInvoice est accessible. Incluez le protocole (http:// ou https://).'
+        locale_help: 'La seule langue actuellement prise en charge est « en ». Pour en choisir une autre, veuillez installer l’extension « intl »'
+        locale_placeholder: 'Veuillez sélectionner une langue'
+        telemetry: 'Envoyer des statistiques d’utilisation anonymes'
+        telemetry_help: 'Aidez-nous à améliorer SolidInvoice en partageant des données d’utilisation anonymes. Aucune information personnelle ou professionnelle n’est jamais collectée.'
+invalid_file: 'Fichier invalide'
+invoice:
+    action:
+        create: 'Créer une facture'
+        create_recurring: 'Créer une facture récurrente'
+        edit: 'Modifier la facture'
+        pay_now: 'Payer maintenant'
+        pdf: PDF
+        print: Imprimer
+        view: 'Voir la facture'
+    add_payment: 'Ajouter un paiement'
+    amount_payable: 'Montant à payer'
+    archive:
+        success: 'La facture a été archivée'
+    balance: 'Solde restant dû'
+    balance_due: 'Solde dû'
+    capture_payment: 'Encaisser un paiement'
+    client:
+        choose: 'Choisir un client'
+        create: 'Veuillez en ajouter un maintenant'
+        create_new: 'Détails du nouveau client'
+        empty: 'Vous n’avez encore créé aucun client.'
+        inline:
+            currency_note: 'La devise par défaut du système sera utilisée pour ce client.'
+        mode:
+            existing: 'Sélectionner un client existant'
+            new: 'Créer un nouveau client'
+        title: Client
+    clone:
+        success: 'Facture dupliquée avec succès'
+    create:
+        new: 'Créer une facture'
+        subtitle: 'Créez des factures professionnelles pour vos clients'
+        success: 'Facture créée avec succès'
+        title: 'Créer une facture'
+    created: Créée
+    custom_fields: 'Champs personnalisés'
+    date: 'Date de facture'
+    discount: Remise
+    due_date: 'Date d’échéance'
+    edit:
+        paid: 'Vous ne pouvez pas modifier une facture déjà payée'
+        success: 'Facture mise à jour avec succès'
+        title: 'Modifier la facture'
+    email:
+        send_failed: 'Échec de l’envoi de l’e-mail de facture. Veuillez vérifier votre configuration e-mail dans les paramètres.'
+    external:
+        footer:
+            description: 'Logiciel de facturation open source pour indépendants et petites entreprises'
+            github: GitHub
+            powered_by: 'Propulsé par'
+            visit_website: 'Visiter SolidInvoice.co'
+        tagline: 'La facturation professionnelle simplifiée'
+    from: De
+    grid:
+        actions:
+            delete: Supprimer
+            edit: Modifier
+            view: Voir
+    id:
+        cancel: 'Annuler la modification du numéro de facture'
+        edit: 'Modifier le numéro de facture'
+        save: 'Enregistrer le numéro de facture'
+    invoice_status:
+        overdue: 'En retard'
+    invoice_taxes:
+        add: 'Ajouter une taxe de facture'
+        heading:
+            direction: Sens
+            note: Note
+            tax: Taxe
+        informational: Informatif
+        remove: 'Supprimer la taxe de facture'
+        subtitle: 'Ajoutez des taxes au niveau de la facture, comme une retenue à la source (TDS) ou des frais forfaitaires.'
+        title: 'Retenues et ajustements'
+    item:
+        add: 'Ajouter une ligne'
+        description:
+            add: 'Ajouter une description'
+            label: 'Description de la ligne'
+            placeholder: 'Décrivez le service ou le produit...'
+        heading:
+            description: Description
+            name: Article
+            price: Prix
+            qty: Qté
+            tax: Taxe
+            total: Total
+        name:
+            label: 'Nom de l’article'
+            placeholder: 'ex. : Conception de site web'
+        number: 'Article %number%'
+        reorder: 'Réordonner la ligne : faites-la glisser ou déplacez-la avec les flèches haut et bas'
+        reordered: 'Ligne déplacée en position %position% sur %total%'
+        remove: 'Supprimer la ligne'
+        tax:
+            add: '+ Ajouter une taxe'
+            remove: 'Supprimer la taxe'
+    items:
+        empty:
+            description: 'Ajoutez votre première ligne pour commencer'
+            title: 'Aucune ligne'
+        title: 'Lignes de facture'
+    label: 'Facture n°'
+    line_tax: 'Taxes de ligne'
+    list:
+        income: Revenus
+        outstanding: 'En attente'
+        recurring_title: 'Factures récurrentes'
+        status_legend: 'Légende des statuts de facture'
+        title: Factures
+    manual_reminder:
+        error:
+            invalid_csrf: 'Jeton CSRF invalide'
+            no_contacts: 'Impossible d’envoyer la relance : la facture n’a aucun contact'
+            send_failed: 'Échec de l’envoi de la relance de paiement'
+        success: 'Relance de paiement envoyée avec succès'
+    mark_paid: 'Marquer comme payée'
+    menu:
+        create: 'Créer une facture'
+        list: 'Lister les factures'
+        main: Factures
+        recurring:
+            create: 'Créer une facture récurrente'
+            list: 'Lister les factures récurrentes'
+            main: 'Factures récurrentes'
+            view: 'Voir la facture récurrente'
+        view: 'Voir la facture'
+    modal:
+        send_paid:
+            confirm: 'Envoyer la facture'
+            heading: 'Envoyer le reçu de la facture ?'
+            message: 'Cela renverra l’e-mail de la facture %invoice_id% aux contacts listés ci-dessous.'
+            recipients: 'L’e-mail sera envoyé à :'
+            title: 'Envoyer une facture payée'
+        send_reminder:
+            confirm: 'Envoyer la relance'
+            heading: 'Envoyer une relance de paiement ?'
+            message: 'Cela enverra un e-mail de relance de paiement pour la facture %invoice_id% aux contacts listés ci-dessous.'
+            recipients: 'L’e-mail sera envoyé à :'
+            title: 'Envoyer une relance de paiement'
+    notes: Notes
+    number_prefix: N°
+    paid_date: 'Date de paiement'
+    payment:
+        capture: 'Voulez-vous encaisser un paiement pour cette facture ?'
+        label: Paiement
+    payment_terms:
+        due_help: 'Calculée à partir des conditions de paiement. Choisissez Personnalisée pour fixer votre propre date.'
+        label: 'Conditions de paiement'
+        recurring_help: 'Chaque facture créée ainsi est due selon ces conditions, à compter de son jour d’émission.'
+    pdf:
+        due_in_days: 'À payer dans %days% jours'
+        due_today: 'ÉCHÉANCE AUJOURD’HUI'
+        overdue_by: 'EN RETARD DE %days% JOURS'
+        payment_description: 'Cliquez sur le bouton ou visitez l’URL ci-dessous pour payer en ligne en toute sécurité.'
+        payment_title: 'Payer cette facture en ligne'
+        payment_url_label: 'URL de paiement'
+        title: FACTURE
+    recurring:
+        activate: Activer
+        activate_start: 'Activer et démarrer'
+        create:
+            subtitle: 'Configurez la génération automatique de factures'
+            title: 'Créer une facture récurrente'
+        date_end: 'Date de fin'
+        date_end_info: 'Sans date de fin, la facture se répétera indéfiniment'
+        date_start: 'Date de début'
+        day_of_month:
+            label: 'Jour du mois'
+            placeholder: 'Sélectionner un jour'
+        days:
+            friday: Vendredi
+            monday: Lundi
+            saturday: Samedi
+            sunday: Dimanche
+            thursday: Jeudi
+            tuesday: Mardi
+            wednesday: Mercredi
+        days_of_month: 'Jours du mois'
+        edit:
+            title: 'Modifier la facture récurrente'
+        end_after_occurrences: 'Terminer après un nombre d’occurrences'
+        end_date: 'Date de fin'
+        end_occurrence_placeholder: 'Nombre de factures'
+        end_type: 'Fin de la récurrence'
+        frequency: Fréquence
+        generated: 'Factures générées'
+        months:
+            april: Avril
+            august: Août
+            december: Décembre
+            february: Février
+            january: Janvier
+            july: Juillet
+            june: Juin
+            march: Mars
+            may: Mai
+            november: Novembre
+            october: Octobre
+            september: Septembre
+        pause: Mettre en pause
+        repeats_in_months: 'Se répète les mois de'
+        repeats_on: 'Se répète le'
+        resume: Reprendre
+        schedule:
+            description: 'Configurez quand les factures sont générées automatiquement'
+            title: 'Calendrier de récurrence'
+            toggle: 'Afficher ou masquer la section du calendrier de récurrence'
+        start_date: 'Date de début'
+        total_generated: 'Total généré'
+        type:
+            label: 'Type de récurrence'
+            placeholder: 'Sélectionner un type de récurrence'
+        upcoming: 'Prochaines occurrences'
+        variables:
+            day: 'Le jour de la facture (ex. : « 15 »)'
+            day_name: 'Le nom du jour (ex. : « mercredi »)'
+            example_input: 'Abonnement pour {month}'
+            example_label: Exemple
+            example_output: 'Abonnement pour %month%'
+            help_button: 'Variables disponibles pour les descriptions'
+            month: 'Le nom du mois (ex. : « janvier »)'
+            text: 'Vous pouvez utiliser les variables suivantes dans les descriptions de lignes ; elles seront remplacées à la génération des factures :'
+            year: 'L’année (ex. : « 2026 »)'
+        view:
+            ending: 'se terminant le'
+            label: Récurrente
+            starting: 'commençant le'
+            title: 'Facture récurrente n°%id%'
+        view_all: 'Voir les %count% factures'
+    save:
+        cancel: Annuler
+        draft: 'Enregistrer comme brouillon'
+        enable: 'Enregistrer et activer'
+        publish: Publier
+        publish_only: 'Publier sans envoyer'
+        send: 'Envoyer au client'
+        update: 'Enregistrer les modifications'
+    send:
+        invalid_csrf: 'Jeton CSRF invalide'
+        no_recipients: 'Personne à qui envoyer cette facture. Modifiez-la et choisissez un contact avec une adresse e-mail.'
+        resend_link: 'envoyer un nouveau lien'
+        verify_hint: 'Confirmez votre adresse e-mail pour envoyer des factures. E-mail introuvable ? Vérifiez vos indésirables, ou'
+    send_to: 'Envoyer la facture à :'
+    stats:
+        active_recurring: 'Récurrentes actives'
+        count:
+            cancelled: '{0} Factures annulées|{1} Facture annulée|]1,Inf] Factures annulées'
+            draft: '{0} Factures brouillon|{1} Facture brouillon|]1,Inf] Factures brouillon'
+            overdue: '{0} Factures en retard|{1} Facture en retard|]1,Inf] Factures en retard'
+            paid: '{0} Factures payées|{1} Facture payée|]1,Inf] Factures payées'
+            pending: '{0} Factures en attente|{1} Facture en attente|]1,Inf] Factures en attente'
+        outstanding_balance: 'En attente'
+        overdue: 'en retard'
+        pending_invoices: 'En attente'
+        status_breakdown: 'Répartition par statut'
+        status_format: '%active% actives, %draft% brouillons, %paused% en pause'
+        total_generated: 'Total généré'
+        total_income: 'Revenus totaux'
+        total_invoices: 'Total des factures'
+        upcoming_7_days: 'À venir sous 7 jours'
+    status: Statut
+    subtotal: Sous-total
+    summary: 'Résumé de la facture'
+    tabs:
+        active: Actives
+        archived: Archivées
+        label: 'Navigation de la liste des factures'
+        recurring_active: Actives
+        recurring_archived: Archivées
+        recurring_completed: Terminées
+    tax: Taxe
+    template:
+        compact:
+            label: FACTURE
+        editorial:
+            heading: 'Relevé de compte'
+            signoff: 'Avec toute notre gratitude,'
+        friendly:
+            greeting: 'Bonjour %name%,'
+            intro: 'Merci encore de travailler avec nous. Voici la facture correspondant au travail effectué — n’hésitez pas à nous contacter si quelque chose vous semble étrange.'
+            signoff: 'À très vite !'
+        modern:
+            label: Relevé
+        photographer:
+            client_label: Pour
+            intro_title: 'Merci pour cette collaboration'
+            signoff: 'Dans l’attente de notre prochain chapitre,'
+            studio_label: 'De la part du studio de'
+            subtitle: 'Photographie et narration visuelle'
+        studio:
+            client: Client
+            deliverable: Livrable
+            engagement: mission
+            project_label: Projet
+            studio: Studio
+    terms: 'Conditions générales'
+    terms_notes:
+        title: 'Conditions et notes'
+        toggle: 'Afficher ou masquer la section des conditions et notes'
+    test_copy:
+        button: 'M’envoyer une copie de test'
+        sent: 'Copie de test envoyée. Ouvrez-la dans votre boîte de réception et confirmez votre e-mail pour commencer à envoyer des factures.'
+        too_many: 'Vous avez utilisé toutes vos copies de test. Confirmez votre e-mail depuis le lien que nous vous avons envoyé pour commencer à envoyer des factures.'
+    title: 'Facture n°%id%'
+    to: À
+    total: Total
+    total_due: 'Total dû'
+    totals:
+        title: Résumé
+    transition:
+        action:
+            accept: 'La facture a été acceptée'
+            archive: 'La facture a été archivée'
+            cancel: 'La facture a été annulée'
+            edit: 'La facture est repassée en brouillon'
+            new: 'La facture est maintenant un brouillon'
+            overdue: 'La facture est maintenant en retard'
+            pay: 'La facture a été payée'
+            reopen: 'La facture a été rouverte'
+            sent: 'La facture a été envoyée'
+        exception:
+            accept: 'La facture ne peut pas être acceptée'
+            archive: 'La facture ne peut pas être archivée'
+            cancel: 'La facture ne peut pas être annulée'
+            pay: 'La facture ne peut pas être payée'
+            reopen: 'La facture ne peut pas être rouverte'
+            sent: 'La facture ne peut pas être envoyée'
+        recurring:
+            action:
+                activate: 'La facture récurrente est maintenant active'
+                archive: 'La facture récurrente a été archivée'
+                cancel: 'La facture récurrente a été annulée'
+                complete: 'La facture récurrente a terminé son calendrier'
+                edit: 'La facture récurrente est repassée en brouillon'
+                new: 'La facture récurrente est maintenant un brouillon'
+                pause: 'La facture récurrente a été mise en pause'
+                resume: 'La facture récurrente a repris'
+    view:
+        online: 'Consultez cette facture en ligne : %url%'
+        payments: Paiements
+        related_quote: 'Devis associé'
+        toolbar:
+            archive: Archiver
+            cancel: Annuler
+            clone: Dupliquer
+            copy_link: 'Copier le lien client'
+            edit: Modifier
+            link_copied: 'Lien copié'
+            mark_paid: 'Marquer comme payée'
+            more_actions: 'Plus d’actions'
+            pay_now: 'Payer maintenant'
+            publish_and_send: 'Publier et envoyer'
+            reopen: Rouvrir
+            send: Envoyer
+            send_reminder: 'Envoyer une relance'
+            toggle_dropdown: 'Afficher le menu'
+            view_quote: 'Voir le devis'
+    withholding: Retenue
+invoice_status_update: 'Mise à jour du statut de facture'
+invoices: Factures
+label:
+    client: Client
+    invoice: Facture
+    'no': Non
+    optional: Facultatif
+    options: Options
+    quote: Devis
+    required: Obligatoire
+    search: Rechercher
+    status: Statut
+    'yes': Oui
+layout:
+    add_company: 'Ajouter une entreprise'
+    api_keys: 'Clés d’API'
+    aria:
+        logo: Logo
+        main_navigation: 'Navigation principale'
+        open_company_menu: 'Ouvrir le menu de l’entreprise'
+        open_create_menu: 'Ouvrir le menu de création'
+        open_user_menu: 'Ouvrir le menu utilisateur'
+        toggle_navigation: 'Afficher ou masquer la navigation'
+    data_export: 'Export de données'
+    feedback: 'Donner votre avis'
+    profile: Profil
+    skip_to_content: 'Aller au contenu principal'
+    unsplash_credit: 'Photos haute résolution libres de droits de Julian Zett'
+    user_image: 'Image de l’utilisateur'
+mcp:
+    connected_apps:
+        empty: 'Vous n’avez encore connecté aucun agent IA.'
+        last_used: 'Dernière utilisation'
+        never_used: 'Jamais utilisée'
+        revoke: Révoquer
+        scopes: Autorisations
+        title: 'Applications connectées'
+    consent:
+        authorize: Autoriser
+        cancel: Annuler
+        company: Entreprise
+        heading: '%client% souhaite accéder à votre compte SolidInvoice'
+        permissions: 'Autorisations demandées'
+        redirect: 'Rappel : %uri%'
+        remember: 'Ne plus me demander pour cette application et cette entreprise'
+        revoke_hint: 'Vous pouvez révoquer cette application à tout moment depuis vos'
+        revoke_hint_link: 'applications connectées'
+        scope:
+            read: 'Lire vos factures, devis, clients, paiements, taxes et statistiques'
+            write: 'Créer et modifier des factures, devis, clients, paiements et taxes'
+        title: 'Autoriser l’application'
+    error:
+        title: 'Erreur d’autorisation'
+    upgrade:
+        contact_admin: 'Contactez votre administrateur pour changer d’offre et activer l’accès MCP.'
+        description: 'Votre offre actuelle n’inclut pas l’accès MCP. Passez à une offre supérieure pour autoriser des agents et outils IA.'
+        title: 'Accès MCP indisponible'
+menu:
+    button:
+        create: Créer
+    top:
+        api: 'Jetons d’API'
+        custom_fields: 'Champs personnalisés'
+        dashboard: 'Tableau de bord'
+        integrations: Intégrations
+        logout: Déconnexion
+        profile: Profil
+        settings: Paramètres
+        system: Système
+        tax: 'Taux de taxe'
+        users: Utilisateurs
+name: Nom
+no_invoices: 'Ce client n’a encore aucune facture.'
+no_quotes: 'Ce client n’a encore aucun devis.'
+notification:
+    flash:
+        added: 'Intégration ajoutée'
+        deleted: 'Intégration supprimée'
+        no_delete_permission: 'Vous n’avez pas la permission de supprimer cette intégration'
+        not_exist: 'L’intégration n’existe pas'
+        updated: 'Intégration mise à jour'
+        validation_errors: 'Veuillez corriger les erreurs de validation'
+    integration:
+        add: 'Ajouter une intégration %type%'
+        configure_credentials: 'Configurer les identifiants de l’intégration de notification'
+        delete: 'Supprimer l’intégration'
+        delete_confirm: 'Voulez-vous vraiment supprimer'
+        delete_title: 'Supprimer l’intégration'
+        delete_undone: 'Cette action est irréversible'
+        delete_warning: 'Cela supprimera l’intégration de notification et ne peut pas être annulé.'
+        save: 'Enregistrer l’intégration'
+        save_button: 'Enregistrer l’intégration'
+    marketplace:
+        all_providers: 'Tous les fournisseurs'
+        browse: 'Parcourir les intégrations'
+        clear_search: 'Effacer la recherche'
+        close_esc: 'Fermer (Échap)'
+        configure: Configurer
+        configured: Configurée
+        configured_title: 'Intégrations configurées'
+        edit: 'Modifier %name%'
+        empty_subtitle: 'Configurez votre première intégration de notification pour commencer à envoyer des notifications par SMS ou chat.'
+        empty_title: 'Aucune intégration configurée'
+        featured_providers: 'Fournisseurs à la une'
+        heading: 'Intégrations de notification'
+        modal_title: 'Configurer l’intégration de notification'
+        no_results: 'Aucune intégration ne correspond à votre recherche'
+        search_aria: 'Rechercher des intégrations de notification'
+        search_placeholder: 'Rechercher des intégrations...'
+        subtitle: 'Envoyez des notifications par SMS ou plateformes de chat'
+        title: Catalogue
+    provider:
+        amazon_sns: 'Envoyez des SMS et des notifications push avec Amazon SNS'
+        discord: 'Envoyez des messages sur des serveurs Discord'
+        fake_chat: 'Testez les notifications de chat en développement'
+        fake_sms: 'Testez les notifications SMS sans envoyer de vrais messages'
+        generic: 'Envoyez des notifications %type% via %name%'
+        google_chat: 'Envoyez des notifications dans des espaces Google Chat'
+        mattermost: 'Communication d’équipe auto-hébergée'
+        message_bird: 'Plateforme mondiale de messagerie SMS'
+        microsoft_teams: 'Publiez des messages dans des canaux Microsoft Teams'
+        rocket_chat: 'Plateforme de chat d’équipe open source'
+        sinch: 'Communications cloud pour l’envoi de SMS'
+        slack: 'Envoyez des notifications dans des canaux Slack'
+        telegram: 'Envoyez des notifications via des bots Telegram'
+        twilio: 'Envoyez des notifications SMS avec Twilio'
+        type_chat: chat
+        vonage: 'Messagerie SMS fiable avec Vonage (anciennement Nexmo)'
+    send_failed: 'Échec de l’envoi de la notification. Veuillez vérifier votre configuration e-mail dans les paramètres.'
+    type:
+        chat: Chat
+        sms: SMS
+        unknown: Inconnu
+notifications:
+    add_integration: 'Ajouter une intégration'
+    available_channels: 'Canaux disponibles'
+    categories:
+        client: 'Notifications clients'
+        invoice: 'Notifications de factures'
+        payment: 'Notifications de paiements'
+        quote: 'Notifications de devis'
+    email_always_available: 'Les notifications par e-mail sont toujours disponibles. Ajoutez des intégrations pour recevoir des notifications par d’autres canaux.'
+    email_channel: E-mail
+    empty:
+        description: 'Les événements de notification apparaîtront ici lorsqu’ils seront disponibles dans le système'
+        title: 'Aucune notification disponible'
+    events:
+        client_created:
+            description: 'Lorsqu’un nouveau client est ajouté à votre compte'
+            title: 'Client créé'
+        invoice_status_changed:
+            description: 'Lorsque le statut d’une facture change (brouillon, envoyée, payée, etc.)'
+            title: 'Statut de facture modifié'
+        payment_received:
+            description: 'Lorsqu’un paiement est reçu pour une facture'
+            title: 'Paiement reçu'
+        quote_status_changed:
+            description: 'Lorsque le statut d’un devis change (brouillon, envoyé, accepté, etc.)'
+            title: 'Statut de devis modifié'
+    flash:
+        saved: 'Notification enregistrée !'
+    integrations_count: 'Vous avez %count% intégration(s) configurée(s)'
+    manage_integrations: 'Gérer les intégrations'
+    notification_channels: 'Canaux de notification'
+    notify_via: 'Notifier via :'
+    save_preferences: 'Enregistrer les préférences'
+    subtitle: 'Choisissez quels événements déclenchent des notifications et où vous les recevez'
+    title: 'Préférences de notification'
+onboarding:
+    company:
+        description: 'Ajoutez le nom et la devise de votre entreprise. Ensuite, vous rédigerez et enverrez votre première facture.'
+        fields:
+            currency:
+                help: 'La devise que vous utiliserez pour vos factures et devis'
+                label: Devise
+            name:
+                help: 'C’est ainsi que votre entreprise apparaîtra sur vos factures et devis'
+                label: 'Nom de l’entreprise'
+                placeholder: 'Société Dupont'
+        submit: 'Continuer vers votre première facture'
+        title: 'Qui envoie la facture ?'
+        welcome: 'Bienvenue sur %app_name% !'
+    flash:
+        first_invoice: 'Votre entreprise est configurée. Dernière étape : ajoutez votre client et envoyez votre première facture.'
+    page_title: 'Bien démarrer - %app_name%'
+optional: Facultatif
+payment:
+    action:
+        pay: 'Payer maintenant'
+    amount:
+        help: 'Saisissez le montant que vous souhaitez payer'
+        label: 'Montant du paiement'
+    balance_remaining: 'Solde restant'
+    capture_online:
+        help: 'Si activé, vous serez redirigé vers la passerelle de paiement pour finaliser le paiement'
+        label: 'Traiter le paiement en ligne'
+    client: Client
+    create:
+        balance: 'Solde restant dû'
+        base_total: 'Total hors taxe'
+        cancel: Annuler
+        credit: 'Crédit :'
+        discount: Remise
+        exception:
+            amount_exceeds_balance: 'Le montant encaissé dépasse le solde restant dû'
+            invoice_cannot_be_paid: 'Cette facture ne peut pas être payée'
+            no_payment_methods: 'Aucun moyen de paiement n’est actuellement disponible'
+            not_enough_credit: 'Crédit disponible insuffisant'
+        force: 'Forcer le statut du paiement (facultatif)'
+        invoice_date: 'Date de facture'
+        payment_label: Paiement
+        subtitle: 'Finalisez votre paiement en toute sécurité'
+        tite: 'Paiement de la facture n°%id%'
+        title: 'Payer la facture n°%id%'
+        total: Total
+    details: 'Détails du paiement'
+    flash:
+        status:
+            authorized: 'Le paiement a été autorisé'
+            cancelled: 'Le paiement a été annulé'
+            expired: 'Le paiement a expiré'
+            failed: 'Le paiement a échoué'
+            new: 'Nouveau paiement créé'
+            pending: 'Le paiement est en attente'
+            refunded: 'Le paiement a été remboursé'
+            success: 'Le paiement a été effectué'
+            suspended: 'Le paiement a été suspendu'
+            unknown: 'Une erreur inconnue est survenue'
+    form:
+        help:
+            internal: 'Cette option réserve ce moyen de paiement à un usage interne. Les clients ne pourront pas le sélectionner pour finaliser un paiement.'
+        label:
+            internal: 'Usage interne uniquement'
+        payment_method:
+            placeholder: 'Choisir un moyen de paiement'
+    gateway:
+        _fallback:
+            tagline: 'Acceptez des paiements via cette passerelle.'
+        about:
+            title: 'À propos de cette passerelle'
+        authorize_net_aim:
+            display_name: 'Authorize.Net (AIM)'
+            tagline: 'Ancienne intégration Authorize.Net AIM.'
+        badge:
+            advanced: Avancé
+            recommended: Recommandé
+        bank_transfer:
+            display_name: 'Virement bancaire'
+            overview: 'Enregistrez les paiements que vos clients envoient par virement bancaire. Indiquez vos coordonnées bancaires sur les factures pour que les clients sachent où payer, puis marquez la facture comme payée à l’arrivée des fonds.'
+            tagline: 'Enregistrez les paiements effectués par virement bancaire direct.'
+        be2bill_direct:
+            display_name: 'Be2Bill Direct'
+            tagline: 'Ancienne intégration Be2Bill directe.'
+        be2bill_offsite:
+            display_name: 'Be2Bill Offsite'
+            tagline: 'Ancienne intégration Be2Bill hébergée.'
+        cash:
+            display_name: Espèces
+            overview: 'Enregistrez les espèces que vous recevez de vos clients. Rien n’est débité en ligne : vous marquez la facture comme payée une fois l’argent en main.'
+            tagline: 'Enregistrez les paiements en espèces reçus en personne.'
+        compare:
+            title: 'Vous hésitez ?'
+        custom:
+            display_name: 'Moyen personnalisé'
+            overview: 'Créez votre propre moyen de paiement, par exemple un portefeuille local ou une passerelle que SolidInvoice ne propose pas. Les paiements sont enregistrés manuellement.'
+            tagline: 'Créez votre propre moyen de paiement enregistré manuellement.'
+        field:
+            enabled:
+                help: 'Activez pour rendre le moyen de paiement disponible. Laissez désactivé pendant que vous finalisez sa configuration.'
+                label: Activé
+            name:
+                help: 'Un libellé pour reconnaître ce moyen dans SolidInvoice : vous seul le voyez, pas vos clients. Par exemple « Stripe - compte principal ».'
+                label: 'Nom affiché'
+                placeholder: 'ex. : Stripe - compte principal'
+            paypal:
+                partner:
+                    help: 'Votre partenaire Payflow, généralement « PayPal ».'
+                    label: Partenaire
+                password:
+                    help: 'Depuis le même écran d’identifiants API PayPal. Laissez vide lors d’une modification pour conserver la valeur enregistrée.'
+                    label: 'Mot de passe API'
+                signature:
+                    help: 'La longue chaîne de signature indiquée avec vos identifiants API PayPal.'
+                    label: 'Signature API'
+                username:
+                    help: 'Depuis votre compte PayPal, sous Paramètres du compte > Accès API > Identifiants API NVP/SOAP.'
+                    label: 'Nom d’utilisateur API'
+                vendor:
+                    help: 'Votre identifiant marchand Payflow (vendor).'
+                    label: 'Vendor / identifiant marchand'
+            sandbox:
+                help: 'Utilisez l’environnement de test de la passerelle avec des identifiants de test : aucun argent réel n’est échangé. Désactivez pour accepter des paiements réels.'
+                label: 'Mode test (sandbox)'
+            stripe:
+                publishable_key:
+                    help: 'Commence par « pk_ ». Cette clé peut être partagée publiquement : elle identifie seulement votre compte Stripe dans le navigateur.'
+                    label: 'Clé publique'
+                secret_key:
+                    help: 'Commence par « sk_ ». Gardez-la privée : elle autorise des débits sur votre compte. Ne la partagez jamais.'
+                    label: 'Clé secrète'
+        klarna_checkout:
+            display_name: 'Klarna Checkout'
+            tagline: 'Ancienne intégration Klarna Checkout.'
+        klarna_invoice:
+            display_name: 'Klarna Invoice'
+            tagline: 'Ancienne intégration Klarna Invoice.'
+        marketplace:
+            subtitle: 'Choisissez comment accepter les paiements de vos clients, ou enregistrez les paiements reçus hors ligne.'
+        offline:
+            display_name: 'Paiement hors ligne'
+            overview: 'Utilisez-le pour enregistrer les paiements reçus en dehors de l’application : chèque, carte encaissée en personne ou tout autre moyen. Rien n’est débité automatiquement ; vous marquez simplement la facture comme payée.'
+            tagline: 'Enregistrez un paiement effectué en dehors de SolidInvoice.'
+        payex:
+            display_name: PayEx
+            tagline: 'Ancienne intégration PayEx.'
+        paypal:
+            comparison: 'PayPal Express Checkout (recommandé) : fonctionne avec un compte PayPal Business standard et convient à presque tout le monde. PayPal Pro (Payflow) : garde les clients sur votre site mais nécessite un compte PayPal Payments Pro / Payflow payant. Ne choisissez Pro que si PayPal vous l’a spécifiquement activé.'
+            setup_label: 'Obtenir vos identifiants API PayPal'
+        paypal_express_checkout:
+            display_name: 'PayPal Express Checkout'
+            overview: 'PayPal Express Checkout envoie votre client sur PayPal pour approuver le paiement, puis le ramène sur SolidInvoice. Les clients peuvent payer avec leur solde PayPal ou une carte bancaire, sans compte PayPal pour les paiements par carte.'
+            tagline: 'Laissez vos clients payer avec leur compte PayPal ou une carte.'
+        paypal_pro_checkout:
+            display_name: 'PayPal Pro (Payflow)'
+            overview: 'PayPal Pro (Payflow) traite les paiements par carte sans envoyer les clients sur PayPal. Il nécessite un compte PayPal Payments Pro ou Payflow payant. Si vous n’en avez pas, utilisez plutôt PayPal Express Checkout.'
+            tagline: 'Encaissez les cartes sur votre site (nécessite un compte PayPal Pro).'
+        section:
+            credentials:
+                subtitle: 'Connectez votre compte. Vous trouverez ces clés dans le tableau de bord de votre prestataire.'
+                title: Identifiants
+            details:
+                subtitle: 'Comment ce moyen de paiement est identifié dans SolidInvoice.'
+                title: Détails
+            more:
+                subtitle: 'Processeurs supplémentaires et anciens. À utiliser seulement si vous avez déjà un compte chez eux.'
+                title: 'Autres passerelles'
+            offline:
+                subtitle: 'Enregistrez les paiements reçus en dehors de SolidInvoice, comme des espèces ou un virement bancaire.'
+                title: 'Moyens hors ligne et manuels'
+            online:
+                subtitle: 'Débitez les cartes automatiquement : votre client paie via un paiement sécurisé.'
+                title: 'Passerelles de paiement en ligne'
+        setup:
+            default_label: 'Comment obtenir vos clés API'
+        stripe:
+            comparison: 'Stripe Checkout (recommandé) : Stripe héberge la page de paiement. C’est le plus simple à configurer et le plus sûr, sans travail de conformité supplémentaire pour vous. Stripe.js : les champs de carte sont intégrés directement dans SolidInvoice pour un rendu plus fluide, mais vous assumez davantage de responsabilité PCI. Dans le doute, choisissez Stripe Checkout.'
+            setup_label: 'Obtenir vos clés API Stripe'
+        stripe_checkout:
+            display_name: 'Stripe Checkout'
+            overview: 'Stripe redirige votre client vers une page de paiement sécurisée hébergée par Stripe, puis le ramène une fois le paiement effectué. C’est le moyen le plus rapide et le plus sûr d’accepter les cartes, car Stripe gère toutes les données sensibles de carte pour vous.'
+            tagline: 'Acceptez les cartes sur une page de paiement sécurisée hébergée par Stripe.'
+        stripe_js:
+            display_name: Stripe.js
+            overview: 'Stripe.js intègre les champs de saisie de carte directement dans SolidInvoice au lieu de rediriger vers Stripe. Le paiement est plus fluide, mais vous assumez davantage de responsabilité PCI. La plupart des entreprises devraient plutôt utiliser Stripe Checkout.'
+            tagline: 'Intégrez les champs de carte directement dans SolidInvoice (avancé).'
+    history:
+        title: 'Historique des paiements'
+    invoice_details: 'Détails de la facture'
+    invoice_summary: 'Résumé de la facture'
+    line_items: 'Lignes de facture'
+    list:
+        grid:
+            amount: Montant
+            currency: Devise
+            invoice: Facture
+            method: 'Moyen de paiement'
+            payment_date: 'Date de paiement'
+            payment_id: 'ID de paiement'
+            status: Statut
+        status_legend: 'Légende des statuts de paiement'
+        title: Paiements
+    marketplace:
+        action:
+            configure: Configurer
+        active:
+            title: 'Moyens de paiement actifs'
+        badge:
+            configured: Configuré
+            disabled: Désactivé
+            enabled: Activé
+            popular: Populaire
+            test_mode: 'Mode test'
+        edit_aria: 'Modifier %name%'
+        empty:
+            browse: 'Parcourir les passerelles de paiement'
+            no_gateways: 'Aucune passerelle ne correspond à votre recherche'
+            no_methods: 'Aucun moyen de paiement configuré'
+            no_methods_hint: 'Commencez en sélectionnant une passerelle dans le catalogue à gauche.'
+        gateways:
+            subtitle: 'Choisissez parmi les processeurs de paiement populaires ou ajoutez des passerelles personnalisées'
+            title: 'Passerelles de paiement'
+        modal:
+            close_title: 'Fermer (Échap)'
+            title: 'Configurer la passerelle de paiement'
+        search:
+            aria: 'Rechercher des passerelles de paiement'
+            clear: 'Effacer la recherche'
+            placeholder: 'Rechercher des passerelles...'
+        tab:
+            active: Actifs
+            marketplace: Catalogue
+    menu:
+        main: Paiements
+        methods: 'Moyens de paiement'
+    method:
+        add: 'Ajouter un moyen de paiement'
+        added: 'Moyen de paiement ajouté avec succès !'
+        credit: Crédit
+        label: 'Moyen de paiement'
+        offline: 'Hors ligne'
+        online: 'En ligne'
+        updated: 'Moyen de paiement mis à jour avec succès !'
+    method_settings:
+        choice:
+            placeholder: 'Veuillez choisir'
+    methods:
+        available: 'Moyens de paiement disponibles'
+        title: 'Moyens de paiement'
+    notes:
+        help: 'Ces notes sont à usage interne uniquement'
+        label: Notes
+        placeholder: 'Ajoutez des notes supplémentaires sur ce paiement...'
+    reference:
+        help: 'Numéro de référence facultatif pour ce paiement'
+        label: Référence
+        placeholder: 'ex. : ID de transaction, numéro de chèque'
+    settings:
+        configure_gateway: 'Configurer %method%'
+        delete_aria: 'Supprimer le moyen de paiement'
+        delete_modal:
+            confirm_prefix: 'Voulez-vous vraiment supprimer'
+            confirm_suffix: 'Cela supprimera le moyen de paiement et ne peut pas être annulé.'
+            subtitle: 'Cette action est irréversible'
+            title: 'Supprimer le moyen de paiement'
+        password:
+            hint: 'Laissez vide pour conserver la valeur existante'
+        save: 'Enregistrer le moyen de paiement'
+        save_aria: 'Enregistrer le moyen de paiement'
+        subtitle: 'Configurez les paramètres et identifiants de la passerelle de paiement'
+    stats:
+        failed: Échoués
+        pending: 'En attente'
+        this_month: 'Ce mois-ci'
+        total_received: 'Total reçu'
+payment_made: 'Le paiement a été reçu'
+payment_terms:
+    custom: Personnalisée
+    due_on_receipt: 'À réception'
+    end_of_month: 'Fin de mois'
+    end_of_next_month: 'Fin du mois suivant'
+    net_14: 'Net 14 jours'
+    net_15: 'Net 15 jours'
+    net_30: 'Net 30 jours'
+    net_45: 'Net 45 jours'
+    net_60: 'Net 60 jours'
+    net_7: 'Net 7 jours'
+    net_90: 'Net 90 jours'
+pdf:
+    additional_information: 'Informations complémentaires'
+    'no': Non
+    of: sur
+    page: Page
+    status: Statut
+    'yes': Oui
+powered_by: 'Propulsé par'
+profile:
+    api:
+        create: 'Créer un jeton'
+        doc_link: 'documentation de l’API'
+        doc_notice: 'Pour consulter la documentation de l’API, rendez-vous sur la page %link%.'
+        flash:
+            created: 'Jeton d’API créé avec succès'
+            revoked: 'Jeton d’API révoqué avec succès'
+        form:
+            actions:
+                close: Fermer
+                save: Enregistrer
+            description_placeholder: 'Description facultative pour ce jeton...'
+            title: 'Créer un jeton d’API'
+            token_confirmed: 'J’ai copié le jeton'
+            token_copy: Copier
+            token_copy_warning: 'Copiez ce jeton maintenant. Pour des raisons de sécurité, il ne sera plus affiché.'
+            token_important: Important !
+            token_name: 'Nom du jeton'
+            token_usage: 'Utilisez ce jeton dans l’en-tête X-API-TOKEN des requêtes d’API.'
+            token_value: 'Valeur du jeton'
+        history:
+            actions:
+                close: Fermer
+            last_calls_shown: 'Seuls les 100 derniers appels sont affichés'
+            last_calls_shown_note: 'Remarque :'
+            list:
+                date: Date
+                ip: 'Adresse IP'
+                resource: Ressource
+                user_agent: 'Agent utilisateur'
+            notice: 'Affichage des requêtes d’API effectuées avec ce jeton.'
+            title: 'Historique de l’API'
+        stats:
+            active_tokens: 'Jetons actifs'
+            calls_month: 'Appels d’API ce mois-ci'
+            last_activity: 'Dernière activité'
+            most_used: 'Jeton le plus utilisé'
+        title: 'Jetons d’API'
+        tokens:
+            created:
+                done: Terminé
+                title: 'Votre nouveau jeton d’API'
+                warning:
+                    body: 'Pour des raisons de sécurité, il ne sera plus affiché. Si vous le perdez, révoquez ce jeton et créez-en un nouveau.'
+                    title: 'Copiez ce jeton maintenant.'
+            empty: 'Vous n’avez aucun jeton d’API'
+            history: 'Voir l’historique'
+            revoke: Révoquer
+            revoke_message: 'Voulez-vous vraiment révoquer ce jeton ? C’est irréversible et toutes les applications qui l’utilisent seront affectées'
+            used:
+                last: 'Dernière utilisation :'
+                never: Jamais
+                text: '%date% depuis %ip%'
+    edit:
+        cancel: Annuler
+        section:
+            personal:
+                description: 'Votre nom et vos coordonnées'
+                title: 'Informations personnelles'
+        submit: Enregistrer
+        subtitle: 'Mettez à jour vos informations personnelles et vos coordonnées'
+        success: 'Votre profil a été mis à jour'
+        title: 'Mettre à jour le profil'
+    nav:
+        api_keys: 'Clés d’API'
+        change_password: 'Changer de mot de passe'
+        connected_apps: 'Applications connectées'
+        data_export: 'Export de données'
+        notifications: Notifications
+        preferences: Préférences
+        profile: Profil
+        refer_and_earn: 'Parrainez et gagnez'
+        two_factor: 'Authentification à deux facteurs'
+    password_change:
+        success: 'Votre mot de passe a été mis à jour'
+    show:
+        change_password: 'Changer de mot de passe'
+        email: E-mail
+        enabled: Activé
+        expired: Expiré
+        first_name: Prénom
+        last_login: 'Dernière connexion'
+        last_name: Nom
+        locked: Verrouillé
+        mobile: Mobile
+        'no': Non
+        personal:
+            description: 'Vos coordonnées et informations de compte'
+            title: 'Informations personnelles'
+        roles: Rôles
+        security:
+            2fa_enabled: 'L’authentification à deux facteurs est activée'
+            description: 'Gérez les paramètres de sécurité de votre compte'
+            enable: Activer
+            google:
+                badge: Lié
+                link: 'Liez votre compte à Google pour vous connecter plus facilement'
+                linked: 'Votre compte est lié à Google'
+                sign_in: 'Se connecter avec Google'
+                title: 'Compte Google'
+            manage: Gérer
+            password:
+                description: 'Changez votre mot de passe pour garder votre compte sécurisé'
+                title: 'Mot de passe'
+            title: Sécurité
+        title: 'Profil - %username%'
+        update_profile: 'Mettre à jour le profil'
+        username: 'Nom d’utilisateur'
+        'yes': Oui
+quote:
+    accepted: 'Devis accepté et facture créée'
+    action:
+        create:
+            success: 'Devis créé avec succès'
+        edit:
+            success: 'Devis mis à jour avec succès'
+        pdf: PDF
+        print: Imprimer
+    amount_payable: 'Montant à payer'
+    archive:
+        success: 'Devis archivé'
+    cancelled: 'Devis annulé'
+    client:
+        choose: 'Choisir un client'
+        create: 'Veuillez en ajouter un maintenant'
+        create_new: 'Détails du nouveau client'
+        empty: 'Vous n’avez encore créé aucun client.'
+        inline:
+            currency_note: 'La devise par défaut du système sera utilisée pour ce client.'
+        mode:
+            existing: 'Sélectionner un client existant'
+            new: 'Créer un nouveau client'
+        title: Client
+    clone:
+        success: 'Devis dupliqué avec succès'
+    create:
+        new: 'Créer un devis'
+        subtitle: 'Créez des devis professionnels pour vos clients'
+        success: 'Devis créé avec succès'
+        title: 'Créer un devis'
+    created: Créé
+    custom_fields:
+        title: 'Champs personnalisés'
+    declined: 'Devis refusé'
+    discount: Remise
+    edit:
+        success: 'Devis mis à jour avec succès'
+        title: 'Modifier le devis'
+    email:
+        send_failed: 'Échec de l’envoi de l’e-mail de devis. Veuillez vérifier votre configuration e-mail dans les paramètres.'
+    external:
+        footer:
+            description: 'Logiciel de facturation open source pour indépendants et petites entreprises'
+            github: GitHub
+            powered_by: 'Propulsé par'
+            visit_website: 'Visiter SolidInvoice.co'
+        tagline: 'La facturation professionnelle simplifiée'
+    from: De
+    grid:
+        actions:
+            delete: Supprimer
+            edit: Modifier
+            view: Voir
+    id:
+        cancel: 'Annuler la modification du numéro de devis'
+        edit: 'Modifier le numéro de devis'
+        save: 'Enregistrer le numéro de devis'
+    invoice_taxes:
+        add: 'Ajouter une taxe'
+        heading:
+            direction: Sens
+            note: Note
+            tax: Taxe
+        informational: Informatif
+        remove: 'Supprimer la taxe'
+        subtitle: 'Ajoutez des taxes au niveau du document, comme une retenue à la source ou des frais forfaitaires.'
+        title: 'Retenues et ajustements'
+    item:
+        add: 'Ajouter une ligne'
+        description:
+            add: 'Ajouter une description'
+            label: 'Description de la ligne'
+            placeholder: 'Décrivez le service ou le produit...'
+        heading:
+            description: Description
+            name: Article
+            price: Prix
+            qty: Qté
+            tax: Taxe
+            total: Total
+        name:
+            label: 'Nom de l’article'
+            placeholder: 'ex. : Conception de site web'
+        number: 'Article %number%'
+        reorder: 'Réordonner la ligne : faites-la glisser ou déplacez-la avec les flèches haut et bas'
+        reordered: 'Ligne déplacée en position %position% sur %total%'
+        remove: 'Supprimer la ligne'
+        tax:
+            add: '+ Ajouter une taxe'
+            remove: 'Supprimer la taxe'
+    items:
+        empty:
+            description: 'Ajoutez votre première ligne pour commencer'
+            title: 'Aucune ligne'
+        title: 'Lignes de devis'
+    label: 'Devis n°'
+    line_tax: 'Taxes de ligne'
+    list:
+        status_legend: 'Légende des statuts de devis'
+        title: Devis
+    menu:
+        create: 'Créer un devis'
+        list: 'Lister les devis'
+        main: Devis
+        view: 'Voir le devis'
+    notes: Notes
+    pdf:
+        date: 'Date du devis'
+        expired: EXPIRÉ
+        expires_today: 'EXPIRE AUJOURD’HUI'
+        prepared_for: 'Préparé pour'
+        title: DEVIS
+        total: 'Total du devis'
+        valid_for_days: 'Valable %days% jours'
+        valid_until: 'Valable jusqu’au'
+    reopened: 'Devis rouvert'
+    save:
+        cancel: Annuler
+        draft: 'Enregistrer comme brouillon'
+        publish: Publier
+        send: 'Enregistrer et envoyer'
+        update: 'Mettre à jour'
+    send:
+        verify_hint: 'Confirmez votre adresse e-mail pour envoyer des devis. E-mail introuvable ? Vérifiez vos indésirables, ou'
+    send_to: 'Envoyer le devis à :'
+    sent: 'Devis envoyé'
+    stats:
+        accepted_quotes: Acceptés
+        count:
+            accepted: '{0} Devis acceptés|{1} Devis accepté|]1,Inf] Devis acceptés'
+            cancelled: '{0} Devis annulés|{1} Devis annulé|]1,Inf] Devis annulés'
+            declined: '{0} Devis refusés|{1} Devis refusé|]1,Inf] Devis refusés'
+            draft: '{0} Devis brouillon|{1} Devis brouillon|]1,Inf] Devis brouillon'
+            pending: '{0} Devis en attente|{1} Devis en attente|]1,Inf] Devis en attente'
+        declined_quotes: Refusés
+        pending_quotes: 'En attente'
+        total_quotes: 'Total des devis'
+    subtotal: Sous-total
+    summary: 'Résumé du devis'
+    tabs:
+        active: Actifs
+        archived: Archivés
+        label: 'Navigation de la liste des devis'
+    tax: Taxe
+    template:
+        friendly:
+            greeting: 'Bonjour %name%,'
+            intro: 'Merci encore de l’intérêt que vous portez à une collaboration. Voici le devis correspondant au travail — n’hésitez pas à nous contacter si quelque chose vous semble étrange.'
+            signoff: 'À très vite !'
+    terms: Conditions
+    terms_notes:
+        title: 'Conditions et notes'
+        toggle: 'Afficher ou masquer la section des conditions et notes'
+    title: 'Devis n°%id%'
+    to: À
+    total: Total
+    totals:
+        title: Résumé
+    transition:
+        action:
+            accept: 'Devis accepté, une facture a été créée'
+            archive: 'Le devis a été archivé'
+            cancel: 'Le devis a été annulé'
+            decline: 'Le devis a été refusé'
+            new: 'Le devis est maintenant un brouillon'
+            publish: 'Le devis a été publié'
+            reopen: 'Le devis a été rouvert'
+            send: 'Le devis a été envoyé'
+            sent: 'Le devis a été envoyé'
+        exception:
+            accept: 'Le devis ne peut pas être accepté'
+            archive: 'Le devis ne peut pas être archivé'
+    view:
+        online: 'Consultez ce devis en ligne : %url%'
+        related_invoice: 'Facture associée'
+        toolbar:
+            accept: Accepter
+            archive: Archiver
+            cancel: Annuler
+            clone: Dupliquer
+            decline: Refuser
+            edit: Modifier
+            more_actions: 'Plus d’actions'
+            publish_and_send: 'Publier et envoyer'
+            reopen: Rouvrir
+            send: Envoyer
+            toggle_dropdown: 'Afficher le menu'
+            view_invoice: 'Voir la facture'
+    withholding: Retenue
+quote_status_update: 'Mise à jour du statut de devis'
+quotes: Devis
+rate: Taux
+required: Obligatoire
+saas:
+    action:
+        back: Retour
+        contact_support: 'Contacter le support'
+        contact_support_short: 'contacter le support'
+        switch_company: 'Changer d’entreprise'
+    cancelled:
+        changed_mind: 'Vous avez changé d’avis ?'
+        data_safe: 'Nous serions ravis de vous revoir ! Vos données sont en sécurité et vous attendront à la réactivation.'
+        feature_clients: 'Gestion des clients et des contacts'
+        feature_history: 'Accès à l’historique des paiements et aux rapports'
+        feature_invoices: 'Création de nouvelles factures et devis'
+        feature_payments: 'Paiements en ligne de vos clients'
+        feature_recurring: 'Factures récurrentes et abonnements'
+        features_heading: 'Fonctionnalités nécessitant une réactivation :'
+        reactivate: 'Réactiver l’abonnement'
+        subtitle: 'Votre abonnement a été résilié. Nous serions ravis de vous revoir à %price%/mois quand vous le souhaitez.'
+        title: 'Nous sommes désolés de vous voir partir'
+    change:
+        description: 'Choisissez une autre offre. Les montées en gamme prennent effet immédiatement. Les passages à l’offre gratuite s’appliquent à la fin de votre période de facturation en cours.'
+        heading: 'Changer d’offre'
+        title: 'Changer d’offre'
+    company:
+        access_other: 'Vous avez accès à d’autres entreprises.'
+        switch_to: 'Passer à %company%'
+    confirm:
+        feature: Fonctionnalité
+        free_notice: 'Votre offre payante continuera de fonctionner jusqu’à la fin de votre période de facturation en cours, puis passera automatiquement à l’offre gratuite.'
+        heading: 'Confirmer le passage à %plan%'
+        paid_notice: 'Votre offre passera immédiatement à %plan%. Le changement est traité par notre prestataire de paiement et tout prorata sera appliqué à votre prochaine facture.'
+        title: 'Confirmer le changement d’offre'
+        what_changes: 'Ce qui change'
+    feature:
+        approaching_limit: 'Limite de l’offre bientôt atteinte'
+        available_on_plan: 'Cette fonctionnalité est disponible avec l’offre %plan%.'
+        remaining: '%remaining% sur %total% restants.'
+        upgrade_required: 'Mise à niveau requise'
+        upgrade_to: 'Passer à %plan%'
+    flash:
+        checkout_failed: 'Impossible de créer la session de paiement. Veuillez réessayer plus tard.'
+        downgrade_cancel_failed: 'Impossible d’annuler le changement programmé : %error%'
+        downgrade_cancelled: 'Changement d’offre programmé annulé.'
+        downgrade_scheduled: 'Votre offre sera rétrogradée à la fin de la période de facturation en cours.'
+        free_plan_active: 'Votre offre gratuite est maintenant active.'
+        invalid_plan: 'L’offre sélectionnée est invalide.'
+        invalid_token: 'Jeton de sécurité invalide, veuillez réessayer.'
+        no_plans_available: 'Aucune offre d’abonnement n’est disponible.'
+        no_subscription: 'Aucun abonnement trouvé.'
+        no_subscription_short: 'Aucun abonnement trouvé'
+        plan_changed: 'Votre offre a été modifiée.'
+        plan_update_failed: 'Impossible de mettre à jour votre offre : %error%'
+        plan_updated: 'Votre offre a été mise à jour.'
+        subscription_activated: 'Votre abonnement a été activé.'
+        trial_ended_on_free: 'Votre essai est terminé, votre compte est donc maintenant sur l’offre Gratuite. Tout ce que vous avez créé est toujours là.'
+    menu:
+        billing: Abonnement
+    overview:
+        cancel_change: 'Annuler le changement'
+        change_plan: 'Changer d’offre'
+        choose_to_continue: 'Choisissez une offre pour continuer.'
+        current_plan: 'Offre actuelle'
+        free: Gratuite
+        manage_payment_method: 'Gérer le moyen de paiement'
+        next_renewal: 'Prochain renouvellement'
+        past_due_message: 'Veuillez mettre à jour vos informations de paiement pour garder votre abonnement actif.'
+        past_due_title: 'Paiement en retard'
+        paused_message: 'Votre abonnement est actuellement en pause.'
+        pending_change_message: 'Vous passerez à l’offre %plan% le %date%.'
+        pending_change_title: 'Changement d’offre programmé'
+        plan_features: 'Fonctionnalités de l’offre'
+        renewal: Renouvellement
+        renewal_none: —
+        started: Début
+        status:
+            active: Actif
+            cancelled: Résilié
+            expired: Expiré
+            inactive: Inactif
+            past_due: 'Paiement en retard'
+            paused: 'En pause'
+            pending: 'En attente'
+            trial: Essai
+            unpaid: Impayé
+        title: Abonnement
+        trial_days_left: '%count% jours restants dans votre essai'
+        trial_ended: 'Votre essai est terminé.'
+        trial_ends: 'Fin de l’essai'
+        trial_keep_features: 'Choisissez une offre payante pour continuer à utiliser toutes les fonctionnalités après la fin de l’essai.'
+    paused:
+        feature_clients: 'Gestion des clients et des contacts'
+        feature_invoices: 'Factures et devis illimités'
+        feature_payments: 'Traitement professionnel des paiements'
+        feature_recurring: 'Factures récurrentes et abonnements'
+        feature_reports: 'Rapports et analyses financières'
+        features_heading: 'Reprenez pour accéder à ces fonctionnalités :'
+        resume: 'Reprendre l’abonnement'
+        subtitle: 'Vous ne serez pas facturé tant que votre abonnement est en pause. Reprenez à tout moment à %price%/mois pour retrouver l’accès à toutes les fonctionnalités.'
+        title: 'Votre abonnement est en pause'
+        while_paused: 'Pendant la pause'
+        while_paused_message: 'Vos données sont en sécurité et vous attendront. Vous ne serez pas facturé pendant cette période, mais vous n’aurez pas accès aux fonctionnalités avant la reprise.'
+    pending:
+        activate: Commencer
+        already_activated: 'Déjà activé ?'
+        just_completed_message: 'Si vous venez de terminer le paiement, l’activation de votre abonnement peut prendre un instant. Vous pouvez actualiser cette page ou patienter quelques secondes.'
+        just_completed_title: 'Vous venez de finaliser le paiement ?'
+        need_help: 'Besoin d’un coup de main ?'
+        secure_checkout: 'Paiement sécurisé · Résiliable à tout moment · Sans frais cachés'
+        secure_checkout_paid_trial: 'Paiement sécurisé · Résiliable à tout moment pendant l’essai · Sans frais cachés'
+        subtitle: 'Choisissez une offre pour débloquer la facturation, les paiements en ligne et les rapports, puis gardez votre activité en marche. Changez ou résiliez à tout moment.'
+        subtitle_paid_trial: 'Choisissez une offre et ajoutez vos informations de paiement pour commencer. Vous pouvez résilier à tout moment.'
+        switch_company: 'Passer à une autre entreprise'
+        title: 'Accédez à toutes les fonctionnalités de SolidInvoice'
+        title_paid_trial: 'Choisissez votre offre'
+    plan:
+        choose: 'Choisir l’offre'
+        continue_free: 'Continuer avec l’offre Gratuite'
+        start_trial: '{1}Démarrer l’essai de 1 jour|]1,Inf[Démarrer l’essai de %days% jours'
+        subscribe: 'S’abonner'
+        current: 'Offre actuelle'
+        included: Inclus
+        just_getting_started: 'Vous débutez ?'
+        no_credit_card: 'Aucune carte bancaire requise'
+        not_included: 'Non inclus'
+        per_month: /mois
+        recommended: Recommandée
+        unlimited: Illimité
+        your_current_plan: 'Votre offre actuelle'
+    pricing:
+        subtitle: 'Choisissez l’offre qui correspond à vos besoins. Vous pourrez en changer plus tard.'
+        title: 'Choisissez votre offre'
+    recurring:
+        feature_blocked: 'Les factures récurrentes ne sont pas disponibles avec votre offre actuelle.'
+        feature_blocked_upgrade: 'Les factures récurrentes ne sont pas disponibles avec votre offre actuelle. Passez à %plan% pour activer cette facture récurrente.'
+    settings:
+        template_preview:
+            title: 'Aperçu du modèle'
+    trial_banner:
+        cancelled:
+            cta: 'Renouveler l’abonnement'
+            message: 'Votre abonnement a été résilié. Votre accès sera révoqué le %date%.'
+            title: 'Abonnement résilié'
+        coupon:
+            cta: 'Prolonger et économiser %percent%%'
+            message: 'Ajoutez votre carte maintenant pour continuer %days% jours de plus gratuitement, puis obtenez %percent%% de remise sur vos 3 premiers mois avec le code %code%.'
+            title: '%days% jours de plus + %percent%% de remise'
+        extend:
+            cta: 'Prolonger mon essai'
+            message: 'Ajoutez vos informations de paiement avant la fin de votre essai et nous le prolongerons de %days% jours. Aucun prélèvement aujourd’hui, résiliable à tout moment.'
+            title: '%days% jours de plus, gratuits'
+    trial_expired:
+        activate: 'Activer l’abonnement'
+        activate_save: 'Activer et économiser %percent%%'
+        feature_clients: 'Gestion des clients et des contacts'
+        feature_invoices: 'Factures et devis illimités'
+        feature_payments: 'Traitement professionnel des paiements'
+        feature_recurring: 'Factures récurrentes et abonnements'
+        feature_reports: 'Rapports et analyses financières'
+        features_heading: 'Continuez à profiter de ces fonctionnalités :'
+        promo_code: 'Code promo'
+        promo_heading: 'Ne partez pas tout de suite — voici %percent%% de remise'
+        promo_message: 'Activez votre abonnement maintenant et utilisez le code <strong>%code%</strong> au paiement pour obtenir <strong>%percent%% de remise sur vos 3 premiers mois</strong>. Gardez vos factures en mouvement sans perdre un instant.'
+        subtitle: 'Votre essai de %days% jours s’est terminé le %date%. Activez votre abonnement à %price%/mois pour continuer à utiliser SolidInvoice.'
+        title: 'Votre essai est terminé'
+    welcome:
+        cancel_anytime: 'Résiliable à tout moment'
+        cancel_anytime_detail: 'Vous changez d’avis avant la fin de l’essai ? Vous ne paierez pas un centime.'
+        cta_caption: 'Vous ne serez pas débité avant la fin de votre essai.'
+        cta_no_trial: 'Débloquer l’accès complet'
+        cta_trial: '{1}Démarrer mon essai gratuit de 1 jour|]1,Inf[Démarrer mon essai gratuit de %days% jours'
+        included_heading: 'Ce qui est inclus'
+        just_completed_message: 'Si vous venez de saisir vos informations de paiement, la confirmation peut prendre quelques secondes. Actualisez la page, ou patientez : elle se mettra à jour toute seule.'
+        just_completed_title: 'Vous venez de finaliser le paiement ?'
+        need_help: 'Une question avant de commencer ?'
+        no_charge: 'Aucun prélèvement aujourd’hui'
+        no_charge_detail: 'Nous ne vous facturerons qu’à la fin de votre essai gratuit.'
+        plan_free_for: '{1}Gratuit pendant 1 jour|]1,Inf[Gratuit pendant %days% jours'
+        plan_label: 'Votre offre'
+        plan_then: 'puis %price%/mois'
+        secure_checkout: 'Paiement sécurisé'
+        secure_checkout_detail: 'Les informations de votre carte sont chiffrées et gérées par notre prestataire de paiement.'
+        subtitle: '{1}Ajoutez votre carte pour débloquer gratuitement une journée complète de tout ce que SolidInvoice peut faire. Nous ne vous débiterons qu’à la fin de l’essai, et vous pouvez résilier à tout moment avant.|]1,Inf[Ajoutez votre carte pour débloquer gratuitement %days% jours de tout ce que SolidInvoice peut faire. Nous ne vous débiterons qu’à la fin de l’essai, et vous pouvez résilier à tout moment avant.'
+        subtitle_no_trial: 'Ajoutez vos informations de paiement pour activer votre abonnement et commencer à envoyer des factures, suivre les paiements et être payé, le tout au même endroit.'
+        title: 'Bienvenue à bord, %name%'
+        title_no_name: 'Bienvenue à bord'
+        title_no_trial: 'Plus qu’une étape avant l’accès complet'
+save: Enregistrer
+search:
+    and: et
+    applies_to: 'S’applique à'
+    at_least: 'au moins'
+    at_most: 'au plus'
+    available_qualifiers: 'Qualificateurs disponibles'
+    between_range: 'entre deux valeurs'
+    comparison_operators: 'Opérateurs de comparaison'
+    description: Description
+    exact_match: 'correspondance exacte'
+    example_overdue: 'Tous les enregistrements en retard de toutes les sections'
+    example_paid: 'Factures payées d’un montant supérieur à 500'
+    example_payments: 'Paiements triés du montant le plus élevé au plus bas'
+    example_pending: 'Éléments en attente liés à Acme Corp'
+    example_queries: 'Exemples de requêtes'
+    example_quotes: 'Devis créés après le 1er janvier 2024'
+    filter_amount: 'Filtrer par montant'
+    filter_client: 'Filtrer par nom de client'
+    filter_created: 'Filtrer par date de création'
+    filter_status: 'Filtrer par statut'
+    greater_than: 'supérieur à'
+    guide: 'Guide de recherche'
+    guide_title: 'Guide de recherche'
+    intro: 'Tapez pour rechercher dans toutes les sections. Utilisez des qualificateurs pour affiner et filtrer vos résultats. Plusieurs qualificateurs peuvent être combinés dans une même requête.'
+    less_than: 'inférieur à'
+    limit_section: 'Limiter la recherche à une section précise'
+    placeholder: Rechercher...
+    qualifier: Qualificateur
+    searching: 'Recherche en cours...'
+    sort_results: 'Trier les résultats'
+    supports_operators: 'Prend en charge les opérateurs de comparaison et les plages — voir ci-dessous'
+    values_syntax: 'Valeurs / Syntaxe'
+security:
+    login:
+        forgot_password: 'Mot de passe oublié'
+        login: Connexion
+        login_with_google: 'Se connecter avec Google'
+        no_account: 'Vous n’avez pas encore de compte ?'
+        or: ou
+        password: 'Mot de passe'
+        register_now: 'S’inscrire maintenant'
+        remember: 'Rester connecté'
+        username: 'Adresse e-mail'
+    register:
+        cta: 'Créer votre compte gratuit'
+        email: 'Adresse e-mail'
+        features:
+            clients:
+                description: 'Gardez toutes les informations de vos clients organisées au même endroit'
+                title: 'Gestion des clients'
+            invoices:
+                description: 'Créez de belles factures personnalisables en quelques secondes'
+                title: 'Factures professionnelles'
+            payments:
+                description: 'Acceptez les paiements en ligne et suivez chaque transaction'
+                title: 'Suivi des paiements'
+            subtitle: 'Rejoignez des milliers d’indépendants et de petites entreprises qui gèrent leurs finances avec SolidInvoice'
+            tax:
+                description: 'Calculs de taxes automatiques et rapports détaillés'
+                title: 'Gestion des taxes'
+            title: 'Commencez à facturer en quelques minutes'
+        heading: 'Créez votre compte gratuit'
+        links:
+            google: 'S’inscrire avec Google'
+            login: 'Vous avez déjà un compte ?'
+            signin: 'Se connecter'
+        password: 'Mot de passe'
+        password_confirm: 'Confirmer le mot de passe'
+        placeholders:
+            company: 'Nom de votre entreprise'
+            email: votre@email.fr
+            password: 'Créez un mot de passe robuste'
+        show_password: 'Afficher le mot de passe'
+        strength:
+            label: 'Au moins 8 caractères'
+            medium: 'Robustesse moyenne'
+            strong: 'Mot de passe robuste'
+            weak: 'Mot de passe faible'
+        subheading: 'Commencez dès aujourd’hui avec SolidInvoice'
+        submit: 'S’inscrire'
+        success: 'Votre compte a été créé. Veuillez vérifier votre adresse e-mail avant de vous connecter.'
+        terms_agreement: 'J’accepte les conditions générales et la politique de confidentialité'
+        terms_agreement_html: 'J’accepte les <a href="https://solidinvoice.co/terms-of-service" target="_blank" class="link-primary" rel="external noreferrer noopener">conditions générales</a> et la <a href="https://solidinvoice.co/privacy-policy" target="_blank" class="link-primary" rel="external noreferrer noopener">politique de confidentialité</a>'
+        title: 'S’inscrire'
+        trust:
+            control: 'Vos données, votre contrôle'
+            encryption: 'Chiffrement de niveau bancaire'
+            opensource: 'Open source'
+    two_factor:
+        backup_code: 'code de secours'
+        code_aria_label: 'Saisissez le code de vérification à 6 chiffres'
+        code_placeholder: '000000'
+        email:
+            check_inbox: 'Consultez votre boîte de réception et vos indésirables'
+            description: 'Nous avons envoyé un code de vérification à 6 chiffres à votre adresse e-mail'
+            expires: 'Le code expire dans 10 minutes'
+            no_code: 'Vous n’avez pas reçu le code ?'
+            resend: 'Renvoyer le code'
+            title: 'Vérification par e-mail'
+        instead: 'à la place'
+        lost_authenticator: 'Vous avez perdu votre application d’authentification ? Utilisez un'
+        security_notice: 'Il s’agit d’une étape de sécurité supplémentaire pour protéger votre compte'
+        settings:
+            backup:
+                available: 'codes disponibles'
+                description: 'Utilisez ces codes si vous perdez l’accès à votre appareil d’authentification'
+                download: Télécharger
+                download_text: 'Télécharger en fichier texte'
+                important: 'Important :'
+                regenerate: 'Régénérer les codes'
+                save_notice: 'Conservez ces codes en lieu sûr. Chaque code ne peut être utilisé qu’une seule fois.'
+                store_safely: 'Conservez-les en lieu sûr : chacun ne peut être utilisé qu’une seule fois'
+                title: 'Codes de secours'
+                view: 'Voir les codes'
+            disable: Désactiver
+            email:
+                codes_sent_to: 'Les codes seront envoyés à'
+                description: 'Recevez des codes de vérification par e-mail lors de la connexion'
+                title: 'Authentification par e-mail'
+            enable: Activer
+            modal:
+                enter_code: 'Saisissez le code à 6 chiffres de votre application'
+                manual_entry: 'Impossible de scanner ? Saisie manuelle'
+                manual_instruction: 'Saisissez ce code dans votre application d’authentification :'
+                qr_alt: 'QR code'
+                scan_instruction: 'Scannez ce QR code avec votre application d’authentification'
+                scan_qr: 'Scanner le QR code'
+                setup_title: 'Configurer l’application d’authentification'
+                verify_code: 'Vérifier le code'
+                verify_enable: 'Vérifier et activer'
+            set_up: Configurer
+            status:
+                disabled: Désactivée
+                enabled: Activée
+            totp:
+                configured: 'Votre application d’authentification est configurée et prête à l’emploi'
+                description: 'Utilisez Google Authenticator, Authy ou des applications similaires pour la vérification'
+                not_configured: 'Configurez une application d’authentification pour renforcer la sécurité'
+                title: 'Application d’authentification'
+            trusted:
+                badge: 'Appareil de confiance'
+                description: 'Cet appareil est de confiance et ne demandera pas de vérification 2FA'
+                note: 'Aucun code de vérification ne vous sera demandé sur cet appareil'
+                revoke: 'Retirer la confiance'
+                title: 'Appareil de confiance'
+        subtitle: 'Ajoutez une couche de sécurité supplémentaire à votre compte'
+        title: 'Authentification à deux facteurs'
+        totp:
+            description: 'Saisissez le code de vérification de votre application d’authentification'
+        trust_device: 'Faire confiance à cet appareil pendant 30 jours'
+        try_another_method: 'Essayer une autre méthode de vérification'
+        verification_code: 'Code de vérification'
+        verify_continue: 'Vérifier et continuer'
+settings:
+    address:
+        city: Ville
+        city_placeholder: Ville
+        country: Pays
+        state: 'Région / Province'
+        state_placeholder: 'Région ou province'
+        street1: 'Adresse'
+        street1_placeholder: 'Adresse, ligne 1'
+        street2: 'Complément d’adresse'
+        street2_placeholder: 'Appartement, étage, bâtiment, etc. (facultatif)'
+        zip: 'Code postal'
+        zip_placeholder: 'Code postal'
+    bcc_address:
+        help: 'Recevez une copie cachée de chaque e-mail de %type% envoyé.'
+    email_subject:
+        help: 'Utilisez {id} pour inclure le numéro de %type%. Exemple : « Nouveau %type% - #{id} »'
+        placeholder: 'Nouveau %type% - #{id}'
+    logo:
+        help: 'Recommandé : image carrée d’au moins 200x200 px, au format PNG ou JPG.'
+    mail_transport:
+        provider:
+            label: 'Fournisseur de messagerie'
+            placeholder: 'Choisir un fournisseur de messagerie'
+    numbering:
+        description: 'Configurez la façon dont les numéros de %type% sont générés.'
+    numbering_strategy:
+        help: 'Choisissez comment les identifiants de %type% sont générés.'
+    page:
+        company:
+            business_address: 'Adresse de l’entreprise'
+            business_details: 'Informations de l’entreprise'
+            contact_details: 'Coordonnées'
+            contact_email: 'E-mail de contact'
+            contact_email_placeholder: contact@votreentreprise.fr
+            contact_help: 'Ces informations apparaîtront sur vos factures et devis.'
+            currency: 'Devise par défaut'
+            currency_help: 'La devise par défaut utilisée pour les nouvelles factures et devis. Les factures et devis déjà émis conservent la devise dans laquelle ils ont été émis.'
+            logo: 'Logo de l’entreprise'
+            name: 'Nom de l’entreprise'
+            name_placeholder: 'Le nom de votre entreprise'
+            phone: 'Numéro de téléphone'
+            phone_placeholder: '+33 1 23 45 67 89'
+            profile: 'Profil de l’entreprise'
+        danger:
+            delete: 'Supprimer l’entreprise'
+            delete_help: 'Supprime définitivement votre entreprise et toutes les données associées. Cette action est irréversible.'
+            modal:
+                company_name_aria: 'Nom de l’entreprise à saisir'
+                confirm_prompt: 'Pour confirmer la suppression, saisissez le nom de l’entreprise exactement comme indiqué ci-dessous :'
+                input_placeholder: 'Saisissez le nom de l’entreprise pour confirmer'
+                title: 'Confirmer la suppression de l’entreprise'
+                warning: Attention !
+                warning_help: 'Cette action supprimera définitivement votre entreprise et toutes les données associées, y compris les factures, devis, clients et paiements. Elle est irréversible.'
+            title: 'Zone de danger'
+        design:
+            template:
+                preview: Aperçu
+                preview_full: 'Ouvrir l’aperçu complet'
+                subtitle: 'Choisissez le design utilisé pour vos factures et devis partout où vos clients les voient : PDF, e-mails et portail client.'
+                title: 'Modèle de facture et de devis'
+        display:
+            title: 'Paramètres d’affichage'
+            watermark: 'Afficher le filigrane de statut'
+        domain:
+            custom_domain: 'Domaine personnalisé'
+            dns_footer: 'Une fois le CNAME en place, votre domaine personnalisé pointera automatiquement vers SolidInvoice, sans autre action requise.'
+            dns_help: 'Après l’enregistrement, ajoutez un enregistrement CNAME chez votre fournisseur DNS pour que votre domaine pointe vers SolidInvoice. La propagation DNS peut prendre jusqu’à 24 heures.'
+            dns_name: 'Nom / Hôte'
+            dns_title: 'Configuration DNS requise'
+            dns_type: Type
+            dns_value: 'Valeur / Cible'
+            subtitle: 'Servez SolidInvoice depuis votre propre domaine (ex. : factures.votreentreprise.fr) au lieu de l’URL par défaut.'
+            title: Domaine
+        email:
+            bcc: 'Adresse e-mail en copie cachée'
+            delivery:
+                subtitle: 'Choisissez et configurez votre service d’envoi d’e-mails.'
+                title: 'Envoi des e-mails'
+            notifications: 'Notifications par e-mail'
+            sender:
+                from_address: 'Adresse e-mail d’expédition'
+                from_address_help: 'Les réponses seront envoyées à cette adresse.'
+                from_name: 'Nom d’expéditeur'
+                from_name_help: 'Le nom qui apparaît dans le champ « De ».'
+                from_name_placeholder: 'Le nom de votre entreprise'
+                subtitle: 'Configurez la façon dont vos e-mails apparaissent aux destinataires.'
+                title: 'Informations de l’expéditeur'
+            subject: 'Objet de l’e-mail'
+        general:
+            title: 'Paramètres généraux'
+        numbering:
+            example: 'Exemple :'
+            prefix: 'Préfixe d’identifiant'
+            prefix_help: 'Ajouté avant le numéro. Par ex. « FAC- » donne FAC-001'
+            strategy: 'Stratégie de numérotation'
+            suffix: 'Suffixe d’identifiant'
+            suffix_help: 'Ajouté après le numéro. Par ex. « -2024 » donne 001-2024'
+            title: 'Schéma de numérotation'
+        payment_terms:
+            help: 'Les nouvelles factures démarrent avec ces conditions. Un client peut avoir ses propres conditions. Personnalisée laisse la date d’échéance à renseigner.'
+            label: 'Conditions de paiement par défaut'
+            title: 'Conditions de paiement'
+        reminder:
+            enable: 'Activer les relances automatiques'
+            enable_help: 'Si activé, les relances de paiement seront envoyées automatiquement selon le calendrier ci-dessous.'
+            how_help: 'Les relances sont envoyées chaque jour à 9h00. Chaque facture reçoit au maximum 4 relances automatiques (1 avant l’échéance + 3 après). Après la dernière relance, vous recevrez une notification d’escalade pour traiter la facture manuellement. Les factures payées ne reçoivent pas de relances.'
+            how_label: 'Comment ça marche :'
+            overdue:
+                subtitle: 'Les relances automatiques sont envoyées 1, 7 et 14 jours après que la facture est en retard. Après la dernière relance (14 jours), une notification d’escalade est envoyée aux utilisateurs internes pour un suivi manuel.'
+                title: 'Calendrier des relances de retard'
+                tone_help: 'Les messages de relance deviennent progressivement plus pressants : courtois à 1 jour, fermes à 7 jours, urgents à 14 jours de retard.'
+                tone_label: 'Ton croissant :'
+            pre_due:
+                days: 'Jours avant l’échéance'
+                days_help: 'Envoyer la relance ce nombre de jours avant l’échéance de la facture (0 pour l’envoyer le jour de l’échéance).'
+                enable: 'Activer les relances avant échéance'
+                subtitle: 'Envoyez un rappel amical avant l’échéance de la facture pour aider vos clients à payer à temps.'
+                title: 'Relance avant échéance'
+            subtitle: 'Envoyez automatiquement des relances de paiement aux clients pour les factures en attente. Les relances sont envoyées avant l’échéance puis à intervalles réguliers après le retard.'
+            title: 'Relances de paiement'
+        save: 'Enregistrer les paramètres'
+        tab:
+            design: Design
+            email: E-mail
+            invoice: Factures
+            quote: Devis
+            system: Entreprise
+    save: Enregistrer
+    saved:
+        success: 'Paramètres enregistrés avec succès !'
+    upgrade:
+        activate: 'Activer l’abonnement'
+        activate_tooltip: 'Activez votre abonnement pour débloquer cette fonctionnalité'
+        label: 'Passer à une offre supérieure'
+        label_plan: 'Passer à %plan%'
+        tooltip: 'Passez à une offre supérieure pour débloquer cette fonctionnalité'
+        tooltip_plan: 'Passez à %plan% pour débloquer cette fonctionnalité'
+    watermark:
+        help: 'Affiche un filigrane visuel (ex. : PAYÉE, BROUILLON) sur le document de %type%.'
+status:
+    accepted: Accepté
+    active: Actif
+    archived: Archivé
+    authorized: Autorisé
+    cancelled: Annulé
+    captured: Encaissé
+    complete: Terminé
+    credit: Crédit
+    declined: Refusé
+    draft: Brouillon
+    expired: Expiré
+    failed: Échoué
+    inactive: Inactif
+    new: Nouveau
+    overdue: 'En retard'
+    paid: Payé
+    paused: 'En pause'
+    pending: 'En attente'
+    refunded: Remboursé
+    suspended: Suspendu
+    unknown: Inconnu
+success: Succès
+tax:
+    company_identifiers:
+        add: 'Ajouter un identifiant fiscal'
+        description: 'Ajoutez les identifiants fiscaux (TVA, GST, TIN, ABN, etc.) de votre propre entreprise : ils apparaîtront sur les factures et devis que vous émettez.'
+        empty: 'Aucun identifiant fiscal configuré. Ajoutez-en un pour l’afficher sur vos factures.'
+        label: Type
+        primary: Principal
+        remove: 'Supprimer l’identifiant fiscal'
+        save: 'Enregistrer les identifiants fiscaux'
+        title: 'Identifiants fiscaux de l’entreprise'
+        value: Numéro
+    direction:
+        additive: Additive
+        deductive: Déductive
+        informational: Informative
+    exclusive: 'Hors taxe'
+    form:
+        input:
+            validate: Valider
+    grid:
+        actions:
+            edit: Modifier
+    inclusive: 'TTC'
+    invoice_tax:
+        note:
+            label: Note
+            placeholder: 'Note facultative (ex. : mention d’autoliquidation de la TVA)'
+        tax:
+            placeholder: 'Sélectionner une taxe'
+    line_tax:
+        tax:
+            placeholder: 'Aucune taxe'
+    rates:
+        add: 'Ajouter un taux de taxe'
+        cancel: Annuler
+        details: 'Détails de la taxe'
+        edit: 'Modifier le taux de taxe'
+        explanation: "<b>TTC</b> : la taxe est déjà incluse dans le prix de la ligne<br />\n<b>Hors taxe</b> : la taxe est calculée en plus du prix de la ligne<br />\n<b>Taux fixe</b> : un montant fixe est facturé quel que soit le prix de la ligne<br />\n"
+        form:
+            description: 'Définissez les détails du taux de taxe et sa méthode de calcul'
+            subtitle: 'Configurez les taux de taxe pour les factures et devis'
+        save: Enregistrer
+        title: 'Taux de taxe'
+        type:
+            select: Sélectionner
+    vat_number: 'N° de TVA :'
+title: messages
+type: Type
+users:
+    add: 'Ajouter un utilisateur'
+    create:
+        generate_password: 'Générer un mot de passe aléatoire'
+        success: 'Utilisateur créé avec succès !'
+    edit: 'Modifier l’utilisateur'
+    empty:
+        description: 'Commencez par inviter votre premier collaborateur.'
+        title: 'Aucun utilisateur'
+    grid:
+        actions:
+            delete: Supprimer
+            edit: Modifier
+        invitation:
+            actions:
+                resend: 'Renvoyer l’invitation'
+    invitation:
+        accept:
+            success: 'Invitation acceptée avec succès ! Vous pouvez maintenant vous connecter.'
+        delete:
+            success: 'Invitation supprimée avec succès !'
+        exists: 'Une invitation existe déjà pour cette adresse e-mail'
+        success: 'Invitation envoyée avec succès !'
+    invitations:
+        empty:
+            description: 'Toutes les invitations ont été acceptées ou il n’y a aucune invitation en attente.'
+            title: 'Aucune invitation en attente'
+    invite:
+        details:
+            description: 'Saisissez l’adresse e-mail de la personne que vous souhaitez inviter'
+            title: 'Détails de l’invitation'
+        email:
+            help: 'L’utilisateur recevra un e-mail d’invitation avec les instructions pour configurer son compte'
+            label: 'Adresse e-mail'
+        info: 'L’utilisateur invité recevra un e-mail contenant un lien pour accepter l’invitation et configurer son compte. Le lien d’invitation expirera au bout de 7 jours.'
+        send: 'Envoyer l’invitation'
+        subtitle: 'Envoyez une invitation à un nouvel utilisateur pour rejoindre votre organisation'
+        title: 'Inviter un utilisateur'
+    invite_user: 'Inviter un utilisateur'
+    save: Enregistrer
+    stats:
+        active_users: 'Utilisateurs actifs'
+        pending_invitations: 'Invitations en attente'
+        recently_joined: 'Récemment inscrits (30 j)'
+    tabs:
+        active_users: 'Utilisateurs actifs'
+        pending_invitations: 'Invitations en attente'
+    title: Utilisateurs
+view: Voir
+website: 'Site web'
