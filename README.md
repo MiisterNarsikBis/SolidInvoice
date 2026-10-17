@@ -44,28 +44,6 @@ Most invoicing tools force a trade-off: easy to use *or* respectful of your data
 
 ---
 
-## 🖼️ A look at the interface
-
-The interface is built on Tailwind CSS with the "Ledger" visual identity (see [`DESIGN.md`](DESIGN.md)), and is available in English and French.
-
-| Invoices | Create an invoice |
-|---|---|
-| <img src="docs/static/img/readme/invoices.jpg" alt="Invoice list" /> | <img src="docs/static/img/readme/invoice-create.jpg" alt="Invoice creation form" /> |
-
-| Clients | Client profile |
-|---|---|
-| <img src="docs/static/img/readme/clients.jpg" alt="Client list" /> | <img src="docs/static/img/readme/client-view.jpg" alt="Client profile" /> |
-
-| Invoice | Quotes |
-|---|---|
-| <img src="docs/static/img/readme/invoice-view.jpg" alt="Invoice detail" /> | <img src="docs/static/img/readme/quotes.jpg" alt="Quote list" /> |
-
-| Payments |
-|---|
-| <img src="docs/static/img/readme/payments.jpg" alt="Payment list" /> |
-
----
-
 ## ✨ Features
 
 ### 💼 Billing & Invoicing
@@ -144,11 +122,13 @@ Both versions ship the same codebase and feature set. Pick whichever fits your w
 
 ## 📸 Screenshots
 
+The interface is built with Tailwind CSS ("Ledger" identity, see [`DESIGN.md`](DESIGN.md)) and is available in English and French.
+
 | | |
 | :---: | :---: |
-| <img src="docs/static/img/dashboard.png" alt="Dashboard" /><br/>**Dashboard** | <img src="docs/static/img/managing-clients/client-view-overview.png" alt="Client View" /><br/>**Client View** |
-| <img src="docs/static/img/invoices/invoice-list.png" alt="Invoice List" /><br/>**Invoice List** | <img src="docs/static/img/invoices/create-invoice-form.png" alt="Invoice Editor" /><br/>**Invoice Editor** |
-| <img src="docs/static/img/recurring-invoices/recurring-invoices-list-page.png" alt="Recurring Invoices" /><br/>**Recurring Invoices** | <img src="docs/static/img/payments.png" alt="Payments" /><br/>**Payments** |
+| <img src="docs/static/img/readme/dashboard.jpg" alt="Dashboard" /><br/>**Dashboard** | <img src="docs/static/img/readme/client-view.jpg" alt="Client View" /><br/>**Client View** |
+| <img src="docs/static/img/readme/invoices.jpg" alt="Invoice List" /><br/>**Invoice List** | <img src="docs/static/img/readme/invoice-create.jpg" alt="Invoice Editor" /><br/>**Invoice Editor** |
+| <img src="docs/static/img/readme/quotes.jpg" alt="Quotes" /><br/>**Quotes** | <img src="docs/static/img/readme/payments.jpg" alt="Payments" /><br/>**Payments** |
 
 ---
 
